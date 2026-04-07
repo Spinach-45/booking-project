@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(printf '\\\\n')",
+      "Bash(npx create-vite@latest . --template react)",
+      "Bash(yes)",
+      "Bash(cp -r \"C:/Users/kiaoj/Desktop/booking-project/C/Users/kiaoj/Desktop/booking-project-temp/.\" \"C:/Users/kiaoj/Desktop/booking-project/\")",
+      "Bash(rm -rf \"C:/Users/kiaoj/Desktop/booking-project/C\")",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
