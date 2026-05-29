@@ -1,83 +1,105 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Heart, MessageSquare, ClipboardList, Settings, LogOut, LogIn, Globe, Menu, X, Home } from 'lucide-react';
-import useStore from '../../store/useStore';
-import { t } from '../../i18n';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import {
+  Map, Train, Hotel, User, LogOut, LogIn, Menu, X,
+  Home, ClipboardList, Heart, ShoppingCart, MessageSquare,
+  Settings, Globe,
+} from 'lucide-react';
+import useAuthStore from '../../store/useAuthStore';
+import useHotelStore from '../../store/useHotelStore';
+import { useToast } from './Toast';
+import { t } from '../../modules/hotel/i18n';
 
 export default function Navbar() {
-  const { lang, setLang, currentUser, logout, cart, favorites } = useStore();
+  const { currentUser, logout } = useAuthStore();
+  const { lang, setLang, cart, favorites } = useHotelStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const toast = useToast();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const T = (key) => t(lang, key);
 
   const handleLogout = () => {
     logout();
+    toast('已登出', 'info');
     navigate('/');
     setMenuOpen(false);
   };
 
-  const cartCount = cart.filter(c => !currentUser || c.userId === currentUser.id).length;
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
+
+  const navCls = (path) => `nav-link${isActive(path) ? ' active' : ''}`;
+
+  const cartCount = currentUser
+    ? cart.filter(c => !c.userId || c.userId === currentUser.id).length
+    : 0;
 
   return (
     <nav className="navbar">
       <div className="navbar-inner">
+        {/* Brand */}
         <Link to="/" className="navbar-brand">
-          <span className="brand-icon">🏨</span>
-          <span className="brand-text">BookingTW</span>
+          <span className="brand-icon">🌏</span>
+          <span className="brand-text">智慧旅遊</span>
         </Link>
 
         {/* Desktop nav */}
         <div className="navbar-links desktop-only">
-          <Link to="/" className="nav-link">
-            <Home size={16} /> {T('nav.home')}
+          <Link to="/" className={navCls('/')} style={{ marginRight: 4 }}>
+            <Home size={15} /> 首頁
           </Link>
-          <Link to="/properties" className="nav-link">
-            {T('nav.properties')}
+          <Link to="/trip" className={navCls('/trip')}>
+            <Map size={15} /> 行程規劃
+          </Link>
+          <Link to="/hotel" className={navCls('/hotel')}>
+            <Hotel size={15} /> 住宿訂房
+          </Link>
+          <Link to="/ticket" className={navCls('/ticket')}>
+            <Train size={15} /> 火車訂票
           </Link>
           {currentUser && (
             <>
-              <Link to="/orders" className="nav-link">
-                <ClipboardList size={16} /> {T('nav.orders')}
+              <Link to="/profile/orders-hotel" className={navCls('/profile')}>
+                <ClipboardList size={15} /> 我的訂單
               </Link>
-              <Link to="/favorites" className="nav-link">
-                <Heart size={16} />
-                {favorites.length > 0 && <span className="badge">{favorites.length}</span>}
+              <Link to="/hotel/favorites" className="nav-link" style={{ position: 'relative' }}>
+                <Heart size={15} />
+                {favorites.length > 0 && <span className="badge" style={{ position: 'absolute', top: 0, right: 0, transform: 'translate(30%,-30%)', background: 'var(--danger)', color: 'white', minWidth: 16, height: 16, borderRadius: 8, fontSize: '0.68rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{favorites.length}</span>}
               </Link>
-              <Link to="/cart" className="nav-link">
-                <ShoppingCart size={16} />
-                {cartCount > 0 && <span className="badge">{cartCount}</span>}
+              <Link to="/hotel/cart" className="nav-link" style={{ position: 'relative' }}>
+                <ShoppingCart size={15} />
+                {cartCount > 0 && <span className="badge" style={{ position: 'absolute', top: 0, right: 0, transform: 'translate(30%,-30%)', background: 'var(--danger)', color: 'white', minWidth: 16, height: 16, borderRadius: 8, fontSize: '0.68rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{cartCount}</span>}
               </Link>
-              <Link to="/chat" className="nav-link">
-                <MessageSquare size={16} />
-              </Link>
+              <Link to="/hotel/chat" className="nav-link"><MessageSquare size={15} /></Link>
               {currentUser.role === 'admin' && (
-                <Link to="/admin" className="nav-link admin-link">
-                  <Settings size={16} /> {T('nav.admin')}
-                </Link>
+                <Link to="/admin" className="nav-link admin-link"><Settings size={15} /> 後台</Link>
               )}
             </>
           )}
         </div>
 
+        {/* Desktop actions */}
         <div className="navbar-actions desktop-only">
-          <button
-            className="btn-ghost lang-btn"
-            onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
-          >
-            <Globe size={16} />
-            {lang === 'zh' ? 'EN' : '中文'}
+          <button className="btn-ghost lang-btn" onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}>
+            <Globe size={15} /> {lang === 'zh' ? 'EN' : '中文'}
           </button>
           {currentUser ? (
             <div className="user-menu">
-              <span className="user-name">👤 {currentUser.name}</span>
-              <button className="btn-ghost" onClick={handleLogout}>
-                <LogOut size={16} /> {T('nav.logout')}
+              <Link to="/profile" className="user-name">
+                <User size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+                {currentUser.name}
+              </Link>
+              <button className="btn-ghost btn-sm" onClick={handleLogout}>
+                <LogOut size={14} /> 登出
               </button>
             </div>
           ) : (
-            <Link to="/login" className="btn-primary">
-              <LogIn size={16} /> {T('nav.login')}
+            <Link to="/login" className="btn-primary btn-sm">
+              <LogIn size={14} /> 登入
             </Link>
           )}
         </div>
@@ -91,27 +113,34 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="mobile-menu">
-          <Link to="/" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>{T('nav.home')}</Link>
-          <Link to="/properties" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>{T('nav.properties')}</Link>
+          {[
+            { to: '/', label: '🏠 首頁' },
+            { to: '/trip', label: '🗺️ 行程規劃' },
+            { to: '/hotel', label: '🏨 住宿訂房' },
+            { to: '/ticket', label: '🚂 火車訂票' },
+          ].map(item => (
+            <Link key={item.to} to={item.to} className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
+              {item.label}
+            </Link>
+          ))}
           {currentUser && (
             <>
-              <Link to="/orders" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>{T('nav.orders')}</Link>
-              <Link to="/favorites" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>{T('nav.favorites')}</Link>
-              <Link to="/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>{T('nav.cart')} {cartCount > 0 && `(${cartCount})`}</Link>
-              <Link to="/chat" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>{T('nav.chat')}</Link>
+              <Link to="/profile" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>👤 個人中心</Link>
+              <Link to="/hotel/favorites" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>❤️ 我的收藏</Link>
+              <Link to="/hotel/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>🛒 購物車 {cartCount > 0 ? `(${cartCount})` : ''}</Link>
               {currentUser.role === 'admin' && (
-                <Link to="/admin" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>{T('nav.admin')}</Link>
+                <Link to="/admin" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>⚙️ 後台管理</Link>
               )}
             </>
           )}
           <div className="mobile-actions">
             <button className="btn-ghost" onClick={() => { setLang(lang === 'zh' ? 'en' : 'zh'); setMenuOpen(false); }}>
-              <Globe size={16} /> {lang === 'zh' ? 'English' : '中文'}
+              <Globe size={15} /> {lang === 'zh' ? 'English' : '中文'}
             </button>
             {currentUser ? (
-              <button className="btn-ghost" onClick={handleLogout}><LogOut size={16} /> {T('nav.logout')}</button>
+              <button className="btn-ghost" onClick={handleLogout}><LogOut size={15} /> 登出</button>
             ) : (
-              <Link to="/login" className="btn-primary" onClick={() => setMenuOpen(false)}>{T('nav.login')}</Link>
+              <Link to="/login" className="btn-primary" onClick={() => setMenuOpen(false)}><LogIn size={15} /> 登入</Link>
             )}
           </div>
         </div>

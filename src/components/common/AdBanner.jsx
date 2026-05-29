@@ -1,22 +1,9 @@
-import useStore from '../../store/useStore';
-
-export default function AdBanner({ position = 'banner' }) {
-  const { ads } = useStore();
-  const now = new Date();
-  const activeAds = ads.filter(ad =>
-    ad.active &&
-    ad.position === position &&
-    new Date(ad.startDate) <= now &&
-    new Date(ad.endDate) >= now
-  );
-  if (!activeAds.length) return null;
-  const ad = activeAds[0];
+export default function AdBanner({ ad, variant = 'banner' }) {
+  if (!ad || !ad.active) return null;
   return (
-    <div className={`ad-banner ad-${position}`}>
-      <a href={ad.link || '#'} target="_blank" rel="noopener noreferrer">
-        <img src={ad.image} alt={ad.title} className="ad-image" />
-        <div className="ad-label">廣告</div>
-      </a>
+    <div className={`ad-banner ad-${variant}`} onClick={() => ad.link && window.open(ad.link, '_blank')}>
+      <img src={ad.imageUrl} alt={ad.title} className="ad-image" style={{ cursor: ad.link ? 'pointer' : 'default' }} />
+      <span className="ad-label">廣告</span>
     </div>
   );
 }
