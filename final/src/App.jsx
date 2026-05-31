@@ -69,7 +69,7 @@ function ShareRedirect() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/final">
       <ToastProvider>
         <div className="app">
           <Navbar />
