@@ -34,7 +34,8 @@
       "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\ryanc\\\\OneDrive\\\\桌面\\\\booking-project\\\\src\\\\modules\\\\hotel\\\\i18n\")",
       "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\ryanc\\\\OneDrive\\\\桌面\\\\booking-project\\\\src\\\\modules\\\\train\\\\pages\")",
       "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\ryanc\\\\OneDrive\\\\桌面\\\\booking-project\\\\src\\\\modules\\\\train\\\\data\")",
-      "Bash(Write-Output \"Done\")"
+      "Bash(Write-Output \"Done\")",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
