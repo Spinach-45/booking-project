@@ -178,41 +178,16 @@ export default function ProfilePage() {
                     {o.bookingNo && <span style={{ fontFamily: 'monospace', color: 'var(--primary)', fontWeight: 700 }}>票號：{o.bookingNo}</span>}
                   </div>
 
-                  {/* Per-ticket rows */}
-                  <div style={{ borderTop: '1px solid var(--border)', marginTop: '0.5rem', paddingTop: '0.5rem' }}>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.35rem', fontWeight: 600 }}>
-                      車票明細（點擊查看詳情）
-                    </div>
-                    {(o.passengers ?? []).map((p, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setTicketDetail({ order: o, passenger: p })}
-                        style={{
-                          display: 'flex', alignItems: 'center', gap: '0.6rem', width: '100%',
-                          padding: '0.4rem 0.6rem', marginBottom: '0.25rem',
-                          background: 'var(--bg)', border: '1px solid var(--border)',
-                          borderRadius: 'var(--radius)', cursor: 'pointer', textAlign: 'left',
-                          transition: 'background 0.15s',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-light)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'var(--bg)'}
-                      >
-                        <Ticket size={13} style={{ color: 'var(--primary)', flexShrink: 0 }} />
-                        <span style={{ fontSize: '0.83rem', fontWeight: 600, flex: 1 }}>{p.name}</span>
-                        <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{p.ticketTypeName}</span>
-                        {p.seatNo
-                          ? <span className="seat-badge">{p.seatNo}</span>
-                          : <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>候補</span>
-                        }
-                        <ArrowRight size={12} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
-                      </button>
-                    ))}
-                  </div>
-
                   {/* Bottom: price + actions */}
                   <div className="order-card-bottom">
                     <span className="order-total-price">NT${o.totalAmount?.toLocaleString()}</span>
                     <div className="order-actions">
+                      <button
+                        className="btn-outline btn-sm"
+                        onClick={() => setTicketDetail({ order: o, passenger: null })}
+                      >
+                        🎫 查看車票詳情
+                      </button>
                       {o.status === 'pending' && (
                         <Link to={`/ticket/payment/${o.id}`} className="btn-primary btn-sm">前往付款</Link>
                       )}
@@ -228,7 +203,6 @@ export default function ProfilePage() {
           {ticketDetail && (
             <ProfileTicketDetailModal
               order={ticketDetail.order}
-              passenger={ticketDetail.passenger}
               onClose={() => setTicketDetail(null)}
             />
           )}
@@ -333,14 +307,12 @@ export default function ProfilePage() {
   );
 }
 
-function ProfileTicketDetailModal({ order, passenger, onClose }) {
+function ProfileTicketDetailModal({ order, onClose }) {
   const typeInfo = TRAIN_TYPES[order.train.type] ?? {};
   const delay = order.train.delay ?? getDelayStatus(order.train.id ?? order.train.trainNo);
+  const passengers = order.passengers ?? [];
 
-  const rows = [
-    ['乘客姓名', passenger.name],
-    ['票種',     passenger.ticketTypeName],
-    ['座位號碼', passenger.seatNo ?? '候補（未分配）'],
+  const orderRows = [
     ['車次號',   `${typeInfo.icon ?? ''} ${typeInfo.name ?? ''} ${order.train.trainNo}`],
     ['起點',     order.train.fromName],
     ['目的地',   order.train.toName],
@@ -351,19 +323,41 @@ function ProfileTicketDetailModal({ order, passenger, onClose }) {
   ];
 
   return (
-    <Modal isOpen onClose={onClose} title="車票詳細資料" size="sm">
+    <Modal isOpen onClose={onClose} title="車票詳細資料" size="md">
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+
+        {/* 列車狀態 */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.25rem' }}>
           <span style={{ padding: '4px 16px', borderRadius: 20, fontSize: '0.82rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
             {delay.status === 'ontime' ? '✓ 列車準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
           </span>
         </div>
-        {rows.map(([label, val]) => (
+
+        {/* 訂單資訊 */}
+        {orderRows.map(([label, val]) => (
           <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.4rem' }}>
             <span style={{ color: 'var(--text-secondary)', flexShrink: 0 }}>{label}</span>
             <span style={{ fontWeight: 600, textAlign: 'right', marginLeft: '1rem' }}>{val}</span>
           </div>
         ))}
+
+        {/* 乘客座位 */}
+        {passengers.length > 0 && (
+          <div style={{ marginTop: '0.5rem' }}>
+            <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>乘客與座位</div>
+            {passengers.map((p, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg)', borderRadius: 'var(--radius)', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
+                <Ticket size={14} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                <span style={{ fontWeight: 600, flex: 1 }}>{p.name}</span>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{p.ticketTypeName}</span>
+                {p.seatNo
+                  ? <span className="seat-badge">{p.seatNo}</span>
+                  : <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>候補</span>
+                }
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </Modal>
   );
