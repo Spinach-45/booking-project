@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Printer, Copy, CheckCheck, ArrowLeft } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
-import { TRAIN_TYPES, formatDuration } from '../data/trainData';
+import { TRAIN_TYPES, formatDuration, getDelayStatus } from '../data/trainData';
 
 /* ── Pseudo QR Code ─────────────────────────────────────────── */
 function PseudoQR({ value, size = 160 }) {
@@ -60,6 +60,7 @@ export default function TicketPage() {
   );
 
   const typeInfo = TRAIN_TYPES[order.train.type] ?? {};
+  const delay = order.train.delay ?? getDelayStatus(order.train.id ?? order.train.trainNo);
 
   const copyCvs = () => {
     const code = order.cvsPickupCode ?? '';
@@ -97,6 +98,11 @@ export default function TicketPage() {
               </div>
               <div style={{ fontSize: '0.88rem', color: typeInfo.color, opacity: 0.85, marginTop: 2 }}>
                 {order.train.date}　{order.train.depTime} 出發　({formatDuration(order.train.duration)})
+              </div>
+              <div style={{ marginTop: 6 }}>
+                <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
+                  {delay.status === 'ontime' ? '✓ 準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
+                </span>
               </div>
             </div>
           </div>

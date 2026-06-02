@@ -92,12 +92,15 @@ const useTrainStore = create((set, get) => ({
     if (!user) return null;
     const baseAmount = tickets.reduce((s, t) => s + t.subtotal, 0);
     const discountAmount = multiDiscount ? Math.round(baseAmount * multiDiscount.percent / 100) : 0;
+    const orderId = uid('ORD');
+    const seatSeed = orderId.split('').reduce((a, c) => a + c.charCodeAt(0), 0) ^ (Date.now() & 0xffff);
+    const passengersWithSeats = assignSeats(passengers, seatPref, seatSeed);
     const order = {
-      id: uid('ORD'),
+      id: orderId,
       userId: user.id,
       bookingNo: null,
       train: { ...train, fromName: STATION_MAP[train.from] ?? train.from, toName: STATION_MAP[train.to] ?? train.to },
-      tickets, passengers, seatPref,
+      tickets, passengers: passengersWithSeats, seatPref,
       paymentMethod: null,
       baseAmount,
       discountAmount,
@@ -123,8 +126,6 @@ const useTrainStore = create((set, get) => ({
       return result;
     }
     const bookingNo = `TR${Date.now().toString().slice(-10)}`;
-    const seed = bookingNo.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-    const passengersWithSeats = assignSeats(order.passengers, order.seatPref, seed);
     const cvsPickupCode = `CV${Date.now().toString().slice(-8)}`;
     const pointsEarned = Math.floor(order.totalAmount / (100 / POINTS_RATE));
     useAuthStore.getState().addPoints(pointsEarned);
@@ -134,7 +135,6 @@ const useTrainStore = create((set, get) => ({
       paymentMethod: method,
       bookingNo,
       paidAt: Date.now(),
-      passengers: passengersWithSeats,
       cvsPickupCode,
       pointsEarned,
     };
