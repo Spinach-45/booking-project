@@ -68,6 +68,7 @@ export const STATIONS = {
     {
       id: 'sta-tp-01',
       name: '台北車站',
+      lat: 25.0478, lng: 121.5170,
       attractions: [
         { id: 'attr-tp01-01', name: '台灣博物館',     type: 'museum',   distance: 300, address: '台北市中正區襄陽路2號' },
         { id: 'attr-tp01-02', name: '二二八和平公園', type: 'park',     distance: 350, address: '台北市中正區凱達格蘭大道3號' },
@@ -80,6 +81,7 @@ export const STATIONS = {
     {
       id: 'sta-tp-02',
       name: '松山車站',
+      lat: 25.0497, lng: 121.5777,
       attractions: [
         { id: 'attr-tp02-01', name: '饒河街夜市',     type: 'nightmarket', distance: 200, address: '台北市松山區饒河街' },
         { id: 'attr-tp02-02', name: '松山文創園區',   type: 'art',         distance: 350, address: '台北市信義區光復南路133號' },
@@ -90,6 +92,7 @@ export const STATIONS = {
     {
       id: 'sta-tp-03',
       name: '萬華車站',
+      lat: 25.0358, lng: 121.4993,
       attractions: [
         { id: 'attr-tp03-01', name: '龍山寺',         type: 'temple',  distance: 350, address: '台北市萬華區廣州街211號' },
         { id: 'attr-tp03-02', name: '艋舺公園（夜市）', type: 'nightmarket', distance: 500, address: '台北市萬華區西園路一段' },
@@ -100,6 +103,7 @@ export const STATIONS = {
     {
       id: 'sta-tp-04',
       name: '南港車站',
+      lat: 25.0543, lng: 121.6069,
       attractions: [
         { id: 'attr-tp04-01', name: '南港展覽館',     type: 'activity', distance: 400, address: '台北市南港區經貿二路1號' },
         { id: 'attr-tp04-02', name: '南港公園',       type: 'park',     distance: 600, address: '台北市南港區市民大道八段' },
@@ -111,6 +115,7 @@ export const STATIONS = {
     {
       id: 'sta-nt-01',
       name: '板橋車站',
+      lat: 25.0142, lng: 121.4631,
       attractions: [
         { id: 'attr-nt01-01', name: '林家花園（板橋林本源園邸）', type: 'historic', distance: 400, address: '新北市板橋區西門街9號' },
         { id: 'attr-nt01-02', name: '板橋435藝文特區', type: 'art',     distance: 600, address: '新北市板橋區中山路一段435號' },
@@ -121,6 +126,7 @@ export const STATIONS = {
     {
       id: 'sta-nt-02',
       name: '樹林車站',
+      lat: 24.9908, lng: 121.4175,
       attractions: [
         { id: 'attr-nt02-01', name: '樹林老街',        type: 'historic', distance: 350, address: '新北市樹林區保安街' },
         { id: 'attr-nt02-02', name: '彭厝濕地公園',    type: 'nature',   distance: 700, address: '新北市樹林區彭厝里' },
@@ -129,6 +135,7 @@ export const STATIONS = {
     {
       id: 'sta-nt-03',
       name: '汐止車站',
+      lat: 25.0708, lng: 121.6564,
       attractions: [
         { id: 'attr-nt03-01', name: '汐止老街',        type: 'historic', distance: 400, address: '新北市汐止區大同路一段' },
         { id: 'attr-nt03-02', name: '新山夢湖',        type: 'nature',   distance: 900, address: '新北市汐止區新山里' },
@@ -138,6 +145,7 @@ export const STATIONS = {
     {
       id: 'sta-nt-04',
       name: '瑞芳車站',
+      lat: 25.1067, lng: 121.8000,
       attractions: [
         { id: 'attr-nt04-01', name: '九份老街',        type: 'historic', distance: 600, address: '新北市瑞芳區九份山城' },
         { id: 'attr-nt04-02', name: '侯硐貓村',        type: 'scenic',   distance: 500, address: '新北市瑞芳區侯硐里' },
@@ -147,6 +155,7 @@ export const STATIONS = {
     {
       id: 'sta-nt-05',
       name: '三重車站',
+      lat: 25.0620, lng: 121.4954,
       attractions: [
         { id: 'attr-nt05-01', name: '先嗇宮',          type: 'temple',   distance: 400, address: '新北市三重區正義南路' },
         { id: 'attr-nt05-02', name: '三重商業區',      type: 'shopping', distance: 300, address: '新北市三重區重新路' },
@@ -156,6 +165,7 @@ export const STATIONS = {
     {
       id: 'sta-nt-06',
       name: '新莊車站',
+      lat: 25.0353, lng: 121.4412,
       attractions: [
         { id: 'attr-nt06-01', name: '新莊老街',        type: 'historic', distance: 300, address: '新北市新莊區新莊路' },
         { id: 'attr-nt06-02', name: '武聖廟',          type: 'temple',   distance: 350, address: '新北市新莊區新莊路341號' },
@@ -167,6 +177,7 @@ export const STATIONS = {
     {
       id: 'sta-kl-01',
       name: '基隆車站',
+      lat: 25.1319, lng: 121.7399,
       attractions: [
         { id: 'attr-kl01-01', name: '廟口夜市',        type: 'nightmarket', distance: 500, address: '基隆市仁愛區愛四路' },
         { id: 'attr-kl01-02', name: '基隆港',          type: 'scenic',      distance: 200, address: '基隆市中正區港西街' },
@@ -178,6 +189,7 @@ export const STATIONS = {
     {
       id: 'sta-kl-02',
       name: '八堵車站',
+      lat: 25.1130, lng: 121.7172,
       attractions: [
         { id: 'attr-kl02-01', name: '八堵火車站（百年車站）', type: 'historic', distance: 100, address: '基隆市暖暖區八堵里' },
         { id: 'attr-kl02-02', name: '暖暖親水公園',    type: 'park',     distance: 500, address: '基隆市暖暖區暖江里' },
@@ -188,6 +200,7 @@ export const STATIONS = {
     {
       id: 'sta-ty-01',
       name: '桃園車站',
+      lat: 24.9888, lng: 121.3155,
       attractions: [
         { id: 'attr-ty01-01', name: '桃園神社',        type: 'historic', distance: 800, address: '桃園市桃園區成功路三段200號' },
         { id: 'attr-ty01-02', name: '桃園老街',        type: 'historic', distance: 600, address: '桃園市桃園區中正路' },
@@ -198,6 +211,7 @@ export const STATIONS = {
     {
       id: 'sta-ty-02',
       name: '中壢車站',
+      lat: 24.9533, lng: 121.2251,
       attractions: [
         { id: 'attr-ty02-01', name: '中壢夜市',        type: 'nightmarket', distance: 300, address: '桃園市中壢區延平路' },
         { id: 'attr-ty02-02', name: '老街溪河濱公園',  type: 'park',        distance: 500, address: '桃園市中壢區老街溪旁' },
@@ -208,6 +222,7 @@ export const STATIONS = {
     {
       id: 'sta-ty-03',
       name: '楊梅車站',
+      lat: 24.9154, lng: 121.1397,
       attractions: [
         { id: 'attr-ty03-01', name: '楊梅老街',        type: 'historic', distance: 400, address: '桃園市楊梅區中山北路' },
         { id: 'attr-ty03-02', name: '楊梅埔心牧場（附近）', type: 'nature', distance: 900, address: '桃園市楊梅區埔心里' },
@@ -216,6 +231,7 @@ export const STATIONS = {
     {
       id: 'sta-ty-04',
       name: '平鎮車站',
+      lat: 24.9498, lng: 121.2175,
       attractions: [
         { id: 'attr-ty04-01', name: '宋屋綠色隧道',    type: 'nature',   distance: 800, address: '桃園市平鎮區宋屋里' },
         { id: 'attr-ty04-02', name: '平鎮褒忠義民廟',  type: 'temple',   distance: 500, address: '桃園市平鎮區義民路一段118號' },
@@ -224,6 +240,7 @@ export const STATIONS = {
     {
       id: 'sta-ty-05',
       name: '富岡車站',
+      lat: 24.9271, lng: 121.1718,
       attractions: [
         { id: 'attr-ty05-01', name: '富岡老街',        type: 'historic', distance: 300, address: '桃園市楊梅區富岡里' },
         { id: 'attr-ty05-02', name: '高榮里紫薇花園',  type: 'nature',   distance: 600, address: '桃園市楊梅區高榮里' },

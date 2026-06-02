@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Train, Hotel, Map, Heart, Share2, Edit2, Save, X } from 'lucide-react';
+import { User, Train, Hotel, Map, Heart, Share2, Edit2, Save, X, Star } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
 import useHotelStore from '../store/useHotelStore';
 import useTrainStore from '../store/useTrainStore';
@@ -74,10 +74,11 @@ export default function ProfilePage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
         {[
-          { label: '行程', value: trips.length, icon: '🗺️', to: null },
-          { label: '火車票訂單', value: trainOrders.length, icon: '🚂', to: null },
-          { label: '住宿訂單', value: hotelOrders.length, icon: '🏨', to: null },
-          { label: '收藏房源', value: favoriteIds.length, icon: '❤️', to: null },
+          { label: '行程', value: trips.length, icon: '🗺️' },
+          { label: '火車票訂單', value: trainOrders.length, icon: '🚂' },
+          { label: '住宿訂單', value: hotelOrders.length, icon: '🏨' },
+          { label: '收藏房源', value: favoriteIds.length, icon: '❤️' },
+          { label: '累積點數', value: currentUser.points ?? 0, icon: '⭐' },
         ].map(s => (
           <div key={s.label} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1rem', textAlign: 'center' }}>
             <div style={{ fontSize: '1.5rem' }}>{s.icon}</div>
@@ -117,7 +118,7 @@ export default function ProfilePage() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.9rem' }}>
-              {[['姓名', currentUser.name], ['Email', currentUser.email], ['手機', currentUser.phone || '未設定'], ['帳號角色', currentUser.role === 'admin' ? '管理員' : '一般用戶']].map(([label, val]) => (
+              {[['姓名', currentUser.name], ['Email', currentUser.email], ['手機', currentUser.phone || '未設定'], ['帳號角色', currentUser.role === 'admin' ? '管理員' : '一般用戶'], ['累積點數', `${currentUser.points ?? 0} 點`]].map(([label, val]) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
                   <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
                   <span style={{ fontWeight: 600 }}>{val}</span>

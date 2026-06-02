@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Map } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
+import GoogleMapPicker from './GoogleMapPicker';
 import { ITEM_TYPES, STATUS_OPTIONS, getStationById } from '../data/attractions';
 
 export default function AddItemModal({ isOpen, onClose, onSave, initialData, stationId }) {
@@ -15,6 +17,7 @@ export default function AddItemModal({ isOpen, onClose, onSave, initialData, sta
     attractionId: null,
   });
   const [selectedAttr, setSelectedAttr] = useState(null);
+  const [recSource, setRecSource] = useState('static');
 
   const station = stationId ? getStationById(stationId) : null;
 
@@ -36,6 +39,7 @@ export default function AddItemModal({ isOpen, onClose, onSave, initialData, sta
       setForm({ type: 'attraction', title: '', location: '', time: '09:00', duration: 60, notes: '', status: 'planned', isCandidate: false, attractionId: null });
       setSelectedAttr(null);
     }
+    setRecSource('static');
   }, [initialData, isOpen]);
 
   const set = (field, value) => setForm(f => ({ ...f, [field]: value }));
@@ -54,39 +58,81 @@ export default function AddItemModal({ isOpen, onClose, onSave, initialData, sta
     }
   };
 
+  const handlePlaceSelect = ({ name, address, itemType }) => {
+    set('title', name);
+    set('location', address);
+    if (itemType) set('type', itemType);
+    set('attractionId', null);
+    setSelectedAttr(null);
+    setRecSource('static');
+  };
+
   const handleSubmit = () => {
     if (!form.title.trim()) return;
     onSave(form);
     onClose();
   };
 
+  const showRecs = station && !initialData;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={initialData ? '編輯行程項目' : '新增行程項目'} size="md">
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-        {/* Station recommendations */}
-        {station && !initialData && (
+        {/* Recommendation source tabs */}
+        {showRecs && (
           <div>
-            <label style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: 6 }}>
-              📍 {station.name} 周邊推薦景點（1km 內）
-            </label>
-            <div className="attractions-grid">
-              {station.attractions.map(attr => (
-                <button
-                  key={attr.id}
-                  className={`attraction-chip ${selectedAttr === attr.id ? 'selected' : ''}`}
-                  onClick={() => handleAttrSelect(attr)}
-                >
-                  <span className="attraction-type-icon">
-                    {ITEM_TYPES.find(t => t.value === 'attraction')?.icon || '📍'}
-                  </span>
-                  <span className="attraction-info">
-                    <span className="attraction-name">{attr.name}</span>
-                    <span className="attraction-dist">{attr.distance}m</span>
-                  </span>
-                </button>
-              ))}
+            <div className="rec-source-tabs">
+              <button
+                className={`rec-source-tab ${recSource === 'static' ? 'active' : ''}`}
+                onClick={() => setRecSource('static')}
+              >
+                📍 {station.name} 推薦景點
+              </button>
+              <button
+                className={`rec-source-tab ${recSource === 'map' ? 'active' : ''}`}
+                onClick={() => setRecSource('map')}
+              >
+                <Map size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 3 }} />
+                地圖探索
+              </button>
             </div>
+
+            {/* Static attraction chips */}
+            {recSource === 'static' && (
+              <div>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: 6 }}>
+                  點擊可快速填入名稱與地址
+                </div>
+                <div className="attractions-grid">
+                  {station.attractions.map(attr => (
+                    <button
+                      key={attr.id}
+                      className={`attraction-chip ${selectedAttr === attr.id ? 'selected' : ''}`}
+                      onClick={() => handleAttrSelect(attr)}
+                    >
+                      <span className="attraction-type-icon">
+                        {ITEM_TYPES.find(t => t.value === 'attraction')?.icon || '📍'}
+                      </span>
+                      <span className="attraction-info">
+                        <span className="attraction-name">{attr.name}</span>
+                        <span className="attraction-dist">{attr.distance}m</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Google Maps picker */}
+            {recSource === 'map' && station.lat && (
+              <GoogleMapPicker
+                stationLat={station.lat}
+                stationLng={station.lng}
+                stationName={station.name}
+                onPlaceSelect={handlePlaceSelect}
+              />
+            )}
           </div>
         )}
 

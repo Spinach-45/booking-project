@@ -45,6 +45,7 @@ import TrainBookingPage from './modules/train/pages/BookingPage';
 import PaymentPage from './modules/train/pages/PaymentPage';
 import PaymentResultPage from './modules/train/pages/PaymentResultPage';
 import TrainOrdersPage from './modules/train/pages/OrdersPage';
+import TicketPage from './modules/train/pages/TicketPage';
 
 function RequireAuth({ children }) {
   const { currentUser } = useAuthStore();
@@ -107,6 +108,7 @@ export default function App() {
               <Route path="/ticket/payment/:orderId" element={<RequireAuth><PaymentPage /></RequireAuth>} />
               <Route path="/ticket/payment-result/:orderId" element={<RequireAuth><PaymentResultPage /></RequireAuth>} />
               <Route path="/ticket/orders" element={<RequireAuth><TrainOrdersPage /></RequireAuth>} />
+              <Route path="/ticket/ticket/:orderId" element={<RequireAuth><TicketPage /></RequireAuth>} />
 
               {/* Admin */}
               <Route path="/admin" element={<RequireAdmin><AdminLayout /></RequireAdmin>}>

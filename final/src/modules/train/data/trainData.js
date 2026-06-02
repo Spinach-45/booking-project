@@ -147,7 +147,64 @@ export function generateTrains({ from, to, date, timeSlot = 'all' }) {
       basePrice,
       availableWindow: windowSeats,
       availableAisle: aisleSeats,
+      delay: getDelayStatus(`${typeId}-${from}-${to}-${date}-${i}`),
     });
   }
   return trains.sort((a, b) => a.depTime.localeCompare(b.depTime));
 }
+
+// ── 沿途停靠站 ─────────────────────────────────────────────────
+const STOP_RATES = { taroko: 0.2, puyuma: 0.25, express: 0.45, juguang: 0.7, local: 1.0 };
+
+export function getStopsBetween(fromId, toId, typeId, depTime, duration) {
+  const fi = STATION_IDX[fromId] ?? 0;
+  const ti = STATION_IDX[toId] ?? 0;
+  if (fi === ti) return [];
+  const dir = ti > fi ? 1 : -1;
+  const all = [];
+  for (let i = fi + dir; i !== ti; i += dir) all.push(STATIONS[i]);
+  if (!all.length) return [];
+  const rate = STOP_RATES[typeId] ?? 0.5;
+  const n = Math.max(1, Math.round(all.length * rate));
+  let selected;
+  if (n >= all.length) {
+    selected = all;
+  } else {
+    selected = [];
+    const step = (all.length - 1) / Math.max(n - 1, 1);
+    for (let k = 0; k < n; k++) {
+      const idx = Math.min(Math.round(k * step), all.length - 1);
+      selected.push(all[idx]);
+    }
+  }
+  return selected.map((s, i) => ({
+    id: s.id, name: s.name,
+    arrTime: addMinutes(depTime, Math.round(duration * (i + 1) / (selected.length + 1))),
+  }));
+}
+
+// ── 誤點狀態 ───────────────────────────────────────────────────
+export function getDelayStatus(trainId) {
+  const h = trainId.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const r1 = ((h * 1664525 + 1013904223) >>> 0) / 0x100000000;
+  if (r1 < 0.65) return { status: 'ontime',  label: '準時', color: '#16a34a', bg: '#dcfce7' };
+  if (r1 < 0.85) {
+    const r2 = (((h + 1) * 1664525 + 1013904223) >>> 0) / 0x100000000;
+    const mins = [5, 10, 15, 20, 30][Math.floor(r2 * 5)];
+    return { status: 'delayed', label: `誤點 ${mins} 分`, color: '#dc2626', bg: '#fee2e2' };
+  }
+  return { status: 'unknown',  label: '未知', color: '#6b7280', bg: '#f1f5f9' };
+}
+
+// ── 多張票折扣 ─────────────────────────────────────────────────
+export const MULTI_TICKET_DISCOUNTS = [
+  { minCount: 5, percent: 10, label: '5 張（含）以上享九折' },
+  { minCount: 3, percent: 5,  label: '3 張（含）以上享 95 折' },
+];
+
+export function getMultiDiscount(totalCount) {
+  return MULTI_TICKET_DISCOUNTS.find(d => totalCount >= d.minCount) ?? null;
+}
+
+// ── 點數累積 ───────────────────────────────────────────────────
+export const POINTS_RATE = 1; // 每消費 NT$100 累積 1 點

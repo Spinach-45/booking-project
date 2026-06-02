@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, AlertCircle, User } from 'lucide-react';
+import { ArrowLeft, AlertCircle, User, Star } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
-import { TICKET_TYPES, TRAIN_TYPES, formatDuration } from '../data/trainData';
+import { TICKET_TYPES, TRAIN_TYPES, formatDuration, getMultiDiscount, POINTS_RATE } from '../data/trainData';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
 import { useToast } from '../../../components/common/Toast';
 
@@ -14,29 +14,25 @@ export default function BookingPage() {
   const [passengers, setPassengers] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
 
-  if (!selectedTrain) {
-    return (
-      <div className="container" style={{ paddingTop: '3rem' }}>
-        <div className="empty-state">
-          <div style={{ fontSize: '3rem' }}>🎫</div>
-          <p>尚未選擇車次</p>
-          <Link to="/ticket" className="btn-primary">返回查詢</Link>
-        </div>
+  if (!selectedTrain) return (
+    <div className="container" style={{ paddingTop: '3rem' }}>
+      <div className="empty-state">
+        <div style={{ fontSize: '3rem' }}>🎫</div>
+        <p>尚未選擇車次</p>
+        <Link to="/ticket" className="btn-primary">返回查詢</Link>
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (!currentUser) {
-    return (
-      <div className="container" style={{ paddingTop: '3rem' }}>
-        <div className="empty-state">
-          <div style={{ fontSize: '3rem' }}>🔐</div>
-          <p>請先登入才能訂票</p>
-          <Link to="/login" className="btn-primary">前往登入</Link>
-        </div>
+  if (!currentUser) return (
+    <div className="container" style={{ paddingTop: '3rem' }}>
+      <div className="empty-state">
+        <div style={{ fontSize: '3rem' }}>🔐</div>
+        <p>請先登入才能訂票</p>
+        <Link to="/login" className="btn-primary">前往登入</Link>
       </div>
-    );
-  }
+    </div>
+  );
 
   const typeInfo = TRAIN_TYPES[selectedTrain.type] ?? {};
 
@@ -44,9 +40,7 @@ export default function BookingPage() {
     const list = [];
     TICKET_TYPES.forEach(tt => {
       const count = searchParams.ticketCounts[tt.id] ?? 0;
-      for (let i = 0; i < count; i++) {
-        list.push({ ...tt, key: `${tt.id}-${i}`, index: list.length });
-      }
+      for (let i = 0; i < count; i++) list.push({ ...tt, key: `${tt.id}-${i}`, index: list.length });
     });
     return list;
   }, [searchParams.ticketCounts]);
@@ -63,19 +57,21 @@ export default function BookingPage() {
     [selectedTrain, searchParams.ticketCounts]
   );
 
-  const totalAmount = tickets.reduce((s, t) => s + t.subtotal, 0);
   const totalPassengers = allPassengerTickets.length;
+  const baseAmount = tickets.reduce((s, t) => s + t.subtotal, 0);
+  const multiDiscount = getMultiDiscount(totalPassengers);
+  const discountAmount = multiDiscount ? Math.round(baseAmount * multiDiscount.percent / 100) : 0;
+  const totalAmount = baseAmount - discountAmount;
+  const pointsPreview = Math.floor(totalAmount / (100 / POINTS_RATE));
 
   const availableSeats =
     seatPref === 'window' ? selectedTrain.availableWindow :
     seatPref === 'aisle'  ? selectedTrain.availableAisle :
     selectedTrain.availableWindow + selectedTrain.availableAisle;
-
   const hasEnoughSeats = availableSeats >= totalPassengers;
 
-  const setPassenger = (key, field, value) => {
+  const setPassenger = (key, field, value) =>
     setPassengers(prev => ({ ...prev, [key]: { ...(prev[key] ?? {}), [field]: value } }));
-  };
 
   const isFormValid = allPassengerTickets.every(pt => {
     const p = passengers[pt.key] ?? {};
@@ -84,11 +80,9 @@ export default function BookingPage() {
 
   const handleConfirm = () => {
     const builtPassengers = allPassengerTickets.map(pt => ({
-      ...passengers[pt.key],
-      ticketType: pt.id,
-      ticketTypeName: pt.name,
+      ...passengers[pt.key], ticketType: pt.id, ticketTypeName: pt.name,
     }));
-    const orderId = createOrder({ train: selectedTrain, tickets, passengers: builtPassengers, seatPref });
+    const orderId = createOrder({ train: selectedTrain, tickets, passengers: builtPassengers, seatPref, multiDiscount });
     toast('訂單建立成功，請完成付款', 'success');
     navigate(`/ticket/payment/${orderId}`);
   };
@@ -103,7 +97,6 @@ export default function BookingPage() {
       </div>
 
       <div className="booking-layout">
-        {/* Left: main form */}
         <div>
           {/* Train summary */}
           <div className="train-summary-strip">
@@ -125,22 +118,16 @@ export default function BookingPage() {
             <div className="form-section-title">💺 座位偏好</div>
             <div className="seat-pref-grid">
               {[
-                { id: 'window', icon: '🪟', label: '靠窗', avail: selectedTrain.availableWindow },
+                { id: 'window', icon: '🪟', label: '靠窗',   avail: selectedTrain.availableWindow },
                 { id: 'aisle',  icon: '🚶', label: '靠走道', avail: selectedTrain.availableAisle },
                 { id: 'any',    icon: '🎲', label: '不指定', avail: selectedTrain.availableWindow + selectedTrain.availableAisle },
               ].map(opt => {
                 const enough = opt.avail >= totalPassengers;
                 return (
-                  <button
-                    key={opt.id}
-                    className={`seat-pref-btn ${seatPref === opt.id ? 'active' : ''}`}
-                    onClick={() => setSeatPref(opt.id)}
-                  >
+                  <button key={opt.id} className={`seat-pref-btn ${seatPref === opt.id ? 'active' : ''}`} onClick={() => setSeatPref(opt.id)}>
                     <div className="seat-pref-icon">{opt.icon}</div>
                     <div className="seat-pref-label">{opt.label}</div>
-                    <div className={`seat-pref-avail ${!enough ? 'low' : ''}`}>
-                      剩餘 {opt.avail} 席{!enough ? '（不足）' : ''}
-                    </div>
+                    <div className={`seat-pref-avail ${!enough ? 'low' : ''}`}>剩餘 {opt.avail} 席{!enough ? '（不足）' : ''}</div>
                   </button>
                 );
               })}
@@ -155,16 +142,11 @@ export default function BookingPage() {
 
           {/* Passenger forms */}
           <div className="form-section">
-            <div className="form-section-title">
-              <User size={16} /> 乘客資料（共 {totalPassengers} 位）
-            </div>
+            <div className="form-section-title"><User size={16} /> 乘客資料（共 {totalPassengers} 位）</div>
             {allPassengerTickets.map((pt, idx) => (
               <div key={pt.key} className="passenger-card">
                 <div className="passenger-header">
-                  <span
-                    className="train-type-badge"
-                    style={{ background: '#f1f5f9', color: 'var(--text)' }}
-                  >
+                  <span className="train-type-badge" style={{ background: '#f1f5f9', color: 'var(--text)' }}>
                     乘客 {idx + 1}
                   </span>
                   <span style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.82rem' }}>
@@ -174,30 +156,21 @@ export default function BookingPage() {
                 <div className="form-grid-3">
                   <div className="form-group">
                     <label>姓名 *</label>
-                    <input
-                      className="form-input"
-                      placeholder="真實姓名"
+                    <input className="form-input" placeholder="真實姓名"
                       value={passengers[pt.key]?.name ?? ''}
-                      onChange={e => setPassenger(pt.key, 'name', e.target.value)}
-                    />
+                      onChange={e => setPassenger(pt.key, 'name', e.target.value)} />
                   </div>
                   <div className="form-group">
                     <label>聯絡電話 *</label>
-                    <input
-                      className="form-input"
-                      placeholder="09xx-xxx-xxx"
+                    <input className="form-input" placeholder="09xx-xxx-xxx"
                       value={passengers[pt.key]?.phone ?? ''}
-                      onChange={e => setPassenger(pt.key, 'phone', e.target.value)}
-                    />
+                      onChange={e => setPassenger(pt.key, 'phone', e.target.value)} />
                   </div>
                   <div className="form-group">
                     <label>身分證 / 護照 *</label>
-                    <input
-                      className="form-input"
-                      placeholder={pt.id === 'child' ? '可填監護人證號' : 'A123456789'}
+                    <input className="form-input" placeholder={pt.id === 'child' ? '可填監護人證號' : 'A123456789'}
                       value={passengers[pt.key]?.idNo ?? ''}
-                      onChange={e => setPassenger(pt.key, 'idNo', e.target.value)}
-                    />
+                      onChange={e => setPassenger(pt.key, 'idNo', e.target.value)} />
                   </div>
                 </div>
               </div>
@@ -205,7 +178,7 @@ export default function BookingPage() {
           </div>
         </div>
 
-        {/* Right: order summary */}
+        {/* Order summary sidebar */}
         <div className="order-sidebar">
           <div className="order-summary-card">
             <div className="order-summary-title">📋 訂單明細</div>
@@ -221,19 +194,37 @@ export default function BookingPage() {
                   <span style={{ paddingLeft: '0.5rem' }}>（每張 NT${t.unitPrice.toLocaleString()}）</span>
                 </div>
               ))}
+
+              {/* 多張折扣 */}
+              {multiDiscount && (
+                <>
+                  <div className="order-row" style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', borderTop: '1px dashed var(--border)', paddingTop: '0.4rem', marginTop: '0.25rem' }}>
+                    <span>小計</span>
+                    <span>NT${baseAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="order-row" style={{ color: 'var(--success)', fontSize: '0.82rem' }}>
+                    <span>🎁 {multiDiscount.label}</span>
+                    <span>－NT${discountAmount.toLocaleString()}</span>
+                  </div>
+                </>
+              )}
+
               <div className="order-row total">
                 <span>合計</span>
                 <span>NT${totalAmount.toLocaleString()}</span>
               </div>
             </div>
+
+            {/* 可累積點數預覽 */}
+            <div className="points-preview">
+              <Star size={13} fill="#f59e0b" strokeWidth={0} />
+              本次可累積 <strong>{pointsPreview}</strong> 點
+            </div>
+
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
               座位：{seatPref === 'window' ? '靠窗' : seatPref === 'aisle' ? '靠走道' : '不指定'}
             </div>
-            <button
-              className="btn-primary full-width"
-              onClick={() => setShowConfirm(true)}
-              disabled={!isFormValid}
-            >
+            <button className="btn-primary full-width" onClick={() => setShowConfirm(true)} disabled={!isFormValid}>
               確認訂單並付款
             </button>
             {!isFormValid && (

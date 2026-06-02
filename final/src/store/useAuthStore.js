@@ -88,6 +88,21 @@ const useAuthStore = create((set, get) => ({
   },
 
   getUsers: () => LS.get('app_users', []),
+
+  addPoints: (pts) => {
+    if (!pts || pts <= 0) return;
+    const cur = get().currentUser;
+    if (!cur) return;
+    const users = LS.get('app_users', []);
+    const idx = users.findIndex(u => u.id === cur.id);
+    if (idx < 0) return;
+    const newPoints = (users[idx].points || 0) + pts;
+    users[idx] = { ...users[idx], points: newPoints };
+    LS.set('app_users', users);
+    const safe = { ...cur, points: newPoints };
+    LS.set('app_currentUser', safe);
+    set({ currentUser: safe });
+  },
 }));
 
 export default useAuthStore;

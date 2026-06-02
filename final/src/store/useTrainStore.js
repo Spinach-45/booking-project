@@ -1,6 +1,19 @@
 import { create } from 'zustand';
 import useAuthStore from './useAuthStore';
-import { generateTrains, STATION_MAP, TICKET_TYPES } from '../modules/train/data/trainData';
+import { generateTrains, STATION_MAP, TICKET_TYPES, POINTS_RATE } from '../modules/train/data/trainData';
+
+function assignSeats(passengers, seatPref, seed) {
+  let s = seed >>> 0;
+  const rand = () => { s = Math.imul(1664525, s) + 1013904223 >>> 0; return s / 0x100000000; };
+  const windowL = ['A', 'F'];
+  const aisleL  = ['C', 'D'];
+  const anyL    = ['A', 'B', 'C', 'D', 'F'];
+  const letters = seatPref === 'window' ? windowL : seatPref === 'aisle' ? aisleL : anyL;
+  return passengers.map(p => ({
+    ...p,
+    seatNo: `${1 + Math.floor(rand() * 12)}車${1 + Math.floor(rand() * 68)}${letters[Math.floor(rand() * letters.length)]}`,
+  }));
+}
 
 const LS = {
   get: (key, fb) => { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fb; } catch { return fb; } },
@@ -74,9 +87,11 @@ const useTrainStore = create((set, get) => ({
   selectTrain: (train) => set({ selectedTrain: train }),
 
   // ── Orders ────────────────────────────────────────────────
-  createOrder: ({ train, tickets, passengers, seatPref }) => {
+  createOrder: ({ train, tickets, passengers, seatPref, multiDiscount = null }) => {
     const user = useAuthStore.getState().currentUser;
     if (!user) return null;
+    const baseAmount = tickets.reduce((s, t) => s + t.subtotal, 0);
+    const discountAmount = multiDiscount ? Math.round(baseAmount * multiDiscount.percent / 100) : 0;
     const order = {
       id: uid('ORD'),
       userId: user.id,
@@ -84,7 +99,10 @@ const useTrainStore = create((set, get) => ({
       train: { ...train, fromName: STATION_MAP[train.from] ?? train.from, toName: STATION_MAP[train.to] ?? train.to },
       tickets, passengers, seatPref,
       paymentMethod: null,
-      totalAmount: tickets.reduce((s, t) => s + t.subtotal, 0),
+      baseAmount,
+      discountAmount,
+      multiDiscount,
+      totalAmount: baseAmount - discountAmount,
       status: 'pending',
       createdAt: Date.now(), paidAt: null,
     };
@@ -105,10 +123,24 @@ const useTrainStore = create((set, get) => ({
       return result;
     }
     const bookingNo = `TR${Date.now().toString().slice(-10)}`;
-    const updated = { ...order, status: 'paid', paymentMethod: method, bookingNo, paidAt: Date.now() };
+    const seed = bookingNo.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    const passengersWithSeats = assignSeats(order.passengers, order.seatPref, seed);
+    const cvsPickupCode = `CV${Date.now().toString().slice(-8)}`;
+    const pointsEarned = Math.floor(order.totalAmount / (100 / POINTS_RATE));
+    useAuthStore.getState().addPoints(pointsEarned);
+    const updated = {
+      ...order,
+      status: 'paid',
+      paymentMethod: method,
+      bookingNo,
+      paidAt: Date.now(),
+      passengers: passengersWithSeats,
+      cvsPickupCode,
+      pointsEarned,
+    };
     const newOrders = orders.map(o => o.id === orderId ? updated : o);
     LS.set('tr_orders', newOrders);
-    const result = { success: true, bookingNo, orderId };
+    const result = { success: true, bookingNo, orderId, pointsEarned };
     set({ orders: newOrders, paymentResult: result });
     return result;
   },

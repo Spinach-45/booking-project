@@ -643,6 +643,11 @@ button { cursor: pointer; border: none; background: none; }
 .status-opt.unplanned.active { background: #f1f5f9; border-color: var(--border); color: var(--text-secondary); }
 .status-opt.completed.active { background: #ede9fe; border-color: #c4b5fd; color: #7c3aed; }
 .status-opt.uncompleted.active { background: #fee2e2; border-color: #fca5a5; color: var(--danger); }
+.rec-source-tabs { display: flex; gap: 3px; background: var(--bg); border-radius: var(--radius); padding: 3px; width: fit-content; margin-bottom: 8px; }
+.rec-source-tab { padding: 0.28rem 0.9rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; background: transparent; color: var(--text-secondary); transition: all 0.15s; }
+.rec-source-tab.active { background: white; color: var(--primary); box-shadow: var(--shadow); }
+.map-places-list { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
+.map-selection-bar { display: flex; align-items: center; gap: 10px; padding: 0.65rem 0.85rem; background: var(--primary-light); border: 1.5px solid #bfdbfe; border-radius: var(--radius); }
 .attractions-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 .attraction-chip { display: flex; align-items: center; gap: 6px; padding: 0.4rem 0.75rem; border: 1.5px solid var(--border); border-radius: var(--radius); background: white; cursor: pointer; transition: all 0.15s; font-size: 0.82rem; }
 .attraction-chip:hover { border-color: var(--primary); background: var(--primary-light); }
@@ -696,6 +701,47 @@ button { cursor: pointer; border: none; background: none; }
 .expense-item-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
 .expense-item-amount { font-size: 1rem; font-weight: 700; color: var(--primary); }
 .expense-per-person { font-size: 0.75rem; color: var(--text-secondary); }
+
+/* ── Train: Delay Badge ───────────────────────────────────── */
+.delay-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+
+/* ── Train: Stops List ────────────────────────────────────── */
+.stops-toggle-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 0.78rem; color: var(--text-secondary); padding: 3px 6px; border-radius: 4px; transition: background 0.15s; }
+.stops-toggle-btn:hover { background: var(--bg); color: var(--primary); }
+.stops-list { display: flex; flex-direction: column; padding: 6px 8px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
+.stop-item { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 0.82rem; }
+.stop-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); border: 2px solid var(--text-secondary); flex-shrink: 0; }
+.stop-dot.origin { border-color: var(--primary); background: var(--primary); }
+.stop-dot.dest { border-color: var(--success); background: var(--success); }
+.stop-name { flex: 1; font-weight: 500; }
+.stop-time { font-size: 0.75rem; color: var(--text-secondary); font-family: monospace; flex-shrink: 0; }
+
+/* ── Train: Seat Badge ────────────────────────────────────── */
+.seat-badge { display: inline-flex; align-items: center; background: var(--primary-light); color: var(--primary); border: 1px solid #bfdbfe; border-radius: 4px; padding: 1px 7px; font-size: 0.78rem; font-weight: 700; font-family: monospace; white-space: nowrap; }
+
+/* ── Train: Seat Assignment Card ─────────────────────────── */
+.seat-assignment-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; margin: 0.75rem 0; }
+.seat-assignment-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.6rem; }
+.seat-assignment-list { display: flex; flex-direction: column; gap: 6px; }
+.seat-assignment-row { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+.seat-passenger-name { flex: 1; font-weight: 600; }
+
+/* ── Train: Points ────────────────────────────────────────── */
+.points-preview { display: flex; align-items: center; gap: 5px; font-size: 0.82rem; color: #d97706; background: #fef9c3; border: 1px solid #fde68a; border-radius: var(--radius); padding: 0.45rem 0.75rem; margin-bottom: 0.75rem; }
+.points-earned-banner { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #d97706; background: #fef9c3; border: 1px solid #fde68a; border-radius: var(--radius-lg); padding: 0.65rem 1.25rem; margin: 0.5rem 0 1rem; }
+
+/* ── Ticket Page ──────────────────────────────────────────── */
+.ticket-card { background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; border: 1px solid var(--border); }
+.ticket-header-band { padding: 1.25rem 1.5rem; }
+.ticket-status-chip { font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: #dcfce7; color: #15803d; white-space: nowrap; }
+.ticket-notch-divider { display: flex; align-items: center; background: white; height: 20px; overflow: visible; }
+.notch-left { width: 20px; height: 20px; border-radius: 0 10px 10px 0; background: var(--bg); border: 1px solid var(--border); border-left: none; flex-shrink: 0; margin-left: -1px; }
+.notch-right { width: 20px; height: 20px; border-radius: 10px 0 0 10px; background: var(--bg); border: 1px solid var(--border); border-right: none; flex-shrink: 0; margin-right: -1px; }
+.ticket-qr-section { display: flex; flex-direction: column; align-items: center; padding: 1.25rem 1.5rem; background: white; }
+.ticket-cvs-section { padding: 1rem 1.5rem 1.25rem; background: white; }
+.ticket-passenger-row { display: flex; align-items: center; gap: 10px; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; flex-wrap: wrap; }
+.ticket-passenger-row:last-child { border-bottom: none; }
+.ticket-passenger-name { font-weight: 700; flex: 1; min-width: 80px; }
 
 /* ── Animations ───────────────────────────────────────────── */
 @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }

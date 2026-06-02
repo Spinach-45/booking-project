@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Ticket, ArrowRight } from 'lucide-react';
+import { Ticket, ArrowRight, ChevronDown, ChevronUp, MapPin, Star } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
-import { TRAIN_TYPES, ORDER_STATUSES, REFUND_RULES, generateTrains, TICKET_TYPES } from '../data/trainData';
+import { TRAIN_TYPES, ORDER_STATUSES, REFUND_RULES, generateTrains, TICKET_TYPES, getStopsBetween } from '../data/trainData';
 import Modal from '../../../components/common/Modal';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
 import { useToast } from '../../../components/common/Toast';
@@ -27,17 +27,15 @@ export default function OrdersPage() {
   const [changeOrder, setChangeOrder] = useState(null);
   const [confirmRefund, setConfirmRefund] = useState(false);
 
-  if (!currentUser) {
-    return (
-      <div className="container" style={{ paddingTop: '3rem' }}>
-        <div className="empty-state">
-          <div style={{ fontSize: '3rem' }}>🔐</div>
-          <p>請先登入才能查看訂單</p>
-          <Link to="/login" className="btn-primary">前往登入</Link>
-        </div>
+  if (!currentUser) return (
+    <div className="container" style={{ paddingTop: '3rem' }}>
+      <div className="empty-state">
+        <div style={{ fontSize: '3rem' }}>🔐</div>
+        <p>請先登入才能查看訂單</p>
+        <Link to="/login" className="btn-primary">前往登入</Link>
       </div>
-    );
-  }
+    </div>
+  );
 
   const allOrders = getUserOrders();
   const orders = activeTab === 'all' ? allOrders : allOrders.filter(o => o.status === activeTab);
@@ -57,14 +55,9 @@ export default function OrdersPage() {
         <Link to="/ticket" className="btn-outline btn-sm">+ 查詢新車次</Link>
       </div>
 
-      {/* Status tabs */}
       <div className="order-tabs">
         {STATUS_TABS.map(t => (
-          <button
-            key={t.key}
-            className={`order-tab ${activeTab === t.key ? 'active' : ''}`}
-            onClick={() => setActiveTab(t.key)}
-          >
+          <button key={t.key} className={`order-tab ${activeTab === t.key ? 'active' : ''}`} onClick={() => setActiveTab(t.key)}>
             {t.label}
             {t.key !== 'all' && (
               <span style={{ marginLeft: '0.3rem', opacity: 0.75 }}>
@@ -82,28 +75,22 @@ export default function OrdersPage() {
           <Link to="/ticket" className="btn-primary">查詢車次</Link>
         </div>
       ) : (
-        orders
-          .slice()
-          .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))
-          .map(order => (
-            <OrderCard
-              key={order.id}
-              order={order}
-              today={today}
-              onDetail={() => setDetailOrder(order)}
-              onRefund={() => setRefundOrder(order)}
-              onChange={() => setChangeOrder(order)}
-              onPay={() => navigate(`/ticket/payment/${order.id}`)}
-            />
-          ))
+        orders.slice().sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)).map(order => (
+          <OrderCard
+            key={order.id}
+            order={order}
+            today={today}
+            onDetail={() => setDetailOrder(order)}
+            onRefund={() => setRefundOrder(order)}
+            onChange={() => setChangeOrder(order)}
+            onPay={() => navigate(`/ticket/payment/${order.id}`)}
+            onTicket={() => navigate(`/ticket/ticket/${order.id}`)}
+          />
+        ))
       )}
 
-      {/* Detail Modal */}
-      {detailOrder && (
-        <OrderDetailModal order={detailOrder} onClose={() => setDetailOrder(null)} />
-      )}
+      {detailOrder && <OrderDetailModal order={detailOrder} onClose={() => setDetailOrder(null)} />}
 
-      {/* Refund Modal */}
       {refundOrder && (
         <RefundModal
           order={refundOrder}
@@ -123,7 +110,6 @@ export default function OrdersPage() {
         confirmClass="btn-warning"
       />
 
-      {/* Change Modal */}
       {changeOrder && (
         <ChangeTicketModal
           order={changeOrder}
@@ -140,11 +126,12 @@ export default function OrdersPage() {
 }
 
 /* ── Order Card ──────────────────────────────────────────────── */
-function OrderCard({ order, today, onDetail, onRefund, onChange, onPay }) {
-  const typeInfo = TRAIN_TYPES[order.train.type] ?? {};
+function OrderCard({ order, today, onDetail, onRefund, onChange, onPay, onTicket }) {
+  const typeInfo  = TRAIN_TYPES[order.train.type] ?? {};
   const statusInfo = ORDER_STATUSES[order.status] ?? {};
   const canRefund = (order.status === 'paid' || order.status === 'changed') && order.train.date >= today;
   const canChange = order.status === 'paid' && order.train.date > today;
+  const canTicket = order.status === 'paid' || order.status === 'used' || order.status === 'changed';
 
   return (
     <div className="order-card">
@@ -157,10 +144,7 @@ function OrderCard({ order, today, onDetail, onRefund, onChange, onPay }) {
             </div>
           )}
         </div>
-        <span
-          className="order-status-badge"
-          style={{ background: statusInfo.bg, color: statusInfo.color }}
-        >
+        <span className="order-status-badge" style={{ background: statusInfo.bg, color: statusInfo.color }}>
           {statusInfo.label}
         </span>
       </div>
@@ -178,21 +162,25 @@ function OrderCard({ order, today, onDetail, onRefund, onChange, onPay }) {
         <span>🕐 {order.train.depTime} – {order.train.arrTime}</span>
         <span>🎫 {order.tickets.map(t => `${t.typeName}×${t.count}`).join('、')}</span>
         <span>💺 {order.seatPref === 'window' ? '靠窗' : order.seatPref === 'aisle' ? '靠走道' : '不指定'}</span>
+        {order.pointsEarned > 0 && (
+          <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: 3 }}>
+            <Star size={12} fill="#f59e0b" strokeWidth={0} /> +{order.pointsEarned} 點
+          </span>
+        )}
       </div>
 
       <div className="order-card-bottom">
         <span className="order-total-price">NT${order.totalAmount.toLocaleString()}</span>
         <div className="order-actions">
           <button className="btn-ghost btn-sm" onClick={onDetail}>查看詳情</button>
+          {canTicket && (
+            <button className="btn-outline btn-sm" onClick={onTicket}>🎟️ 取票</button>
+          )}
           {order.status === 'pending' && (
             <button className="btn-primary btn-sm" onClick={onPay}>前往付款</button>
           )}
-          {canChange && (
-            <button className="btn-warning btn-sm" onClick={onChange}>改票</button>
-          )}
-          {canRefund && (
-            <button className="btn-danger btn-sm" onClick={onRefund}>退票</button>
-          )}
+          {canChange && <button className="btn-warning btn-sm" onClick={onChange}>改票</button>}
+          {canRefund && <button className="btn-danger btn-sm" onClick={onRefund}>退票</button>}
         </div>
       </div>
     </div>
@@ -201,9 +189,14 @@ function OrderCard({ order, today, onDetail, onRefund, onChange, onPay }) {
 
 /* ── Order Detail Modal ──────────────────────────────────────── */
 function OrderDetailModal({ order, onClose }) {
-  const typeInfo = TRAIN_TYPES[order.train.type] ?? {};
+  const [stopsOpen, setStopsOpen] = useState(false);
+  const typeInfo   = TRAIN_TYPES[order.train.type] ?? {};
   const statusInfo = ORDER_STATUSES[order.status] ?? {};
-  const pmLabels = { credit: '信用卡', linepay: 'LINE Pay', cvs: '超商付款', bank: '銀行轉帳' };
+  const pmLabels   = { credit: '信用卡', linepay: 'LINE Pay', cvs: '超商付款', bank: '銀行轉帳' };
+
+  const stops = stopsOpen
+    ? getStopsBetween(order.train.from, order.train.to, order.train.type, order.train.depTime, order.train.duration)
+    : [];
 
   return (
     <Modal isOpen onClose={onClose} title="訂單詳情" size="md">
@@ -233,16 +226,56 @@ function OrderDetailModal({ order, onClose }) {
           </div>
         ))}
 
+        {/* 多張折扣 */}
+        {order.multiDiscount && (
+          <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 'var(--radius)', padding: '0.6rem 0.85rem', fontSize: '0.85rem', color: '#15803d' }}>
+            🎁 {order.multiDiscount.label}：節省 NT${order.discountAmount?.toLocaleString()}
+          </div>
+        )}
+
+        {/* 乘客名單 + 座位 */}
         <div style={{ background: 'var(--bg)', borderRadius: 'var(--radius)', padding: '0.85rem', marginTop: '0.25rem' }}>
-          <div style={{ fontWeight: 700, fontSize: '0.88rem', marginBottom: '0.5rem' }}>乘客名單</div>
+          <div style={{ fontWeight: 700, fontSize: '0.88rem', marginBottom: '0.5rem' }}>乘客名單與座位</div>
           {order.passengers.map((p, i) => (
-            <div key={i} style={{ display: 'flex', gap: '0.75rem', fontSize: '0.83rem', marginBottom: '0.3rem' }}>
+            <div key={i} style={{ display: 'flex', gap: '0.75rem', fontSize: '0.83rem', marginBottom: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
               <span style={{ color: 'var(--text-secondary)', minWidth: 60 }}>{p.ticketTypeName}</span>
               <span style={{ fontWeight: 600 }}>{p.name}</span>
               <span style={{ color: 'var(--text-secondary)' }}>{p.phone}</span>
+              {p.seatNo && <span className="seat-badge">{p.seatNo}</span>}
             </div>
           ))}
         </div>
+
+        {/* 沿途停靠站 */}
+        <div>
+          <button className="stops-toggle-btn" onClick={() => setStopsOpen(v => !v)}>
+            <MapPin size={12} /> 沿途停靠站
+            {stopsOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+          </button>
+          {stopsOpen && (
+            <div className="stops-list" style={{ marginTop: 6 }}>
+              <div className="stop-item stop-item-origin">
+                <span className="stop-dot origin" /><span className="stop-name">{order.train.fromName}</span><span className="stop-time">{order.train.depTime} 出發</span>
+              </div>
+              {stops.map(s => (
+                <div key={s.id} className="stop-item">
+                  <span className="stop-dot" /><span className="stop-name">{s.name}</span><span className="stop-time">{s.arrTime}</span>
+                </div>
+              ))}
+              <div className="stop-item stop-item-dest">
+                <span className="stop-dot dest" /><span className="stop-name">{order.train.toName}</span><span className="stop-time">{order.train.arrTime} 抵達</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 點數 */}
+        {order.pointsEarned > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.85rem', color: '#d97706' }}>
+            <Star size={14} fill="#f59e0b" strokeWidth={0} />
+            本次訂票累積 {order.pointsEarned} 點
+          </div>
+        )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '1rem', color: 'var(--primary)', paddingTop: '0.5rem', borderTop: '2px solid var(--border)' }}>
           <span>總金額</span>
@@ -256,37 +289,23 @@ function OrderDetailModal({ order, onClose }) {
 /* ── Refund Modal ────────────────────────────────────────────── */
 function RefundModal({ order, onClose, onConfirm }) {
   const today = new Date().toISOString().split('T')[0];
-  const trainDate = order.train.date;
-  const diffDays = Math.ceil((new Date(trainDate) - new Date(today)) / 86400000);
-
+  const diffDays = Math.ceil((new Date(order.train.date) - new Date(today)) / 86400000);
   let ruleIdx = -1;
   if (diffDays >= 25) ruleIdx = 0;
   else if (diffDays >= 3) ruleIdx = 1;
   else if (diffDays >= 1) ruleIdx = 2;
   else if (diffDays === 0) ruleIdx = 3;
-
   const rule = ruleIdx >= 0 ? REFUND_RULES[ruleIdx] : null;
-  const refundable = ruleIdx >= 0;
-
-  let refundAmount = 0;
-  if (ruleIdx === 0) refundAmount = Math.round(order.totalAmount * 0.99);
-  else if (ruleIdx === 1) refundAmount = Math.round(order.totalAmount * 0.97);
-  else if (ruleIdx === 2) refundAmount = Math.round(order.totalAmount * 0.95);
-  else if (ruleIdx === 3) refundAmount = Math.round(order.totalAmount * 0.90);
+  const refundPcts = [0.99, 0.97, 0.95, 0.90];
+  const refundAmount = ruleIdx >= 0 ? Math.round(order.totalAmount * refundPcts[ruleIdx]) : 0;
 
   return (
     <Modal isOpen onClose={onClose} title="申請退票" size="md">
       <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
         退票規則依出發日期計算，請詳閱以下說明：
       </p>
-
       <table className="refund-table">
-        <thead>
-          <tr>
-            <th>申請時間</th>
-            <th>退票費用說明</th>
-          </tr>
-        </thead>
+        <thead><tr><th>申請時間</th><th>退票費用說明</th></tr></thead>
         <tbody>
           {REFUND_RULES.map((r, i) => (
             <tr key={i} style={i === ruleIdx ? { background: '#fef3c7' } : {}}>
@@ -296,8 +315,7 @@ function RefundModal({ order, onClose, onConfirm }) {
           ))}
         </tbody>
       </table>
-
-      {refundable ? (
+      {ruleIdx >= 0 ? (
         <div className="refund-estimate">
           <strong>預估退款金額：NT${refundAmount.toLocaleString()}</strong>
           （原票價 NT${order.totalAmount.toLocaleString()}，扣除 {rule.fee}）
@@ -307,14 +325,9 @@ function RefundModal({ order, onClose, onConfirm }) {
           ⚠ 車次出發後無法申請退票
         </div>
       )}
-
       <div className="modal-footer">
         <button className="btn-ghost" onClick={onClose}>取消</button>
-        {refundable && (
-          <button className="btn-warning" onClick={onConfirm}>
-            確認申請退票
-          </button>
-        )}
+        {ruleIdx >= 0 && <button className="btn-warning" onClick={onConfirm}>確認申請退票</button>}
       </div>
     </Modal>
   );
@@ -331,33 +344,22 @@ function ChangeTicketModal({ order, onClose, onConfirm }) {
 
   const handleSearch = () => {
     const results = generateTrains({ from: order.train.from, to: order.train.to, date: newDate, timeSlot });
-    setTrains(results);
-    setSearched(true);
-    setSelected(null);
+    setTrains(results); setSearched(true); setSelected(null);
   };
 
   const totalTickets = order.tickets.reduce((s, t) => s + t.count, 0);
   const oldBasePrice = order.train.basePrice;
   const priceDiff = selected ? (selected.basePrice - oldBasePrice) * totalTickets : 0;
 
-  const TIME_SLOT_LABELS = { all: '不限', morning: '上午', afternoon: '下午', evening: '晚上' };
-
   return (
     <Modal isOpen onClose={onClose} title="申請改票" size="lg">
       <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
         原車次：{order.train.fromName} → {order.train.toName}（{order.train.date} {order.train.depTime}）
       </p>
-
       <div className="form-grid" style={{ marginBottom: '0.75rem' }}>
         <div className="form-group">
           <label>新出發日期</label>
-          <input
-            className="form-input"
-            type="date"
-            min={tomorrow}
-            value={newDate}
-            onChange={e => setNewDate(e.target.value)}
-          />
+          <input className="form-input" type="date" min={tomorrow} value={newDate} onChange={e => setNewDate(e.target.value)} />
         </div>
         <div className="form-group">
           <label>時段</label>
@@ -377,16 +379,12 @@ function ChangeTicketModal({ order, onClose, onConfirm }) {
             const ti = TRAIN_TYPES[t.type] ?? {};
             const diff = (t.basePrice - oldBasePrice) * totalTickets;
             return (
-              <div
-                key={t.id}
-                onClick={() => setSelected(t)}
-                style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '0.75rem 1rem', cursor: 'pointer', borderBottom: '1px solid var(--border)',
-                  background: selected?.id === t.id ? 'var(--primary-light)' : 'white',
-                  borderLeft: selected?.id === t.id ? '3px solid var(--primary)' : '3px solid transparent',
-                }}
-              >
+              <div key={t.id} onClick={() => setSelected(t)} style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '0.75rem 1rem', cursor: 'pointer', borderBottom: '1px solid var(--border)',
+                background: selected?.id === t.id ? 'var(--primary-light)' : 'white',
+                borderLeft: selected?.id === t.id ? '3px solid var(--primary)' : '3px solid transparent',
+              }}>
                 <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                   <span className="train-type-badge" style={{ background: ti.bg, color: ti.color }}>{ti.icon} {ti.name}</span>
                   <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>{t.trainNo}</span>
@@ -400,28 +398,16 @@ function ChangeTicketModal({ order, onClose, onConfirm }) {
           })}
         </div>
       )}
-
-      {searched && trains.length === 0 && (
-        <p style={{ marginTop: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.88rem' }}>無可用車次</p>
-      )}
-
+      {searched && trains.length === 0 && <p style={{ marginTop: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.88rem' }}>無可用車次</p>}
       {selected && (
         <div className={`change-diff-box ${priceDiff > 0 ? 'extra' : priceDiff < 0 ? 'refund' : 'same'}`}>
           {priceDiff > 0 ? `⚠ 需補差額 NT$${priceDiff.toLocaleString()}` :
-           priceDiff < 0 ? `✅ 退還差額 NT$${Math.abs(priceDiff).toLocaleString()}` :
-           '✓ 無差額，直接改票'}
+           priceDiff < 0 ? `✅ 退還差額 NT$${Math.abs(priceDiff).toLocaleString()}` : '✓ 無差額，直接改票'}
         </div>
       )}
-
       <div className="modal-footer">
         <button className="btn-ghost" onClick={onClose}>取消</button>
-        <button
-          className="btn-primary"
-          disabled={!selected}
-          onClick={() => onConfirm(selected, priceDiff)}
-        >
-          確認改票
-        </button>
+        <button className="btn-primary" disabled={!selected} onClick={() => onConfirm(selected, priceDiff)}>確認改票</button>
       </div>
     </Modal>
   );
