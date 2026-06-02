@@ -183,7 +183,7 @@ export default function ProfilePage() {
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.35rem', fontWeight: 600 }}>
                       車票明細（點擊查看詳情）
                     </div>
-                    {o.passengers.map((p, i) => (
+                    {(o.passengers ?? []).map((p, i) => (
                       <button
                         key={i}
                         onClick={() => setTicketDetail({ order: o, passenger: p })}
