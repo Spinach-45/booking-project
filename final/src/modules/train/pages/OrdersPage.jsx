@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Ticket, ArrowRight, ChevronDown, ChevronUp, MapPin, Star } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
+import useAuthStore from '../../../store/useAuthStore';
 import { TRAIN_TYPES, ORDER_STATUSES, REFUND_RULES, generateTrains, TICKET_TYPES, getStopsBetween } from '../data/trainData';
 import Modal from '../../../components/common/Modal';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
@@ -20,7 +21,8 @@ const STATUS_TABS = [
 export default function OrdersPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  const { currentUser, getUserOrders, requestRefund, changeTicket, cancelOrder } = useStore();
+  const { getUserOrders, requestRefund, changeTicket, cancelOrder } = useStore();
+  const { currentUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState('all');
   const [detailOrder, setDetailOrder] = useState(null);
   const [refundOrder, setRefundOrder] = useState(null);

@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, ArrowLeftRight, ChevronDown, ChevronUp } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
+import useAuthStore from '../../../store/useAuthStore';
 import { STATIONS, TICKET_TYPES, TIME_SLOTS, CAR_TYPES } from '../data/trainData';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { searchParams, setSearchParams, currentUser } = useStore();
+  const { searchParams, setSearchParams } = useStore();
+  const { currentUser } = useAuthStore();
   const [showAdvanced, setShowAdvanced] = useState(searchParams.queryType === 'advanced');
 
   const today = new Date().toISOString().split('T')[0];

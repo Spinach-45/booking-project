@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, AlertCircle, User, Star } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
+import useAuthStore from '../../../store/useAuthStore';
 import { TICKET_TYPES, TRAIN_TYPES, formatDuration, getMultiDiscount, POINTS_RATE } from '../data/trainData';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
 import { useToast } from '../../../components/common/Toast';
@@ -9,7 +10,8 @@ import { useToast } from '../../../components/common/Toast';
 export default function BookingPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  const { selectedTrain, searchParams, currentUser, createOrder } = useStore();
+  const { selectedTrain, searchParams, createOrder } = useStore();
+  const { currentUser } = useAuthStore();
   const [seatPref, setSeatPref] = useState(searchParams.seatPref || 'any');
   const [passengers, setPassengers] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
