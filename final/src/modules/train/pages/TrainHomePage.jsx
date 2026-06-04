@@ -41,7 +41,7 @@ export default function HomePage() {
     <>
       <div className="search-hero">
         <div className="search-hero-inner">
-          <div className="search-hero-title">🚂 台鐵線上訂票</div>
+          <div className="search-hero-title"><i className="fi fi-rr-train-side" style={{ marginRight: 8 }} />台鐵線上訂票</div>
           <div className="search-hero-sub">快速查詢車次、輕鬆完成訂票，台灣環島一票搞定</div>
         </div>
       </div>
