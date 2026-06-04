@@ -13,8 +13,16 @@ function initUsers() {
       { id: 'user-demo',  name: '示範用戶',   email: 'demo@example.com',  phone: '0912-345-678', password: 'demo123', role: 'customer' },
       { id: 'admin-001',  name: '系統管理員', email: 'admin@example.com', phone: '0900-000-000', password: 'admin123', role: 'admin' },
       { id: 'user-002',   name: '林小美',     email: 'user2@example.com', phone: '0987-654-321', password: 'demo123', role: 'customer' },
+      { id: 'host-demo',  name: '示範房東',   email: 'host@example.com',  phone: '0923-456-789', password: 'host123', role: 'host' },
     ]);
     LS.set('app_initialized', true);
+  } else {
+    // migration: add host user if not present
+    const users = LS.get('app_users', []);
+    if (!users.find(u => u.id === 'host-demo')) {
+      users.push({ id: 'host-demo', name: '示範房東', email: 'host@example.com', phone: '0923-456-789', password: 'host123', role: 'host' });
+      LS.set('app_users', users);
+    }
   }
 }
 initUsers();
@@ -88,6 +96,23 @@ const useAuthStore = create((set, get) => ({
   },
 
   getUsers: () => LS.get('app_users', []),
+
+  updateUserRole: (userId, role) => {
+    const users = LS.get('app_users', []).map(u => u.id === userId ? { ...u, role } : u);
+    LS.set('app_users', users);
+    // If the current user's role changed, update session too
+    const cur = LS.get('app_currentUser', null);
+    if (cur && cur.id === userId) {
+      const updated = { ...cur, role };
+      LS.set('app_currentUser', updated);
+      set({ currentUser: updated });
+    }
+  },
+
+  toggleUserActive: (userId) => {
+    const users = LS.get('app_users', []).map(u => u.id === userId ? { ...u, active: !u.active } : u);
+    LS.set('app_users', users);
+  },
 
   addPoints: (pts) => {
     if (!pts || pts <= 0) return;

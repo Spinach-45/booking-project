@@ -48,6 +48,10 @@ function initLS() {
 }
 initLS();
 
+const DEFAULT_PRICING_RULES = [
+  { id: 'rule-001', maxIncreasePercent: 30, minPrice: 500, effectiveDate: '2024-01-01', createdAt: Date.now() },
+];
+
 const useHotelStore = create((set, get) => ({
   // Auth proxy
   get currentUser() { return useAuthStore.getState().currentUser; },
@@ -295,6 +299,58 @@ const useHotelStore = create((set, get) => ({
     else inv.push({ id: `inv-${Date.now()}`, propertyId, roomId, date, quantity });
     LS.set('bk_inventory', inv);
     set({ inventory: inv });
+  },
+
+  // ── Refund Requests ───────────────────────────────────────
+  refundRequests: LS.get('bk_refund_requests', []),
+  getRefundRequests: () => LS.get('bk_refund_requests', []),
+  addRefundRequest: (req) => {
+    const requests = LS.get('bk_refund_requests', []);
+    const newReq = { ...req, id: `refund-${Date.now()}`, status: 'pending', createdAt: new Date().toISOString() };
+    requests.push(newReq);
+    LS.set('bk_refund_requests', requests);
+    set({ refundRequests: requests });
+    return newReq;
+  },
+  updateRefundRequest: (id, updates) => {
+    const requests = LS.get('bk_refund_requests', []).map(r => r.id === id ? { ...r, ...updates } : r);
+    LS.set('bk_refund_requests', requests);
+    set({ refundRequests: requests });
+  },
+
+  // ── Property Approval ─────────────────────────────────────
+  getPendingProperties: () => {
+    const props = LS.get('bk_properties', []);
+    return props.filter(p => p.status === 'pending');
+  },
+  approveProperty: (id) => {
+    const props = LS.get('bk_properties', []).map(p => p.id === id ? { ...p, status: 'active', active: true } : p);
+    LS.set('bk_properties', props);
+    set({ properties: props });
+  },
+  rejectProperty: (id, reason) => {
+    const props = LS.get('bk_properties', []).map(p => p.id === id ? { ...p, status: 'rejected', rejectReason: reason, active: false } : p);
+    LS.set('bk_properties', props);
+    set({ properties: props });
+  },
+
+  // ── Pricing Rules ─────────────────────────────────────────
+  pricingRules: LS.get('bk_pricing_rules', DEFAULT_PRICING_RULES),
+  getPricingRules: () => LS.get('bk_pricing_rules', DEFAULT_PRICING_RULES),
+  savePricingRules: (rules) => {
+    LS.set('bk_pricing_rules', rules);
+    set({ pricingRules: rules });
+  },
+
+  // ── Host-specific ─────────────────────────────────────────
+  getHostProperties: (hostId) => {
+    const props = LS.get('bk_properties', []);
+    return props.filter(p => p.hostId === hostId);
+  },
+  getHostOrders: (hostId) => {
+    const props = LS.get('bk_properties', []).filter(p => p.hostId === hostId);
+    const propIds = props.map(p => p.id);
+    return LS.get('bk_orders', []).filter(o => propIds.includes(o.propertyId));
   },
 }));
 

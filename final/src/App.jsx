@@ -37,6 +37,21 @@ import AdminPricingPage from './modules/hotel/pages/admin/AdminPricingPage';
 import AdminDiscountsPage from './modules/hotel/pages/admin/AdminDiscountsPage';
 import AdminOrdersPage from './modules/hotel/pages/admin/AdminOrdersPage';
 import AdminAdsPage from './modules/hotel/pages/admin/AdminAdsPage';
+import AdminRefundsPage from './modules/hotel/pages/admin/AdminRefundsPage';
+import AdminAccountsPage from './modules/hotel/pages/admin/AdminAccountsPage';
+import AdminPricingRulesPage from './modules/hotel/pages/admin/AdminPricingRulesPage';
+import AdminPropertiesApprovalPage from './modules/hotel/pages/admin/AdminPropertiesApprovalPage';
+
+// Hotel module — host
+import HostLayout from './modules/hotel/pages/host/HostLayout';
+import HostDashboardPage from './modules/hotel/pages/host/HostDashboardPage';
+import HostOrdersPage from './modules/hotel/pages/host/HostOrdersPage';
+import HostPropertiesPage from './modules/hotel/pages/host/HostPropertiesPage';
+import HostPropertyFormPage from './modules/hotel/pages/host/HostPropertyFormPage';
+import HostPropertyViewPage from './modules/hotel/pages/host/HostPropertyViewPage';
+import HostRoomsPage from './modules/hotel/pages/host/HostRoomsPage';
+import HostDiscountsPage from './modules/hotel/pages/host/HostDiscountsPage';
+import HostPricingPage from './modules/hotel/pages/host/HostPricingPage';
 
 // Train module
 import TrainHomePage from './modules/train/pages/TrainHomePage';
@@ -56,6 +71,15 @@ function RequireAdmin({ children }) {
   const { currentUser } = useAuthStore();
   if (!currentUser) return <Navigate to="/login" replace />;
   if (currentUser.role !== 'admin') return <Navigate to="/" replace />;
+  return children;
+}
+
+function RequireHost({ children }) {
+  const { currentUser } = useAuthStore();
+  if (!currentUser) return <Navigate to="/login" replace />;
+  if (currentUser.role !== 'host' && currentUser.role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
   return children;
 }
 
@@ -119,6 +143,23 @@ export default function App() {
                 <Route path="discounts" element={<AdminDiscountsPage />} />
                 <Route path="orders" element={<AdminOrdersPage />} />
                 <Route path="ads" element={<AdminAdsPage />} />
+                <Route path="refunds" element={<AdminRefundsPage />} />
+                <Route path="approval" element={<AdminPropertiesApprovalPage />} />
+                <Route path="accounts" element={<AdminAccountsPage />} />
+                <Route path="pricing-rules" element={<AdminPricingRulesPage />} />
+              </Route>
+
+              {/* Host */}
+              <Route path="/host" element={<RequireHost><HostLayout /></RequireHost>}>
+                <Route index element={<HostDashboardPage />} />
+                <Route path="orders" element={<HostOrdersPage />} />
+                <Route path="properties" element={<HostPropertiesPage />} />
+                <Route path="properties/new" element={<HostPropertyFormPage />} />
+                <Route path="properties/:id/view" element={<HostPropertyViewPage />} />
+                <Route path="properties/:id/edit" element={<HostPropertyFormPage />} />
+                <Route path="rooms/:propId" element={<HostRoomsPage />} />
+                <Route path="discounts" element={<HostDiscountsPage />} />
+                <Route path="pricing/:propId" element={<HostPricingPage />} />
               </Route>
 
               <Route path="*" element={<Navigate to="/" replace />} />

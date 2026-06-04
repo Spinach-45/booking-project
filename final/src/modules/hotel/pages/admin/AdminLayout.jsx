@@ -11,6 +11,10 @@ const NAV_ITEMS = [
   { path: '/admin/discounts', icon: <i className="fi fi-rr-percentage fi-sm" />, key: 'admin.discountManagement' },
   { path: '/admin/orders', icon: <i className="fi fi-rr-clipboard-list fi-sm" />, key: 'admin.orderManagement' },
   { path: '/admin/ads', icon: <i className="fi fi-rr-megaphone fi-sm" />, key: 'admin.adManagement' },
+  { path: '/admin/refunds', icon: <i className="fi fi-rr-arrows-h fi-sm" />, label: '審核退款' },
+  { path: '/admin/approval', icon: <i className="fi fi-rr-building fi-sm" />, label: '審核房源' },
+  { path: '/admin/accounts', icon: <i className="fi fi-rr-users fi-sm" />, label: '帳號管理' },
+  { path: '/admin/pricing-rules', icon: <i className="fi fi-rr-dollar fi-sm" />, label: '定價規則' },
 ];
 
 export default function AdminLayout() {
@@ -41,7 +45,7 @@ export default function AdminLayout() {
           {NAV_ITEMS.map(item => (
             <Link key={item.path} to={item.path} className={`admin-nav-item ${isActive(item) ? 'active' : ''}`}>
               {item.icon}
-              {sidebarOpen && <span>{T(item.key)}</span>}
+              {sidebarOpen && <span>{item.label || T(item.key)}</span>}
             </Link>
           ))}
         </nav>
