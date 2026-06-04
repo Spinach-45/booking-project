@@ -319,30 +319,32 @@ export default function LandingPage() {
       {landingAds.length > 0 && (
         <div style={{ padding: '1.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div className="container">
-            {landingAds.map(ad => (
-              <Link
-                key={ad.id}
-                to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
-                style={{ display: 'block', textDecoration: 'none', position: 'relative', overflow: 'hidden', borderRadius: 'var(--radius-lg)', marginBottom: '0.75rem' }}
-              >
-                {ad.video ? (
-                  <video
-                    src={ad.video}
-                    poster={ad.image}
-                    autoPlay muted loop playsInline
-                    style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }}
-                  />
-                ) : (
-                  <img
-                    src={ad.image}
-                    alt={ad.title}
-                    style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }}
-                    loading="lazy"
-                  />
-                )}
-                <span style={{ position: 'absolute', top: 6, right: 8, background: 'rgba(0,0,0,0.4)', color: 'white', fontSize: '0.6rem', padding: '1px 5px', borderRadius: 3 }}>廣告</span>
-              </Link>
-            ))}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+              {landingAds.map(ad => (
+                <Link
+                  key={ad.id}
+                  to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
+                  style={{ display: 'block', textDecoration: 'none', position: 'relative', overflow: 'hidden', borderRadius: 'var(--radius-lg)' }}
+                >
+                  {ad.video ? (
+                    <video
+                      src={ad.video}
+                      poster={ad.image}
+                      autoPlay muted loop playsInline
+                      style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }}
+                    />
+                  ) : (
+                    <img
+                      src={ad.image}
+                      alt={ad.title}
+                      style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }}
+                      loading="lazy"
+                    />
+                  )}
+                  <span style={{ position: 'absolute', top: 6, right: 8, background: 'rgba(0,0,0,0.4)', color: 'white', fontSize: '0.6rem', padding: '1px 5px', borderRadius: 3 }}>廣告</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}
