@@ -44,9 +44,8 @@ export default function RegisterPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-header">
-          <div style={{ fontSize: '3rem' }}>🌏</div>
-          <h1>建立帳號</h1>
-          <p>加入智慧旅遊整合平台</p>
+          <h1 style={{ fontSize: '2rem', letterSpacing: '0.06em', fontWeight: 600, marginTop: 0 }}>Agent TT</h1>
+          <p>建立帳號，開始你的旅程</p>
         </div>
 
         <div className="login-form">

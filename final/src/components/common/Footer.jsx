@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <div className="footer-brand">🌏 智慧旅遊整合平台</div>
+            <div className="footer-brand" style={{ letterSpacing: '0.05em' }}>Agent TT</div>
             <p className="footer-desc">行程規劃 × 住宿訂房 × 火車訂票，一站搞定您的旅遊需求</p>
           </div>
           <div>
@@ -26,7 +26,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2026 智慧旅遊整合平台. All rights reserved.</span>
+          <span>© 2026 Agent TT. All rights reserved.</span>
         </div>
       </div>
     </footer>

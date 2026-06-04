@@ -38,13 +38,14 @@ export default function Navbar() {
     ? cart.filter(c => !c.userId || c.userId === currentUser.id).length
     : 0;
 
+  const isHome = location.pathname === '/';
+
   return (
-    <nav className="navbar">
+    <nav className={`navbar${isHome ? ' navbar-transparent' : ''}`}>
       <div className="navbar-inner">
         {/* Brand */}
         <Link to="/" className="navbar-brand">
-          <span className="brand-icon">🌏</span>
-          <span className="brand-text">智慧旅遊</span>
+          <span className="brand-text" style={{ fontWeight: 600, letterSpacing: '0.05em' }}>Agent TT</span>
         </Link>
 
         {/* Desktop nav */}

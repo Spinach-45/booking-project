@@ -46,8 +46,7 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-header">
-          <div style={{ fontSize: '3rem' }}>🌏</div>
-          <h1>智慧旅遊整合平台</h1>
+          <h1 style={{ fontSize: '2rem', letterSpacing: '0.06em', fontWeight: 600, marginTop: 0 }}>Agent TT</h1>
           <p>登入以使用完整功能</p>
         </div>
 
