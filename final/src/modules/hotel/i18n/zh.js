@@ -58,7 +58,7 @@ export const zh = {
   },
   // 首頁
   home: {
-    title: 'BookingTW - 找到您完美的住所',
+    title: 'Agent TT - 找到您完美的住所',
     subtitle: '探索台灣各地優質住宿，輕鬆訂房',
     searchPlaceholder: '輸入地點（如：台北車站、基隆...）',
     checkIn: '入住日期',

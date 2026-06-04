@@ -55,7 +55,7 @@ export const en = {
     language: 'Language',
   },
   home: {
-    title: 'BookingTW - Find Your Perfect Stay',
+    title: 'Agent TT - Find Your Perfect Stay',
     subtitle: 'Discover quality accommodations across Taiwan',
     searchPlaceholder: 'Enter location (e.g., Taipei Station, Keelung...)',
     checkIn: 'Check-in',

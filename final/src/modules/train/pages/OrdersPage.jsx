@@ -46,6 +46,7 @@ export default function OrdersPage() {
   const handleRefundConfirm = () => {
     requestRefund(refundOrder.id);
     toast('退票申請成功，款項將於 3-5 個工作日退回', 'success');
+    setConfirmRefund(false);
     setRefundOrder(null);
   };
 
@@ -102,11 +103,11 @@ export default function OrdersPage() {
         />
       )}
 
-      {refundOrder && (
+      {refundOrder && !confirmRefund && (
         <RefundModal
           order={refundOrder}
           onClose={() => setRefundOrder(null)}
-          onConfirm={() => { setRefundOrder(null); setTimeout(() => setConfirmRefund(true), 100); }}
+          onConfirm={() => setConfirmRefund(true)}
         />
       )}
 
