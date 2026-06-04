@@ -55,26 +55,30 @@ export default function SearchBar({ compact = false }) {
           ))}
         </select>
       </div>
-      <div className="search-field">
-        <Calendar size={18} className="field-icon" />
+      <div className="search-field" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
+        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Calendar size={12} /> {lang === 'zh' ? '入住日期' : 'Check-in'}
+        </span>
         <input
           type="date"
           min={today}
           value={form.checkIn}
           onChange={e => setForm(f => ({ ...f, checkIn: e.target.value }))}
           className="search-input"
-          placeholder={T('home.checkIn')}
+          style={{ padding: 0 }}
         />
       </div>
-      <div className="search-field">
-        <Calendar size={18} className="field-icon" />
+      <div className="search-field" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
+        <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Calendar size={12} /> {lang === 'zh' ? '退房日期' : 'Check-out'}
+        </span>
         <input
           type="date"
           min={form.checkIn || today}
           value={form.checkOut}
           onChange={e => setForm(f => ({ ...f, checkOut: e.target.value }))}
           className="search-input"
-          placeholder={T('home.checkOut')}
+          style={{ padding: 0 }}
         />
       </div>
       <div className="search-field search-field-sm">
