@@ -13,7 +13,7 @@ export default function PaymentResultPage() {
   if (!order) return (
     <div className="container" style={{ paddingTop: '3rem' }}>
       <div className="empty-state">
-        <div style={{ fontSize: '3rem' }}>❓</div>
+        <i className="fi fi-rr-question fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>找不到訂單資訊</p>
         <Link to="/ticket" className="btn-primary">返回首頁</Link>
       </div>
@@ -31,7 +31,7 @@ export default function PaymentResultPage() {
     <div className="container">
       {success ? (
         <div className="result-page">
-          <div className="result-icon">🎉</div>
+          <div className="result-icon"><i className="fi fi-rr-star fi-lg" style={{ color: 'var(--success)' }} /></div>
           <div className="result-title" style={{ color: 'var(--success)' }}>付款成功！</div>
           <div className="result-sub">訂票完成，請妥善保管您的訂票編號</div>
 
@@ -68,7 +68,7 @@ export default function PaymentResultPage() {
           {/* 座位號碼 */}
           {order.passengers?.some(p => p.seatNo) && (
             <div className="seat-assignment-card">
-              <div className="seat-assignment-title">🪑 座位分配</div>
+              <div className="seat-assignment-title"><i className="fi fi-rr-chair fi-sm" style={{ marginRight: 6 }} />座位分配</div>
               <div className="seat-assignment-list">
                 {order.passengers.map((p, i) => (
                   <div key={i} className="seat-assignment-row">
@@ -81,12 +81,12 @@ export default function PaymentResultPage() {
           )}
 
           <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', textAlign: 'center' }}>
-            📧 訂票確認通知已發送至您的 Email，🔔 出發前 30 分鐘將以簡訊提醒
+            <i className="fi fi-rr-envelope fi-xs" style={{ marginRight: 3 }} />訂票確認通知已發送至您的 Email，<i className="fi fi-rr-bell fi-xs" style={{ margin: '0 3px' }} />出發前 30 分鐘將以簡訊提醒
           </p>
 
           <div className="result-actions">
             <Link to={`/ticket/ticket/${orderId}`} className="btn-primary">
-              🎟️ 取票 / 查看電子票
+              <i className="fi fi-rr-ticket fi-sm" style={{ marginRight: 4 }} />取票 / 查看電子票
             </Link>
             <Link to="/ticket/orders" className="btn-outline">
               <i className="fi fi-rr-ticket fi-sm" /> 查看我的訂單
@@ -98,7 +98,7 @@ export default function PaymentResultPage() {
         </div>
       ) : (
         <div className="result-page">
-          <div className="result-icon">❌</div>
+          <div className="result-icon"><i className="fi fi-sr-cross-circle fi-lg" style={{ color: 'var(--danger)' }} /></div>
           <div className="result-title" style={{ color: 'var(--danger)' }}>付款失敗</div>
           <div className="result-sub">很抱歉，您的付款未能完成</div>
           <div className="fail-reason-box">

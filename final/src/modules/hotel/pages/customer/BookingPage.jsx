@@ -133,10 +133,10 @@ export default function BookingPage() {
                   disabled={!!appliedCoupon}
                 />
                 <button type="button" className="btn-primary" onClick={handleApplyCoupon} disabled={!!appliedCoupon}>
-                  {appliedCoupon ? `✓ ${T('booking.couponApplied')}` : T('booking.applyCoupon')}
+                  {appliedCoupon ? <><i className="fi fi-sr-check fi-xs" style={{ marginRight: 4 }} />{T('booking.couponApplied')}</> : T('booking.applyCoupon')}
                 </button>
               </div>
-              {appliedCoupon && <div className="coupon-success">🎉 {appliedCoupon.code}: -NT$ {couponDiscount.toLocaleString()}</div>}
+              {appliedCoupon && <div className="coupon-success"><i className="fi fi-sr-check-circle fi-xs" style={{ marginRight: 4, color: 'var(--success)' }} />{appliedCoupon.code}: -NT$ {couponDiscount.toLocaleString()}</div>}
             </section>
 
             {/* Payment */}
@@ -191,13 +191,13 @@ export default function BookingPage() {
                 <h3 className="summary-name">{propName}</h3>
                 <p className="summary-room">{roomName}</p>
                 <div className="summary-dates">
-                  <span>📅 {checkIn}</span>
+                  <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{checkIn}</span>
                   <span>→</span>
                   <span>{checkOut}</span>
                 </div>
                 <div className="summary-meta">
-                  <span>🌙 {nights} {T('common.nights')}</span>
-                  <span>👤 {guests} {T('common.persons')}</span>
+                  <span><i className="fi fi-rr-moon fi-xs" style={{ marginRight: 3 }} />{nights} {T('common.nights')}</span>
+                  <span><i className="fi fi-rr-user fi-xs" style={{ marginRight: 3 }} />{guests} {T('common.persons')}</span>
                 </div>
               </div>
               <div className="price-breakdown">

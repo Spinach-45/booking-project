@@ -4,7 +4,7 @@ export default function ConfirmDialog({
   isOpen, onClose, onConfirm,
   title = '確認操作',
   message = '確定要執行此操作嗎？',
-  icon = '⚠️',
+  icon = <i className="fi fi-sr-exclamation fi-lg" style={{ color: 'var(--warning)' }} />,
   confirmLabel = '確認',
   confirmClass = 'btn-danger',
 }) {

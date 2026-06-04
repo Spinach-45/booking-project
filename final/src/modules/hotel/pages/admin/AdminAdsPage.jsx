@@ -49,7 +49,7 @@ export default function AdminAdsPage() {
             </div>
             <div className="ad-manage-info">
               <h3>{lang === 'zh' ? ad.title : (ad.titleEn || ad.title)}</h3>
-              <p>📅 {ad.startDate} → {ad.endDate}</p>
+              <p><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{ad.startDate} → {ad.endDate}</p>
               <div className="ad-manage-actions">
                 <button className={`toggle-btn ${ad.active ? 'active' : ''}`} onClick={() => updateAd(ad.id, { active: !ad.active })}>
                   {ad.active ? T('admin.ad.active') : T('admin.ad.inactive')}

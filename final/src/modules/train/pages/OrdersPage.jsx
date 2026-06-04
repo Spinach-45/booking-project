@@ -32,7 +32,7 @@ export default function OrdersPage() {
   if (!currentUser) return (
     <div className="container" style={{ paddingTop: '3rem' }}>
       <div className="empty-state">
-        <div style={{ fontSize: '3rem' }}>🔐</div>
+        <i className="fi fi-rr-lock fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>請先登入才能查看訂單</p>
         <Link to="/login" className="btn-primary">前往登入</Link>
       </div>
@@ -73,7 +73,7 @@ export default function OrdersPage() {
 
       {orders.length === 0 ? (
         <div className="empty-state">
-          <div style={{ fontSize: '3rem' }}>🎫</div>
+          <i className="fi fi-rr-ticket fi-lg" style={{ color: 'var(--secondary)' }} />
           <p>{activeTab === 'all' ? '尚無任何訂單' : '此狀態無訂單'}</p>
           <Link to="/ticket" className="btn-primary">查詢車次</Link>
         </div>
@@ -116,7 +116,7 @@ export default function OrdersPage() {
         onConfirm={handleRefundConfirm}
         title="確認退票"
         message="確認申請退票？退票後無法恢復，款項將依規定退回。"
-        icon="🔄"
+        icon={<i className="fi fi-rr-arrows-h fi-lg" style={{ color: 'var(--primary)' }} />}
         confirmLabel="確認退票"
         confirmClass="btn-warning"
       />
@@ -168,14 +168,14 @@ function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange,
         {' '}{order.train.trainNo}：
         {order.train.fromName} <i className="fi fi-rr-arrow-right fi-sm" style={{ display: 'inline', verticalAlign: 'middle' }} /> {order.train.toName}
         <span style={{ marginLeft: 8, padding: '1px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
-          {delay.status === 'ontime' ? '✓ 準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
+          {delay.status === 'ontime' ? <><i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} />準時</> : delay.status === 'delayed' ? <><i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 3 }} />{delay.label}</> : `? ${delay.label}`}
         </span>
       </div>
 
       <div className="order-meta">
-        <span>📅 {order.train.date}</span>
-        <span>🕐 {order.train.depTime} – {order.train.arrTime}</span>
-        <span>💺 {order.seatPref === 'window' ? '靠窗' : order.seatPref === 'aisle' ? '靠走道' : '不指定'}</span>
+        <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{order.train.date}</span>
+        <span><i className="fi fi-rr-clock fi-xs" style={{ marginRight: 3 }} />{order.train.depTime} – {order.train.arrTime}</span>
+        <span><i className="fi fi-rr-chair fi-xs" style={{ marginRight: 3 }} />{order.seatPref === 'window' ? '靠窗' : order.seatPref === 'aisle' ? '靠走道' : '不指定'}</span>
         {order.pointsEarned > 0 && (
           <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: 3 }}>
             <i className="fi fi-sr-star fi-xs" style={{ color: '#f59e0b' }} /> +{order.pointsEarned} 點
@@ -219,7 +219,7 @@ function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange,
         <div className="order-actions">
           <button className="btn-ghost btn-sm" onClick={onDetail}>訂單詳情</button>
           {canTicket && (
-            <button className="btn-outline btn-sm" onClick={onTicket}>🎟️ 取票</button>
+            <button className="btn-outline btn-sm" onClick={onTicket}><i className="fi fi-rr-ticket fi-xs" style={{ marginRight: 4 }} />取票</button>
           )}
           {order.status === 'pending' && (
             <button className="btn-primary btn-sm" onClick={onPay}>前往付款</button>
@@ -274,7 +274,7 @@ function OrderDetailModal({ order, onClose }) {
         {/* 多張折扣 */}
         {order.multiDiscount && (
           <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 'var(--radius)', padding: '0.6rem 0.85rem', fontSize: '0.85rem', color: '#15803d' }}>
-            🎁 {order.multiDiscount.label}：節省 NT${order.discountAmount?.toLocaleString()}
+            <i className="fi fi-rr-gift fi-xs" style={{ marginRight: 4 }} />{order.multiDiscount.label}：節省 NT${order.discountAmount?.toLocaleString()}
           </div>
         )}
 
@@ -395,7 +395,7 @@ function RefundModal({ order, onClose, onConfirm }) {
         </div>
       ) : (
         <div style={{ background: '#fef2f2', border: '1.5px solid #fecaca', borderRadius: 'var(--radius)', padding: '0.75rem', marginTop: '0.75rem', color: 'var(--danger)', fontSize: '0.88rem' }}>
-          ⚠ 車次出發後無法申請退票
+          <i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 4 }} />車次出發後無法申請退票
         </div>
       )}
       <div className="modal-footer">
@@ -429,7 +429,7 @@ function TicketDetailModal({ order, passenger, onClose }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.25rem' }}>
           <span style={{ padding: '4px 16px', borderRadius: 20, fontSize: '0.82rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
-            {delay.status === 'ontime' ? '✓ 列車準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
+            {delay.status === 'ontime' ? <><i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} />列車準時</> : delay.status === 'delayed' ? <><i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 3 }} />{delay.label}</> : `? ${delay.label}`}
           </span>
         </div>
         {rows.map(([label, val]) => (
@@ -511,8 +511,8 @@ function ChangeTicketModal({ order, onClose, onConfirm }) {
       {searched && trains.length === 0 && <p style={{ marginTop: '0.75rem', color: 'var(--text-secondary)', fontSize: '0.88rem' }}>無可用車次</p>}
       {selected && (
         <div className={`change-diff-box ${priceDiff > 0 ? 'extra' : priceDiff < 0 ? 'refund' : 'same'}`}>
-          {priceDiff > 0 ? `⚠ 需補差額 NT$${priceDiff.toLocaleString()}` :
-           priceDiff < 0 ? `✅ 退還差額 NT$${Math.abs(priceDiff).toLocaleString()}` : '✓ 無差額，直接改票'}
+          {priceDiff > 0 ? <><i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 4 }} />需補差額 NT${priceDiff.toLocaleString()}</> :
+           priceDiff < 0 ? <><i className="fi fi-sr-check-circle fi-xs" style={{ marginRight: 4, color: 'var(--success)' }} />退還差額 NT${Math.abs(priceDiff).toLocaleString()}</> : <><i className="fi fi-sr-check fi-xs" style={{ marginRight: 4 }} />無差額，直接改票</>}
         </div>
       )}
       <div className="modal-footer">

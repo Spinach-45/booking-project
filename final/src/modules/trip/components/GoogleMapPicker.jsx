@@ -188,7 +188,7 @@ export default function GoogleMapPicker({ stationLat, stationLng, stationName, o
   if (!API_KEY) {
     return (
       <div style={{ padding: '1rem', background: '#fef9c3', borderRadius: 8, border: '1px solid #fde68a', textAlign: 'center' }}>
-        <div style={{ fontSize: '1.5rem', marginBottom: 6 }}>🗺️</div>
+        <div style={{ fontSize: '1.5rem', marginBottom: 6 }}><i className="fi fi-rr-map fi-lg" /></div>
         <p style={{ fontSize: '0.82rem', color: '#78350f', margin: 0 }}>
           請在專案根目錄建立 <code style={{ background: '#fef08a', padding: '1px 4px', borderRadius: 3 }}>.env</code> 並設定：
           <br />
@@ -238,7 +238,7 @@ export default function GoogleMapPicker({ stationLat, stationLng, stationName, o
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '0.85rem', color: '#64748b', zIndex: 1,
           }}>
-            🗺️ 地圖載入中…
+            <i className="fi fi-rr-map fi-sm" style={{ marginRight: 4 }} />地圖載入中…
           </div>
         )}
         <div ref={mapDivRef} style={{ height: 260 }} />

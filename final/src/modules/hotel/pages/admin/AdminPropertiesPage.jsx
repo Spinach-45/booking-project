@@ -127,7 +127,7 @@ export default function AdminPropertiesPage() {
                 <td>{lang === 'zh' ? p.station : p.stationEn}<br /><small>{p.distanceToStation}m</small></td>
                 <td>{p.rooms.length} {T('common.rooms')}</td>
                 <td>NT$ {Math.min(...p.rooms.map(r => r.price)).toLocaleString()}</td>
-                <td>⭐ {p.rating}</td>
+                <td><i className="fi fi-sr-star fi-xs" style={{ marginRight: 3, color: '#f59e0b' }} />{p.rating}</td>
                 <td>
                   {p.hostVerified
                     ? <span className="badge badge-confirmed"><i className="fi fi-rr-check fi-sm" /> {T('admin.verified')}</span>

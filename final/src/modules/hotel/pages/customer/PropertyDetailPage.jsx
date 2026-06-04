@@ -156,7 +156,7 @@ export default function PropertyDetailPage() {
               <div className="host-card">
                 <img src={property.hostAvatar} alt={property.hostName} className="host-avatar" />
                 <div className="host-info">
-                  <div className="host-name">{property.hostName} {property.hostVerified && <span className="badge-verified">✓ {T('admin.verified')}</span>}</div>
+                  <div className="host-name">{property.hostName} {property.hostVerified && <span className="badge-verified"><i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} />{T('admin.verified')}</span>}</div>
                   <div className="host-meta">{T('property.hostJoined')}: {property.hostJoined}</div>
                   <div className="host-meta">{T('property.hostResponse')}: {property.hostResponseRate}%</div>
                 </div>
@@ -194,15 +194,15 @@ export default function PropertyDetailPage() {
             <div className="rooms-card">
               <h3 className="rooms-card-title">{lang === 'zh' ? '選擇房型' : 'Select Room Type'}</h3>
               <div className="date-summary">
-                <span>📅 {checkIn} → {checkOut}</span>
-                <span>🌙 {nights} {T('common.nights')}</span>
+                <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{checkIn} → {checkOut}</span>
+                <span><i className="fi fi-rr-moon fi-xs" style={{ marginRight: 3 }} />{nights} {T('common.nights')}</span>
               </div>
               {property.rooms.map(room => (
                 <div key={room.id} className={`room-option ${selectedRoom?.id === room.id ? 'room-selected' : ''}`}
                   onClick={() => setSelectedRoom(room)}>
                   <div className="room-info">
                     <span className="room-type-name">{lang === 'zh' ? room.typeName : (room.typeNameEn || room.typeName)}</span>
-                    <span className="room-guests">👤 {lang === 'zh' ? `最多${room.maxGuests}人` : `Max ${room.maxGuests} guests`}</span>
+                    <span className="room-guests"><i className="fi fi-rr-user fi-xs" style={{ marginRight: 3 }} />{lang === 'zh' ? `最多${room.maxGuests}人` : `Max ${room.maxGuests} guests`}</span>
                   </div>
                   <div className="room-price-wrap">
                     <span className="room-price">NT$ {room.price.toLocaleString()}</span>

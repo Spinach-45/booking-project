@@ -110,22 +110,22 @@ export default function Navbar() {
       {menuOpen && (
         <div className="mobile-menu">
           {[
-            { to: '/', label: '🏠 首頁' },
-            { to: '/trip', label: '🗺️ 行程規劃' },
-            { to: '/hotel', label: '🏨 住宿訂房' },
-            { to: '/ticket', label: '🚂 火車訂票' },
+            { to: '/', icon: 'fi-rr-home', label: '首頁' },
+            { to: '/trip', icon: 'fi-rr-map', label: '行程規劃' },
+            { to: '/hotel', icon: 'fi-rr-bed', label: '住宿訂房' },
+            { to: '/ticket', icon: 'fi-rr-train-side', label: '火車訂票' },
           ].map(item => (
             <Link key={item.to} to={item.to} className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
-              {item.label}
+              <i className={`fi ${item.icon} fi-sm`} style={{ marginRight: 6 }} />{item.label}
             </Link>
           ))}
           {currentUser && (
             <>
-              <Link to="/profile" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>👤 個人中心</Link>
-              <Link to="/hotel/favorites" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>❤️ 我的收藏</Link>
-              <Link to="/hotel/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>🛒 購物車 {cartCount > 0 ? `(${cartCount})` : ''}</Link>
+              <Link to="/profile" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-user fi-sm" style={{ marginRight: 6 }} />個人中心</Link>
+              <Link to="/hotel/favorites" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-sr-heart fi-sm" style={{ marginRight: 6 }} />我的收藏</Link>
+              <Link to="/hotel/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-shopping-cart fi-sm" style={{ marginRight: 6 }} />購物車 {cartCount > 0 ? `(${cartCount})` : ''}</Link>
               {currentUser.role === 'admin' && (
-                <Link to="/admin" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>⚙️ 後台管理</Link>
+                <Link to="/admin" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-settings fi-sm" style={{ marginRight: 6 }} />後台管理</Link>
               )}
             </>
           )}

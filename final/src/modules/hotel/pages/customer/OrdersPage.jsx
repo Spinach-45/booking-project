@@ -71,8 +71,8 @@ export default function OrdersPage() {
                     <p>{order.roomType} · {order.guests} {T('common.persons')}</p>
                   </div>
                   <div className="order-dates">
-                    <div>📅 {order.checkIn} → {order.checkOut}</div>
-                    <div>🌙 {order.nights} {T('common.nights')}</div>
+                    <div><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{order.checkIn} → {order.checkOut}</div>
+                    <div><i className="fi fi-rr-moon fi-xs" style={{ marginRight: 3 }} />{order.nights} {T('common.nights')}</div>
                   </div>
                   <div className="order-host">
                     <span className="label">{T('orders.hostInfo')}:</span>
@@ -120,9 +120,9 @@ export default function OrdersPage() {
         <div className="refund-policy-card">
           <h3><i className="fi fi-rr-arrows-h" style={{ fontSize: 18 }} /> {T('orders.refundPolicy')}</h3>
           <ul>
-            <li className="refund-ok">✓ {T('orders.refundFull')}</li>
-            <li className="refund-partial">◐ {T('orders.refund70')}</li>
-            <li className="refund-no">✗ {T('orders.noRefund')}</li>
+            <li className="refund-ok"><i className="fi fi-sr-check fi-xs" style={{ marginRight: 4 }} />{T('orders.refundFull')}</li>
+            <li className="refund-partial"><i className="fi fi-rr-arrows-h fi-xs" style={{ marginRight: 4 }} />{T('orders.refund70')}</li>
+            <li className="refund-no"><i className="fi fi-sr-cross fi-xs" style={{ marginRight: 4 }} />{T('orders.noRefund')}</li>
           </ul>
         </div>
       </div>

@@ -87,7 +87,7 @@ export default function LoginPage() {
               <i className="fi fi-rr-globe fi-sm" /> Google
             </button>
             <button className="btn-outline full-width" onClick={() => handleOAuth('line')} style={{ flex: 1, color: '#06C755', borderColor: '#06C755' }}>
-              💬 LINE
+              <i className="fi fi-rr-comment fi-sm" /> LINE
             </button>
           </div>
         </div>
@@ -100,10 +100,10 @@ export default function LoginPage() {
           <p>測試帳號（點擊快速填入）：</p>
           <div className="demo-accounts">
             <button className="demo-btn" onClick={() => { setMethod('email'); set('email', 'demo@example.com'); set('password', 'demo123'); }}>
-              👤 示範用戶 — demo@example.com / demo123
+              <i className="fi fi-rr-user fi-xs" style={{ marginRight: 4 }} />示範用戶 — demo@example.com / demo123
             </button>
             <button className="demo-btn" onClick={() => { setMethod('email'); set('email', 'admin@example.com'); set('password', 'admin123'); }}>
-              ⚙️ 系統管理員 — admin@example.com / admin123
+              <i className="fi fi-rr-settings fi-xs" style={{ marginRight: 4 }} />系統管理員 — admin@example.com / admin123
             </button>
           </div>
         </div>

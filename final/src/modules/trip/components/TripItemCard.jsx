@@ -148,7 +148,7 @@ export default function TripItemCard({
         onConfirm={() => deleteItem(tripId, dayId, item.id)}
         title="刪除行程項目"
         message={`確定要刪除「${item.title}」嗎？此操作無法復原。`}
-        icon="🗑️"
+        icon={<i className="fi fi-rr-trash fi-lg" style={{ color: 'var(--danger)' }} />}
         confirmLabel="刪除"
       />
     </>

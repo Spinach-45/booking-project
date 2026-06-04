@@ -51,7 +51,7 @@ export default function TicketPage() {
   if (!order || order.status === 'pending') return (
     <div className="container" style={{ paddingTop: '3rem' }}>
       <div className="empty-state">
-        <div style={{ fontSize: '3rem' }}>🎫</div>
+        <i className="fi fi-rr-ticket fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>{!order ? '找不到訂單' : '訂單尚未付款，無法取票'}</p>
         <Link to="/ticket/orders" className="btn-primary">返回票務</Link>
       </div>
@@ -75,7 +75,7 @@ export default function TicketPage() {
           <button className="btn-ghost btn-sm" onClick={() => navigate(-1)}>
             <i className="fi fi-rr-arrow-left fi-sm" /> 返回
           </button>
-          <h1 className="page-title">🎟️ 電子票</h1>
+          <h1 className="page-title"><i className="fi fi-rr-ticket fi-sm" style={{ marginRight: 6 }} />電子票</h1>
           <button className="btn-ghost btn-sm" style={{ marginLeft: 'auto' }} onClick={() => window.print()}>
             <i className="fi fi-rr-print fi-sm" /> 列印
           </button>
@@ -100,7 +100,7 @@ export default function TicketPage() {
               </div>
               <div style={{ marginTop: 6 }}>
                 <span style={{ display: 'inline-block', padding: '2px 10px', borderRadius: 20, fontSize: '0.78rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
-                  {delay.status === 'ontime' ? '✓ 準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
+                  {delay.status === 'ontime' ? <><i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} />準時</> : delay.status === 'delayed' ? <><i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 3 }} />{delay.label}</> : `? ${delay.label}`}
                 </span>
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function TicketPage() {
               </div>
             </div>
             <div className="ticket-status-chip">
-              {order.status === 'paid' ? '✅ 有效票' : order.status === 'used' ? '已使用' : order.status === 'changed' ? '已改票' : order.status}
+              {order.status === 'paid' ? <><i className="fi fi-sr-check-circle fi-xs" style={{ marginRight: 3, color: 'var(--success)' }} />有效票</> : order.status === 'used' ? '已使用' : order.status === 'changed' ? '已改票' : order.status}
             </div>
           </div>
 
@@ -130,10 +130,10 @@ export default function TicketPage() {
           <div style={{ padding: '0.75rem 1.25rem 0', background: 'white' }}>
             <div className="rec-source-tabs">
               <button className={`rec-source-tab ${ticketMode === 'qr' ? 'active' : ''}`} onClick={() => setTicketMode('qr')}>
-                📱 線上電子票
+                <i className="fi fi-rr-mobile fi-xs" style={{ marginRight: 4 }} />線上電子票
               </button>
               <button className={`rec-source-tab ${ticketMode === 'cvs' ? 'active' : ''}`} onClick={() => setTicketMode('cvs')}>
-                🏪 超商取票
+                <i className="fi fi-rr-store-alt fi-xs" style={{ marginRight: 4 }} />超商取票
               </button>
             </div>
           </div>

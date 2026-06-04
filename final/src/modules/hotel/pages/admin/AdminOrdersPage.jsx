@@ -108,7 +108,7 @@ export default function AdminOrdersPage() {
                   <td>NT$ {order.finalAmount?.toLocaleString()}</td>
                   <td>
                     <span className={`badge badge-${order.status}`}>{T(`orders.${order.status}`)}</span>
-                    {isConflict && <span className="badge badge-conflict">⚠️</span>}
+                    {isConflict && <span className="badge badge-conflict"><i className="fi fi-sr-exclamation fi-xs" /></span>}
                   </td>
                   <td>
                     <div className="action-btns">

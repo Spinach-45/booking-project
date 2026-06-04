@@ -19,7 +19,7 @@ export default function ExpensePage() {
   if (!trip) return (
     <div className="container">
       <div className="empty-state" style={{ paddingTop: '6rem' }}>
-        <div style={{ fontSize: '3rem' }}>🔍</div>
+        <i className="fi fi-rr-search fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>找不到此行程</p>
         <button className="btn-primary" onClick={() => navigate('/trip')}>返回行程列表</button>
       </div>
@@ -51,7 +51,7 @@ export default function ExpensePage() {
     if (trip.budget > 0) {
       const newTotal = trip.expenses.reduce((s, e) => s + e.amount, 0) + Number(data.amount);
       if (newTotal > trip.budget) {
-        toast(`⚠️ 警告：總花費 NT$${newTotal.toLocaleString()} 已超出預算 NT$${trip.budget.toLocaleString()}！`, 'warning', 5000);
+        toast(`警告：總花費 NT$${newTotal.toLocaleString()} 已超出預算 NT$${trip.budget.toLocaleString()}！`, 'warning', 5000);
       }
     }
     toast('費用已記錄', 'success');
@@ -123,7 +123,7 @@ export default function ExpensePage() {
         {/* Per-person breakdown */}
         {collabNames.length > 1 && (
           <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', marginBottom: '1.5rem' }}>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}>💹 分帳明細</h3>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}><i className="fi fi-rr-chart-histogram fi-sm" style={{ marginRight: 6 }} />分帳明細</h3>
             <table className="expense-split-table">
               <thead>
                 <tr>
@@ -161,7 +161,7 @@ export default function ExpensePage() {
         {/* Expense List */}
         {trip.expenses.length === 0 ? (
           <div className="empty-state">
-            <div style={{ fontSize: '3rem' }}>💸</div>
+            <i className="fi fi-rr-dollar fi-lg" style={{ color: 'var(--secondary)' }} />
             <p>尚未記錄任何費用</p>
             <button className="btn-primary" onClick={() => setAddModal(true)}>
               <i className="fi fi-rr-plus fi-sm" /> 記錄第一筆費用
@@ -169,7 +169,7 @@ export default function ExpensePage() {
           </div>
         ) : (
           <div>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}>📋 費用清單</h3>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem' }}><i className="fi fi-rr-clipboard-list fi-sm" style={{ marginRight: 6 }} />費用清單</h3>
             <div className="expense-list">
               {[...trip.expenses].reverse().map(exp => {
                 const catInfo = getCategoryInfo(exp.category);
@@ -182,10 +182,10 @@ export default function ExpensePage() {
                     <div className="expense-item-info">
                       <div className="expense-item-title">{exp.title}</div>
                       <div className="expense-item-meta">
-                        <span>📅 {exp.date}</span>
+                        <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{exp.date}</span>
                         <span>付款：{exp.paidByName}</span>
                         <span>分攤：{exp.splitWith.length} 人</span>
-                        {exp.notes && <span>📝 {exp.notes}</span>}
+                        {exp.notes && <span><i className="fi fi-rr-pencil fi-xs" style={{ marginRight: 3 }} />{exp.notes}</span>}
                       </div>
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -222,7 +222,7 @@ export default function ExpensePage() {
         onConfirm={() => { deleteExpense(id, deleteExpId); toast('費用已刪除', 'success'); setDeleteExpId(null); }}
         title="刪除費用"
         message="確定要刪除此筆費用記錄嗎？"
-        icon="🗑️"
+        icon={<i className="fi fi-rr-trash fi-lg" style={{ color: 'var(--danger)' }} />}
         confirmLabel="刪除"
       />
     </div>

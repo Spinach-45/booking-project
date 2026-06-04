@@ -33,7 +33,7 @@ export default function SearchResultsPage() {
         <button className="btn-ghost btn-sm" onClick={() => navigate('/ticket')}>
           <i className="fi fi-rr-arrow-left fi-sm" /> 修改查詢
         </button>
-        <h1 className="page-title">🔍 車次查詢結果</h1>
+        <h1 className="page-title"><i className="fi fi-rr-search fi-sm" style={{ marginRight: 6 }} />車次查詢結果</h1>
       </div>
 
       <div className="results-summary-bar">
@@ -42,12 +42,12 @@ export default function SearchResultsPage() {
           <i className="fi fi-rr-arrow-right fi-sm" style={{ display: 'inline', margin: '0 4px', verticalAlign: 'middle' }} />
           {sorted[0]?.toName ?? searchParams.to}
         </span>
-        <span>📅 {searchParams.date}</span>
-        <span>🕐 {['all','morning','afternoon','evening'].reduce((acc, id) => {
+        <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{searchParams.date}</span>
+        <span><i className="fi fi-rr-clock fi-xs" style={{ marginRight: 3 }} />{['all','morning','afternoon','evening'].reduce((acc, id) => {
           const t = { all:'不限時段', morning:'上午', afternoon:'下午', evening:'晚上' };
           return searchParams.timeSlot === id ? t[id] : acc;
         }, '不限時段')}</span>
-        <span>🎫 {ticketSummary}（共 {totalPassengers} 人）</span>
+        <span><i className="fi fi-rr-ticket fi-xs" style={{ marginRight: 3 }} />{ticketSummary}（共 {totalPassengers} 人）</span>
         {searchParams.queryType === 'advanced' && <span className="badge badge-primary">進階查詢</span>}
       </div>
 
@@ -65,7 +65,7 @@ export default function SearchResultsPage() {
 
       {sorted.length === 0 ? (
         <div className="empty-state">
-          <div style={{ fontSize: '3rem' }}>🚫</div>
+          <i className="fi fi-rr-ban fi-lg" style={{ color: 'var(--secondary)' }} />
           <p>無符合條件的車次</p>
           <button className="btn-primary" onClick={() => navigate('/ticket')}>重新查詢</button>
         </div>
@@ -124,10 +124,10 @@ function TrainCard({ train, ticketCounts, onSelect }) {
           <div className="train-meta">
             {/* 誤點狀態 */}
             <span className="delay-badge" style={{ background: delay.bg, color: delay.color }}>
-              {delay.status === 'ontime' ? '✓' : delay.status === 'delayed' ? '⚠' : '?'} {delay.label}
+              {delay.status === 'ontime' ? <i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} /> : delay.status === 'delayed' ? <i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 3 }} /> : '? '}{delay.label}
             </span>
-            <span className={`seat-chip ${windowLow ? 'low' : ''}`}>🪟 靠窗 {train.availableWindow}</span>
-            <span className={`seat-chip ${aisleLow ? 'low' : ''}`}>💺 走道 {train.availableAisle}</span>
+            <span className={`seat-chip ${windowLow ? 'low' : ''}`}><i className="fi fi-rr-window fi-xs" style={{ marginRight: 3 }} />靠窗 {train.availableWindow}</span>
+            <span className={`seat-chip ${aisleLow ? 'low' : ''}`}><i className="fi fi-rr-chair fi-xs" style={{ marginRight: 3 }} />走道 {train.availableAisle}</span>
           </div>
         </div>
 

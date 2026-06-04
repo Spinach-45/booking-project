@@ -65,7 +65,7 @@ export default function HomePage() {
         <div className="page" style={{ paddingTop: '2rem' }}>
           {!currentUser ? (
             <div className="empty-state">
-              <div className="empty-icon" style={{ fontSize: '4rem' }}>🔐</div>
+              <div className="empty-icon"><i className="fi fi-rr-lock fi-lg" style={{ color: 'var(--secondary)' }} /></div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>請先登入</h3>
               <p className="empty-hint">登入後即可建立、管理您的行程</p>
               <Link to="/login" className="btn-primary">
@@ -88,7 +88,7 @@ export default function HomePage() {
 
               {trips.length === 0 ? (
                 <div className="empty-state">
-                  <div style={{ fontSize: '4rem' }}>✈️</div>
+                  <i className="fi fi-rr-plane fi-lg" style={{ color: 'var(--secondary)' }} />
                   <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>還沒有行程</h3>
                   <p className="empty-hint">點擊「建立行程」開始規劃您的旅程</p>
                   <button className="btn-primary" onClick={() => setCreateModal(true)}>
@@ -111,7 +111,7 @@ export default function HomePage() {
                             {formatDate(trip.startDate)} – {formatDate(trip.endDate)}
                           </span>
                           {trip.collaborators.length > 0 && (
-                            <span>👥 {trip.collaborators.length + 1} 位旅伴</span>
+                            <span><i className="fi fi-rr-users fi-xs" style={{ marginRight: 3 }} />{trip.collaborators.length + 1} 位旅伴</span>
                           )}
                         </div>
                         {trip.description && (
@@ -158,7 +158,7 @@ export default function HomePage() {
         onConfirm={() => { deleteTrip(deleteId); toast('行程已刪除', 'success'); setDeleteId(null); }}
         title="刪除行程"
         message={`確定要刪除「${deleteTitle}」嗎？所有資料將無法恢復。`}
-        icon="🗑️"
+        icon={<i className="fi fi-rr-trash fi-lg" style={{ color: 'var(--danger)' }} />}
         confirmLabel="刪除"
       />
     </div>
@@ -234,7 +234,7 @@ function CreateTripModal({ isOpen, onClose, onSave }) {
                     className={`station-btn ${form.stationId === sta.id ? 'active' : ''}`}
                     onClick={() => handleStationSelect(sta)}
                   >
-                    🚉 {sta.name}
+                    <i className="fi fi-rr-train-side fi-xs" style={{ marginRight: 4 }} />{sta.name}
                   </button>
                 ))}
               </div>

@@ -18,7 +18,7 @@ export default function BookingPage() {
   if (!selectedTrain) return (
     <div className="container" style={{ paddingTop: '3rem' }}>
       <div className="empty-state">
-        <div style={{ fontSize: '3rem' }}>🎫</div>
+        <i className="fi fi-rr-ticket fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>尚未選擇車次</p>
         <Link to="/ticket" className="btn-primary">返回查詢</Link>
       </div>
@@ -28,7 +28,7 @@ export default function BookingPage() {
   if (!currentUser) return (
     <div className="container" style={{ paddingTop: '3rem' }}>
       <div className="empty-state">
-        <div style={{ fontSize: '3rem' }}>🔐</div>
+        <i className="fi fi-rr-lock fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>請先登入才能訂票</p>
         <Link to="/login" className="btn-primary">前往登入</Link>
       </div>
@@ -94,7 +94,7 @@ export default function BookingPage() {
         <button className="btn-ghost btn-sm" onClick={() => navigate('/ticket/search')}>
           <i className="fi fi-rr-arrow-left fi-sm" /> 返回車次列表
         </button>
-        <h1 className="page-title">🎫 填寫乘客資料</h1>
+        <h1 className="page-title"><i className="fi fi-rr-ticket fi-sm" style={{ marginRight: 6 }} />填寫乘客資料</h1>
       </div>
 
       <div className="booking-layout">
@@ -108,20 +108,20 @@ export default function BookingPage() {
               {selectedTrain.trainNo}：{selectedTrain.fromName} → {selectedTrain.toName}
             </div>
             <div className="train-summary-meta">
-              <span>📅 {selectedTrain.date}</span>
-              <span>🕐 {selectedTrain.depTime} – {selectedTrain.arrTime}</span>
-              <span>⏱ {formatDuration(selectedTrain.duration)}</span>
+              <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{selectedTrain.date}</span>
+              <span><i className="fi fi-rr-clock fi-xs" style={{ marginRight: 3 }} />{selectedTrain.depTime} – {selectedTrain.arrTime}</span>
+              <span><i className="fi fi-rr-clock fi-xs" style={{ marginRight: 3 }} />{formatDuration(selectedTrain.duration)}</span>
             </div>
           </div>
 
           {/* Seat preference */}
           <div className="form-section">
-            <div className="form-section-title">💺 座位偏好</div>
+            <div className="form-section-title"><i className="fi fi-rr-chair fi-sm" style={{ marginRight: 6 }} />座位偏好</div>
             <div className="seat-pref-grid">
               {[
-                { id: 'window', icon: '🪟', label: '靠窗',   avail: selectedTrain.availableWindow },
-                { id: 'aisle',  icon: '🚶', label: '靠走道', avail: selectedTrain.availableAisle },
-                { id: 'any',    icon: '🎲', label: '不指定', avail: selectedTrain.availableWindow + selectedTrain.availableAisle },
+                { id: 'window', icon: <i className="fi fi-rr-window" />, label: '靠窗',   avail: selectedTrain.availableWindow },
+                { id: 'aisle',  icon: <i className="fi fi-rr-chair" />, label: '靠走道', avail: selectedTrain.availableAisle },
+                { id: 'any',    icon: <i className="fi fi-rr-arrows-h" />, label: '不指定', avail: selectedTrain.availableWindow + selectedTrain.availableAisle },
               ].map(opt => {
                 const enough = opt.avail >= totalPassengers;
                 return (
@@ -183,7 +183,7 @@ export default function BookingPage() {
         {/* Order summary sidebar */}
         <div className="order-sidebar">
           <div className="order-summary-card">
-            <div className="order-summary-title">📋 訂單明細</div>
+            <div className="order-summary-title"><i className="fi fi-rr-clipboard-list fi-sm" style={{ marginRight: 6 }} />訂單明細</div>
             <div className="order-rows">
               {tickets.map(t => (
                 <div key={t.typeId} className="order-row subtotal">
@@ -205,7 +205,7 @@ export default function BookingPage() {
                     <span>NT${baseAmount.toLocaleString()}</span>
                   </div>
                   <div className="order-row" style={{ color: 'var(--success)', fontSize: '0.82rem' }}>
-                    <span>🎁 {multiDiscount.label}</span>
+                    <span><i className="fi fi-rr-gift fi-xs" style={{ marginRight: 3 }} />{multiDiscount.label}</span>
                     <span>－NT${discountAmount.toLocaleString()}</span>
                   </div>
                 </>
@@ -244,7 +244,7 @@ export default function BookingPage() {
         onConfirm={handleConfirm}
         title="確認訂單"
         message={`確認建立訂單？總金額 NT$${totalAmount.toLocaleString()}，共 ${totalPassengers} 位乘客。建立後將導向付款頁面。`}
-        icon="🎫"
+        icon={<i className="fi fi-rr-ticket fi-lg" style={{ color: 'var(--primary)' }} />}
         confirmLabel="確認，前往付款"
         confirmClass="btn-primary"
       />

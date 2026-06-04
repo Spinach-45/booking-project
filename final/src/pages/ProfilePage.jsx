@@ -328,7 +328,7 @@ function ProfileTicketDetailModal({ order, onClose }) {
         {/* 列車狀態 */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.25rem' }}>
           <span style={{ padding: '4px 16px', borderRadius: 20, fontSize: '0.82rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
-            {delay.status === 'ontime' ? '✓ 列車準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
+            {delay.status === 'ontime' ? <><i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} />列車準時</> : delay.status === 'delayed' ? <><i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 3 }} />{delay.label}</> : `? ${delay.label}`}
           </span>
         </div>
 

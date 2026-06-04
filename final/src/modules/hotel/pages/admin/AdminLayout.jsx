@@ -32,7 +32,7 @@ export default function AdminLayout() {
     <div className={`admin-layout ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
       <aside className="admin-sidebar">
         <div className="admin-sidebar-header">
-          <span className="admin-brand">⚙️ {T('admin.title')}</span>
+          <span className="admin-brand"><i className="fi fi-rr-settings fi-sm" style={{ marginRight: 6 }} />{T('admin.title')}</span>
           <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
             {sidebarOpen ? <i className="fi fi-rr-cross fi-sm" /> : <i className="fi fi-rr-menu-burger fi-sm" />}
           </button>
@@ -47,7 +47,7 @@ export default function AdminLayout() {
         </nav>
         <div className="admin-sidebar-footer">
           <Link to="/hotel" className="admin-nav-item">
-            🏠 {sidebarOpen && (lang === 'zh' ? '返回前台' : 'Back to Site')}
+            <i className="fi fi-rr-home fi-sm" /> {sidebarOpen && (lang === 'zh' ? '返回前台' : 'Back to Site')}
           </Link>
         </div>
       </aside>

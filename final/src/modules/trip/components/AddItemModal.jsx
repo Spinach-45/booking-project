@@ -86,7 +86,7 @@ export default function AddItemModal({ isOpen, onClose, onSave, initialData, sta
                 className={`rec-source-tab ${recSource === 'static' ? 'active' : ''}`}
                 onClick={() => setRecSource('static')}
               >
-                📍 {station.name} 推薦景點
+                <i className="fi fi-rr-marker fi-xs" style={{ marginRight: 4 }} />{station.name} 推薦景點
               </button>
               <button
                 className={`rec-source-tab ${recSource === 'map' ? 'active' : ''}`}

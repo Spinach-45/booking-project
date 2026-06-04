@@ -75,7 +75,7 @@ export default function ChatPage() {
                   className={`chat-list-item ${activeChat?.key === chat.key ? 'active' : ''}`}
                   onClick={() => setActiveChat(chat)}
                 >
-                  <div className="chat-list-icon">💬</div>
+                  <div className="chat-list-icon"><i className="fi fi-rr-comment" /></div>
                   <div className="chat-list-info">
                     <div className="chat-list-prop">{getPropName(chat.propertyId)}</div>
                     <div className="chat-list-with">{lang === 'zh' ? '與' : 'With'}: {getOtherParticipant(chat)}</div>

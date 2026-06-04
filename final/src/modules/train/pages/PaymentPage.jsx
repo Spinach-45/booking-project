@@ -27,7 +27,7 @@ export default function PaymentPage() {
   if (!order) return (
     <div className="container" style={{ paddingTop: '3rem' }}>
       <div className="empty-state">
-        <div style={{ fontSize: '3rem' }}>❌</div>
+        <i className="fi fi-sr-cross-circle fi-lg" style={{ color: 'var(--danger)' }} />
         <p>找不到訂單</p>
         <button className="btn-primary" onClick={() => navigate('/ticket')}>返回首頁</button>
       </div>
@@ -97,7 +97,7 @@ export default function PaymentPage() {
         <button className="btn-ghost btn-sm" onClick={() => navigate(-1)}>
           <i className="fi fi-rr-arrow-left fi-sm" /> 返回
         </button>
-        <h1 className="page-title">💳 付款</h1>
+        <h1 className="page-title"><i className="fi fi-rr-credit-card fi-sm" style={{ marginRight: 6 }} />付款</h1>
       </div>
 
       <div className="payment-layout">
@@ -173,9 +173,9 @@ export default function PaymentPage() {
             {/* LINE Pay */}
             {method === 'linepay' && (
               <div className="payment-form-area">
-                <div className="pfa-title">📱 LINE Pay 授權</div>
+                <div className="pfa-title"><i className="fi fi-rr-mobile fi-sm" style={{ marginRight: 6 }} />LINE Pay 授權</div>
                 <div className="linepay-area">
-                  <div className="linepay-qr">📲</div>
+                  <div className="linepay-qr"><i className="fi fi-rr-mobile fi-lg" /></div>
                   <div className="linepay-hint">掃描 QR Code 或點擊下方按鈕完成授權</div>
                   {!linepayReady ? (
                     <button className="btn-primary" onClick={() => setLinepayReady(true)}>
@@ -183,7 +183,7 @@ export default function PaymentPage() {
                     </button>
                   ) : (
                     <div className="badge badge-success" style={{ fontSize: '0.9rem', padding: '0.4rem 1rem' }}>
-                      ✅ 授權完成，可進行付款
+                      <i className="fi fi-sr-check-circle fi-xs" style={{ marginRight: 4 }} />授權完成，可進行付款
                     </div>
                   )}
                 </div>
@@ -193,7 +193,7 @@ export default function PaymentPage() {
             {/* CVS */}
             {method === 'cvs' && (
               <div className="payment-form-area">
-                <div className="pfa-title">🏪 超商繳費代碼</div>
+                <div className="pfa-title"><i className="fi fi-rr-store-alt fi-sm" style={{ marginRight: 6 }} />超商繳費代碼</div>
                 <div className="cvs-area">
                   {!cvsCode ? (
                     <button className="btn-primary" onClick={generateCvs}>產生繳費代碼</button>
@@ -215,7 +215,7 @@ export default function PaymentPage() {
             {/* Bank transfer */}
             {method === 'bank' && (
               <div className="payment-form-area">
-                <div className="pfa-title">🏦 銀行轉帳資訊</div>
+                <div className="pfa-title"><i className="fi fi-rr-bank fi-sm" style={{ marginRight: 6 }} />銀行轉帳資訊</div>
                 {!bankAcct ? (
                   <div style={{ textAlign: 'center', padding: '1rem' }}>
                     <button className="btn-primary" onClick={generateBank}>產生虛擬帳號</button>
@@ -262,7 +262,7 @@ export default function PaymentPage() {
         {/* Right: order summary */}
         <div className="order-sidebar">
           <div className="order-summary-card">
-            <div className="order-summary-title">📋 訂單摘要</div>
+            <div className="order-summary-title"><i className="fi fi-rr-clipboard-list fi-sm" style={{ marginRight: 6 }} />訂單摘要</div>
             <div style={{ marginBottom: '0.75rem' }}>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.35rem' }}>
                 <span className="train-type-badge" style={{ background: typeInfo.bg, color: typeInfo.color }}>
@@ -306,7 +306,7 @@ export default function PaymentPage() {
             {userPoints > 0 && (
               <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
                 <div style={{ fontSize: '0.82rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-                  🌟 點數折抵（持有 {userPoints} 點）
+                  <i className="fi fi-sr-star fi-xs" style={{ marginRight: 4, color: '#f59e0b' }} />點數折抵（持有 {userPoints} 點）
                 </div>
                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                   <input

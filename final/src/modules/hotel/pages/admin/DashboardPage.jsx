@@ -95,7 +95,7 @@ export default function DashboardPage() {
                 <div className="prop-status-info">
                   <div className="prop-status-name">{lang === 'zh' ? p.name : (p.nameEn || p.name)}</div>
                   <div className="prop-status-meta">
-                    ⭐ {p.rating} · {p.reviewCount} {lang === 'zh' ? '評價' : 'reviews'}
+                    <i className="fi fi-sr-star fi-xs" style={{ marginRight: 3, color: '#f59e0b' }} />{p.rating} · {p.reviewCount} {lang === 'zh' ? '評價' : 'reviews'}
                   </div>
                 </div>
                 <span className={`badge ${p.active ? 'badge-confirmed' : 'badge-cancelled'}`}>

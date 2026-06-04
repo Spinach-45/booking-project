@@ -133,7 +133,7 @@ export default function DayBlock({ day, trip }) {
         onConfirm={() => deleteDay(trip.id, day.id)}
         title="刪除此天行程"
         message={`確定要刪除「第 ${day.dayNumber} 天（${dateStr}）」及其所有項目嗎？`}
-        icon="🗑️"
+        icon={<i className="fi fi-rr-trash fi-lg" style={{ color: 'var(--danger)' }} />}
         confirmLabel="刪除"
       />
     </div>

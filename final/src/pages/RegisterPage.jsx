@@ -80,7 +80,7 @@ export default function RegisterPage() {
               <i className="fi fi-rr-globe fi-sm" /> Google
             </button>
             <button className="btn-outline full-width" onClick={() => handleOAuth('line')} style={{ flex: 1, color: '#06C755', borderColor: '#06C755' }}>
-              💬 LINE
+              <i className="fi fi-rr-comment fi-sm" /> LINE
             </button>
           </div>
         </div>

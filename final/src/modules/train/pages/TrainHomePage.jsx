@@ -178,7 +178,7 @@ export default function HomePage() {
 
           {/* Validation hint */}
           {(searchParams.from === searchParams.to) && (
-            <p style={{ color: 'var(--danger)', fontSize: '0.82rem', marginBottom: '0.75rem' }}>⚠ 出發站與到達站不能相同</p>
+            <p style={{ color: 'var(--danger)', fontSize: '0.82rem', marginBottom: '0.75rem' }}><i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 4 }} />出發站與到達站不能相同</p>
           )}
           {totalPassengers === 0 && (
             <p style={{ color: 'var(--warning)', fontSize: '0.82rem', marginBottom: '0.75rem' }}>請至少選擇 1 張票</p>

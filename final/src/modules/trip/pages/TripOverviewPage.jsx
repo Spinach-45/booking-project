@@ -13,7 +13,7 @@ export default function TripOverviewPage() {
   if (!trip) return (
     <div className="container">
       <div className="empty-state" style={{ paddingTop: '6rem' }}>
-        <div style={{ fontSize: '3rem' }}>🔍</div>
+        <i className="fi fi-rr-search fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>找不到此行程</p>
         <button className="btn-primary" onClick={() => navigate('/trip')}>返回行程列表</button>
       </div>
@@ -26,7 +26,10 @@ export default function TripOverviewPage() {
     return `${dt.getFullYear()}年 ${dt.getMonth() + 1}月${dt.getDate()}日（${dow}）`;
   };
 
-  const getTypeIcon = (type) => ITEM_TYPES.find(t => t.value === type)?.icon || '📍';
+  const getTypeIcon = (type) => {
+    const found = ITEM_TYPES.find(t => t.value === type);
+    return found ? <i className={`fi ${found.icon} fi-xs`} style={{ marginRight: 4 }} /> : <i className="fi fi-rr-marker fi-xs" style={{ marginRight: 4 }} />;
+  };
   const getStatusLabel = (status) => STATUS_OPTIONS.find(s => s.value === status)?.label || status;
 
   // summary stats
@@ -54,16 +57,16 @@ export default function TripOverviewPage() {
         {/* Summary Stats */}
         <div style={{ display: 'flex', gap: '1rem', margin: '0 0 1.5rem', flexWrap: 'wrap' }}>
           {[
-            { label: '總天數', value: trip.days.length, icon: '📅' },
-            { label: '行程項目', value: totalItems, icon: '📍' },
-            { label: '已完成', value: completedItems, icon: '✅' },
-            { label: '候選中', value: candidateItems, icon: '⭐' },
+            { label: '總天數', value: trip.days.length, icon: <i className="fi fi-rr-calendar" style={{ fontSize: '1.4rem' }} /> },
+            { label: '行程項目', value: totalItems, icon: <i className="fi fi-rr-marker" style={{ fontSize: '1.4rem' }} /> },
+            { label: '已完成', value: completedItems, icon: <i className="fi fi-sr-check-circle" style={{ fontSize: '1.4rem', color: 'var(--success)' }} /> },
+            { label: '候選中', value: candidateItems, icon: <i className="fi fi-sr-star" style={{ fontSize: '1.4rem', color: '#f59e0b' }} /> },
           ].map(s => (
             <div key={s.label} style={{
               background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)',
               padding: '0.9rem 1.25rem', flex: '1', minWidth: '100px',
             }}>
-              <div style={{ fontSize: '1.4rem', marginBottom: 2 }}>{s.icon}</div>
+              <div style={{ marginBottom: 2 }}>{s.icon}</div>
               <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--primary)' }}>{s.value}</div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{s.label}</div>
             </div>
@@ -122,11 +125,11 @@ export default function TripOverviewPage() {
                             </div>
                           )}
                           {item.notes && (
-                            <div className="timeline-notes">💬 {item.notes}</div>
+                            <div className="timeline-notes"><i className="fi fi-rr-comment fi-xs" style={{ marginRight: 3 }} />{item.notes}</div>
                           )}
                           {item.isCandidate && (item.votes.for.length > 0 || item.votes.against.length > 0) && (
                             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 3 }}>
-                              投票：👍 {item.votes.for.length} · 👎 {item.votes.against.length}
+                              投票：<i className="fi fi-sr-check fi-xs" style={{ marginRight: 2, color: '#4caf50' }} />{item.votes.for.length} · <i className="fi fi-sr-cross fi-xs" style={{ marginRight: 2, color: '#f44336' }} />{item.votes.against.length}
                             </div>
                           )}
                         </div>
@@ -141,7 +144,7 @@ export default function TripOverviewPage() {
 
         {trip.days.length === 0 && (
           <div className="empty-state">
-            <div style={{ fontSize: '3rem' }}>📅</div>
+            <i className="fi fi-rr-calendar fi-lg" style={{ color: 'var(--secondary)' }} />
             <p>行程尚未安排任何天數</p>
             <Link to={`/trip/${id}`} className="btn-primary">前往安排行程</Link>
           </div>

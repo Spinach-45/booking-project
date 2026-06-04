@@ -28,7 +28,7 @@ export default function TripDetailPage() {
   if (!trip) return (
     <div className="container">
       <div className="empty-state" style={{ paddingTop: '6rem' }}>
-        <div style={{ fontSize: '3rem' }}>🔍</div>
+        <i className="fi fi-rr-search fi-lg" style={{ color: 'var(--secondary)' }} />
         <p>找不到此行程</p>
         <button className="btn-primary" onClick={() => navigate('/trip')}>返回行程列表</button>
       </div>
@@ -75,8 +75,8 @@ export default function TripDetailPage() {
   };
 
   const ACTION_ICONS = {
-    create: '🎉', add_item: '➕', edit_item: '✏️', delete_item: '🗑️',
-    vote: '🗳️', invite: '✉️', join: '👋', add_expense: '💰',
+    create: <i className="fi fi-rr-star fi-xs" />, add_item: <i className="fi fi-rr-plus fi-xs" />, edit_item: <i className="fi fi-rr-pencil fi-xs" />, delete_item: <i className="fi fi-rr-trash fi-xs" />,
+    vote: <i className="fi fi-rr-vote-yea fi-xs" />, invite: <i className="fi fi-rr-envelope fi-xs" />, join: <i className="fi fi-rr-hand-wave fi-xs" />, add_expense: <i className="fi fi-rr-dollar fi-xs" />,
   };
 
   return (
@@ -90,9 +90,9 @@ export default function TripDetailPage() {
               <div className="trip-detail-meta">
                 <span><i className="fi fi-rr-marker fi-sm" /> {trip.stationName}</span>
                 <span><i className="fi fi-rr-calendar fi-sm" /> {formatDate(trip.startDate)} – {formatDate(trip.endDate)}</span>
-                <span>🗓️ {trip.days.length} 天</span>
+                <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{trip.days.length} 天</span>
                 <span><i className="fi fi-rr-users fi-sm" /> {collabNames.length} 位旅伴</span>
-                {trip.budget > 0 && <span>💰 預算 NT${trip.budget.toLocaleString()}</span>}
+                {trip.budget > 0 && <span><i className="fi fi-rr-dollar fi-xs" style={{ marginRight: 3 }} />預算 NT${trip.budget.toLocaleString()}</span>}
               </div>
               {trip.description && (
                 <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)' }}>{trip.description}</p>
@@ -137,7 +137,7 @@ export default function TripDetailPage() {
               <div>
                 {trip.days.length === 0 ? (
                   <div className="empty-state">
-                    <div style={{ fontSize: '3rem' }}>📅</div>
+                    <i className="fi fi-rr-calendar fi-lg" style={{ color: 'var(--secondary)' }} />
                     <p>尚未安排任何天數</p>
                     <button className="btn-primary" onClick={() => addDay(id)}>
                       <i className="fi fi-rr-plus fi-sm" /> 新增第一天
@@ -207,7 +207,7 @@ export default function TripDetailPage() {
                       <span className="history-dot" />
                       <div className="history-content">
                         <span className="history-action">
-                          {ACTION_ICONS[h.action] || '📝'} {h.description}
+                          {ACTION_ICONS[h.action] || <i className="fi fi-rr-pencil fi-xs" />} {h.description}
                         </span>
                         <span className="history-time">
                           {h.userName} · {formatTs(h.timestamp)}

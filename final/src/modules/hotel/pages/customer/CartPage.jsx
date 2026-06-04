@@ -44,7 +44,7 @@ export default function CartPage() {
                   <div className="cart-item-info">
                     <h3>{item.propertyName}</h3>
                     <p>{item.roomType}</p>
-                    <p>📅 {item.checkIn} → {item.checkOut} · 🌙 {item.nights} {T('common.nights')} · 👤 {item.guests} {T('common.persons')}</p>
+                    <p><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{item.checkIn} → {item.checkOut} · <i className="fi fi-rr-moon fi-xs" style={{ margin: '0 3px' }} />{item.nights} {T('common.nights')} · <i className="fi fi-rr-user fi-xs" style={{ margin: '0 3px' }} />{item.guests} {T('common.persons')}</p>
                   </div>
                   <div className="cart-item-price">
                     <div className="price-per-night">NT$ {item.pricePerNight.toLocaleString()} / {T('common.night')}</div>
