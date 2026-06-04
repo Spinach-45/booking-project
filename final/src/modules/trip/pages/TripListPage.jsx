@@ -47,7 +47,7 @@ export default function HomePage() {
       <div className="hero">
         <div className="hero-bg" />
         <div className="hero-content">
-          <h1 className="hero-title">🗺️ 旅行行程規劃</h1>
+          <h1 className="hero-title"><i className="fi fi-rr-map" /> 旅行行程規劃</h1>
           <p className="hero-subtitle">以火車站為核心，規劃精彩行程，與旅伴協作共遊</p>
           {currentUser ? (
             <button className="btn-primary btn-large" onClick={() => setCreateModal(true)}>
