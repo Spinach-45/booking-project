@@ -141,7 +141,7 @@ const DESTINATIONS = [
     name: '國立故宮博物院',
     city: '台北市',
     description: '收藏逾69萬件中華文物珍寶，翠玉白菜為鎮館之寶',
-    image: 'https://images.unsplash.com/photo-1599413987323-b2b8c0d7d9c8?w=600',
+    image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600',
     lat: 25.1023,
     lng: 121.5484,
   },
