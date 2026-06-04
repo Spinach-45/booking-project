@@ -59,9 +59,9 @@ function getNearestStation(lat, lng) {
   return { ...nearest, distanceM: Math.round(minDist), walkMins };
 }
 
-// ── 2 公里內推薦住宿（距離 → 評分 → 價格）──────────────────
+// ── 推薦住宿：先找 2km 內，不足 3 筆再擴展到 15km ──────────
 function getNearbyHotels(lat, lng) {
-  return SEED_PROPERTIES
+  const scored = SEED_PROPERTIES
     .filter(p => p.lat != null && p.lng != null && p.active !== false)
     .map(p => ({
       id: p.id,
@@ -70,9 +70,12 @@ function getNearbyHotels(lat, lng) {
       minPrice: Math.min(...p.rooms.map(r => r.price)),
       distance: Math.round(getDistance(lat, lng, p.lat, p.lng)),
     }))
-    .filter(p => p.distance <= 2000)
-    .sort((a, b) => a.distance - b.distance || b.rating - a.rating || a.minPrice - b.minPrice)
-    .slice(0, 3);
+    .sort((a, b) => a.distance - b.distance || b.rating - a.rating || a.minPrice - b.minPrice);
+
+  const near = scored.filter(p => p.distance <= 2000);
+  if (near.length >= 3) return near.slice(0, 3);
+  // 不足 3 筆則擴展至 15km
+  return scored.filter(p => p.distance <= 15000).slice(0, 3);
 }
 
 // ── 景點資料（含座標，用於自動比對）────────────────────────
