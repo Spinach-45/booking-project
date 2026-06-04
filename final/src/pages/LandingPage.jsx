@@ -160,7 +160,7 @@ function DestCard({ dest, station, hotels }) {
   const handleStationClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setSearchParams({ from: station.id });
+    setSearchParams({ to: station.id });
     navigate('/ticket');
   };
 
