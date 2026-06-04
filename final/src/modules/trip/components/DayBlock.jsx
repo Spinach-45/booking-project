@@ -66,7 +66,7 @@ export default function DayBlock({ day, trip }) {
         <span className="day-header-date">{dateStr}</span>
         {conflicts.length > 0 && (
           <span className="badge badge-conflict" style={{ fontSize: '0.72rem' }}>
-            ⚡ {conflicts.length} 個衝突
+            <i className="fi fi-sr-exclamation fi-xs" style={{ color: '#ff9800', marginRight: 3 }} />{conflicts.length} 個衝突
           </span>
         )}
         <div className="day-header-actions">

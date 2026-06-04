@@ -159,7 +159,7 @@ export default function HomePage() {
           )}
 
           {/* Ticket counts */}
-          <div className="ticket-section-label">🎫 票種與張數（最多 6 張）</div>
+          <div className="ticket-section-label"><i className="fi fi-rr-ticket fi-sm" style={{ color: '#6e7c87', marginRight: 6 }} />票種與張數（最多 6 張）</div>
           <div className="ticket-count-grid" style={{ marginBottom: '1.25rem' }}>
             {TICKET_TYPES.map(tt => (
               <div key={tt.id} className="ticket-count-row">
@@ -197,7 +197,7 @@ export default function HomePage() {
       {currentUser && (
         <div className="features-section" style={{ paddingTop: 0 }}>
           <div style={{ padding: '1rem 1.25rem', background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-            <span style={{ fontWeight: 700 }}>👋 歡迎回來，{currentUser.name}！</span>
+            <span style={{ fontWeight: 700 }}><i className="fi fi-rr-hand-wave fi-sm" style={{ color: '#6e7c87', marginRight: 6 }} />歡迎回來，{currentUser.name}！</span>
             <Link to="/ticket/orders" className="btn-outline btn-sm">查看我的訂單</Link>
           </div>
         </div>

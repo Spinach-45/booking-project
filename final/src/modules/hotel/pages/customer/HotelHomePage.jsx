@@ -6,10 +6,10 @@ import PropertyCard from '../../components/PropertyCard';
 import AdBanner from '../../../../components/common/AdBanner';
 
 const DESTINATIONS = [
-  { value: 'taipei', zh: '台北', en: 'Taipei', emoji: '🏙️', count: 2 },
-  { value: 'keelung', zh: '基隆', en: 'Keelung', emoji: '⚓', count: 1 },
-  { value: 'newTaipei', zh: '新北', en: 'New Taipei', emoji: '🌉', count: 3 },
-  { value: 'taoyuan', zh: '桃園', en: 'Taoyuan', emoji: '✈️', count: 2 },
+  { value: 'taipei',   zh: '台北', en: 'Taipei',     icon: 'fi-sr-city',   count: 2 },
+  { value: 'keelung',  zh: '基隆', en: 'Keelung',    icon: 'fi-sr-anchor', count: 1 },
+  { value: 'newTaipei',zh: '新北', en: 'New Taipei', icon: 'fi-sr-bridge', count: 3 },
+  { value: 'taoyuan',  zh: '桃園', en: 'Taoyuan',    icon: 'fi-sr-plane',  count: 2 },
 ];
 
 export default function HomePage() {
@@ -50,7 +50,7 @@ export default function HomePage() {
                 className="destination-card"
                 onClick={() => handleDestClick(d.value)}
               >
-                <span className="dest-emoji">{d.emoji}</span>
+                <i className={`fi ${d.icon}`} style={{ fontSize: '2.5rem', color: '#6e7c87', marginBottom: '0.5rem', display: 'block' }} />
                 <span className="dest-name">{lang === 'zh' ? d.zh : d.en}</span>
                 <span className="dest-count">{d.count} {lang === 'zh' ? '個房源' : 'properties'}</span>
                 <i className="fi fi-rr-angle-right fi-sm dest-arrow" />

@@ -6,7 +6,6 @@ import Modal from '../../../components/common/Modal';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
 import { AREAS, STATIONS } from '../data/attractions';
 
-const AREA_EMOJIS = { taipei: '🏙️', newTaipei: '🌆', keelung: '⚓', taoyuan: '✈️' };
 
 export default function HomePage() {
   const { currentUser, getUserTrips, createTrip, deleteTrip } = useStore();
@@ -101,9 +100,7 @@ export default function HomePage() {
                   {trips.map(trip => (
                     <div key={trip.id} className="trip-card">
                       <div className="trip-card-cover">
-                        <span className="trip-card-cover-emoji">
-                          {AREA_EMOJIS[trip.area] || '🗺️'}
-                        </span>
+                        <i className="fi fi-sr-map" style={{ fontSize: '3rem', color: '#6e7c87' }} />
                       </div>
                       <div className="trip-card-body">
                         <div className="trip-card-title">{trip.title}</div>

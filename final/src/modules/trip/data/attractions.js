@@ -40,11 +40,11 @@ export const TYPE_NAMES = {
 };
 
 export const ITEM_TYPES = [
-  { value: 'attraction', label: '景點', icon: '🗺️' },
-  { value: 'food',       label: '餐廳/美食', icon: '🍜' },
-  { value: 'activity',   label: '活動', icon: '🎭' },
-  { value: 'transport',  label: '交通', icon: '🚌' },
-  { value: 'other',      label: '其他', icon: '📍' },
+  { value: 'attraction', label: '景點',    icon: 'fi-rr-museum' },
+  { value: 'food',       label: '餐廳/美食', icon: 'fi-rr-utensils' },
+  { value: 'activity',   label: '活動',    icon: 'fi-rr-star' },
+  { value: 'transport',  label: '交通',    icon: 'fi-rr-train-side' },
+  { value: 'other',      label: '其他',    icon: 'fi-rr-marker' },
 ];
 
 export const EXPENSE_CATEGORIES = [

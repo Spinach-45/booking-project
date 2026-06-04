@@ -56,7 +56,7 @@ export default function TripItemCard({
             {item.time}
           </span>
           <span className="trip-item-title">
-            <span style={{ marginRight: 4 }}>{typeInfo.icon}</span>
+            <i className={`fi ${typeInfo.icon} fi-xs`} style={{ marginRight: 4, color: '#6e7c87' }} />
             {item.title}
           </span>
           <div className="trip-item-actions">
@@ -95,7 +95,7 @@ export default function TripItemCard({
             <span className="badge badge-candidate">候選</span>
           )}
           {hasConflict && (
-            <span className="badge badge-conflict">⚡ 時間衝突</span>
+            <span className="badge badge-conflict"><i className="fi fi-sr-exclamation fi-xs" style={{ color: '#ff9800', marginRight: 3 }} />時間衝突</span>
           )}
           {item.duration > 0 && (
             <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
@@ -121,7 +121,7 @@ export default function TripItemCard({
               onClick={() => handleVote('for')}
               disabled={!currentUser}
             >
-              <i className="fi fi-rr-check fi-xs" />
+              <i className="fi fi-sr-check fi-xs" style={{ color: '#4caf50' }} />
               <span className="vote-count">{item.votes.for.length}</span>
             </button>
             <button
@@ -129,7 +129,7 @@ export default function TripItemCard({
               onClick={() => handleVote('against')}
               disabled={!currentUser}
             >
-              <i className="fi fi-rr-cross fi-xs" />
+              <i className="fi fi-sr-cross fi-xs" style={{ color: '#f44336' }} />
               <span className="vote-count">{item.votes.against.length}</span>
             </button>
             {item.votes.for.length > item.votes.against.length && item.votes.for.length > 0 && (

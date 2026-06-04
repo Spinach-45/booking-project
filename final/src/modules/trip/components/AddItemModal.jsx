@@ -110,9 +110,7 @@ export default function AddItemModal({ isOpen, onClose, onSave, initialData, sta
                       className={`attraction-chip ${selectedAttr === attr.id ? 'selected' : ''}`}
                       onClick={() => handleAttrSelect(attr)}
                     >
-                      <span className="attraction-type-icon">
-                        {ITEM_TYPES.find(t => t.value === 'attraction')?.icon || '📍'}
-                      </span>
+                      <i className={`fi ${ITEM_TYPES.find(t => t.value === 'attraction')?.icon || 'fi-rr-marker'} fi-xs`} />
                       <span className="attraction-info">
                         <span className="attraction-name">{attr.name}</span>
                         <span className="attraction-dist">{attr.distance}m</span>
@@ -145,7 +143,7 @@ export default function AddItemModal({ isOpen, onClose, onSave, initialData, sta
                   className={`area-tab ${form.type === t.value ? 'active' : ''}`}
                   onClick={() => set('type', t.value)}
                 >
-                  {t.icon} {t.label}
+                  <i className={`fi ${t.icon} fi-xs`} style={{ marginRight: 4 }} />{t.label}
                 </button>
               ))}
             </div>
