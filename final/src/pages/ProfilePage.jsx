@@ -33,7 +33,7 @@ export default function ProfilePage() {
     return (
       <div className="container" style={{ paddingTop: '4rem' }}>
         <div className="empty-state">
-          <div style={{ fontSize: '3rem' }}>🔐</div>
+          <i className="fi fi-rr-lock fi-lg" style={{ color: 'var(--secondary)' }} />
           <p>請先登入才能查看個人中心</p>
           <Link to="/login" className="btn-primary">前往登入</Link>
         </div>
@@ -75,14 +75,14 @@ export default function ProfilePage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '0.75rem', marginBottom: '1.5rem' }}>
         {[
-          { label: '行程', value: trips.length, icon: '🗺️' },
-          { label: '火車票訂單', value: trainOrders.length, icon: '🚂' },
-          { label: '住宿訂單', value: hotelOrders.length, icon: '🏨' },
-          { label: '收藏房源', value: favoriteIds.length, icon: '❤️' },
-          { label: '累積點數', value: currentUser.points ?? 0, icon: '⭐' },
+          { label: '行程', value: trips.length, icon: 'fi-rr-map' },
+          { label: '火車票訂單', value: trainOrders.length, icon: 'fi-rr-train-side' },
+          { label: '住宿訂單', value: hotelOrders.length, icon: 'fi-rr-bed' },
+          { label: '收藏房源', value: favoriteIds.length, icon: 'fi-sr-heart' },
+          { label: '累積點數', value: currentUser.points ?? 0, icon: 'fi-sr-star' },
         ].map(s => (
           <div key={s.label} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem' }}>{s.icon}</div>
+            <i className={`fi ${s.icon}`} style={{ fontSize: '1.5rem', color: 'var(--primary)' }} />
             <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--primary)' }}>{s.value}</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{s.label}</div>
           </div>
@@ -137,7 +137,7 @@ export default function ProfilePage() {
             <Link to="/ticket/orders" className="btn-outline btn-sm">前往票務管理</Link>
           </div>
           {trainOrders.length === 0 ? (
-            <div className="empty-state"><div style={{ fontSize: '2rem' }}>🎫</div><p>尚無火車票訂單</p><Link to="/ticket" className="btn-primary">查詢車次</Link></div>
+            <div className="empty-state"><i className="fi fi-rr-ticket fi-lg" style={{ color: 'var(--secondary)' }} /><p>尚無火車票訂單</p><Link to="/ticket" className="btn-primary">查詢車次</Link></div>
           ) : (
             trainOrders.slice().reverse().map(o => {
               const typeInfo = TRAIN_TYPES[o.train.type] ?? {};
@@ -165,15 +165,15 @@ export default function ProfilePage() {
                     <i className="fi fi-rr-arrow-right fi-sm" style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} />
                     {o.train.toName}
                     <span style={{ marginLeft: 8, padding: '1px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
-                      {delay.status === 'ontime' ? '✓ 準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
+                      {delay.status === 'ontime' ? <><i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} />準時</> : delay.status === 'delayed' ? <><i className="fi fi-sr-exclamation fi-xs" style={{ marginRight: 3 }} />{delay.label}</> : delay.label}
                     </span>
                   </div>
 
                   {/* Meta */}
                   <div className="order-meta">
-                    <span>📅 {o.train.date}</span>
-                    <span>🕐 {o.train.depTime} – {o.train.arrTime}</span>
-                    <span>💺 {o.seatPref === 'window' ? '靠窗' : o.seatPref === 'aisle' ? '靠走道' : '不指定'}</span>
+                    <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{o.train.date}</span>
+                    <span><i className="fi fi-rr-clock fi-xs" style={{ marginRight: 3 }} />{o.train.depTime} – {o.train.arrTime}</span>
+                    <span><i className="fi fi-rr-chair fi-xs" style={{ marginRight: 3 }} />{o.seatPref === 'window' ? '靠窗' : o.seatPref === 'aisle' ? '靠走道' : '不指定'}</span>
                     {o.bookingNo && <span style={{ fontFamily: 'monospace', color: 'var(--primary)', fontWeight: 700 }}>票號：{o.bookingNo}</span>}
                   </div>
 
@@ -185,13 +185,13 @@ export default function ProfilePage() {
                         className="btn-outline btn-sm"
                         onClick={() => setTicketDetail({ order: o, passenger: null })}
                       >
-                        🎫 查看車票詳情
+                        <i className="fi fi-rr-ticket fi-xs" style={{ marginRight: 4 }} />查看車票詳情
                       </button>
                       {o.status === 'pending' && (
                         <Link to={`/ticket/payment/${o.id}`} className="btn-primary btn-sm">前往付款</Link>
                       )}
                       {canTicket && (
-                        <Link to={`/ticket/ticket/${o.id}`} className="btn-outline btn-sm">🎟️ 取票</Link>
+                        <Link to={`/ticket/ticket/${o.id}`} className="btn-outline btn-sm"><i className="fi fi-rr-ticket fi-xs" style={{ marginRight: 4 }} />取票</Link>
                       )}
                     </div>
                   </div>
@@ -212,7 +212,7 @@ export default function ProfilePage() {
         <div>
           <h3 style={{ fontWeight: 700, marginBottom: '1rem' }}>住宿訂單（{hotelOrders.length} 筆）</h3>
           {hotelOrders.length === 0 ? (
-            <div className="empty-state"><div style={{ fontSize: '2rem' }}>🏨</div><p>尚無住宿訂單</p><Link to="/hotel" className="btn-primary">搜尋住宿</Link></div>
+            <div className="empty-state"><i className="fi fi-rr-bed fi-lg" style={{ color: 'var(--secondary)' }} /><p>尚無住宿訂單</p><Link to="/hotel" className="btn-primary">搜尋住宿</Link></div>
           ) : (
             hotelOrders.slice().reverse().map(o => (
               <div key={o.id} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1rem', marginBottom: '0.75rem' }}>
@@ -221,7 +221,7 @@ export default function ProfilePage() {
                   <span className={`badge badge-${o.status === 'confirmed' ? 'success' : 'danger'}`}>{o.status === 'confirmed' ? '已確認' : '已取消'}</span>
                 </div>
                 <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: 4 }}>{o.roomTypeName} · {o.checkIn} – {o.checkOut}</div>
-                {o.discountApplied && <div style={{ fontSize: '0.82rem', color: 'var(--success)', marginTop: 2 }}>🎁 {o.discountApplied.reason} 省 NT${o.discountApplied.savedAmount}</div>}
+                {o.discountApplied && <div style={{ fontSize: '0.82rem', color: 'var(--success)', marginTop: 2 }}><i className="fi fi-rr-gift fi-xs" style={{ marginRight: 3 }} />{o.discountApplied.reason} 省 NT${o.discountApplied.savedAmount}</div>}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
                   <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>訂單：{o.id}</span>
                   <span style={{ fontWeight: 700, color: 'var(--primary)' }}>NT${(o.finalAmount || o.totalAmount)?.toLocaleString()}</span>
@@ -239,7 +239,7 @@ export default function ProfilePage() {
             <Link to="/trip" className="btn-primary btn-sm">+ 新行程</Link>
           </div>
           {trips.length === 0 ? (
-            <div className="empty-state"><div style={{ fontSize: '2rem' }}>✈️</div><p>尚無行程</p><Link to="/trip" className="btn-primary">建立行程</Link></div>
+            <div className="empty-state"><i className="fi fi-rr-plane fi-lg" style={{ color: 'var(--secondary)' }} /><p>尚無行程</p><Link to="/trip" className="btn-primary">建立行程</Link></div>
           ) : (
             trips.map(trip => (
               <div key={trip.id} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1rem', marginBottom: '0.75rem' }}>
@@ -262,7 +262,7 @@ export default function ProfilePage() {
         <div>
           <h3 style={{ fontWeight: 700, marginBottom: '1rem' }}>收藏房源（{favoriteProps.length} 筆）</h3>
           {favoriteProps.length === 0 ? (
-            <div className="empty-state"><div style={{ fontSize: '2rem' }}>❤️</div><p>尚無收藏</p><Link to="/hotel/properties" className="btn-primary">搜尋房源</Link></div>
+            <div className="empty-state"><i className="fi fi-sr-heart fi-lg" style={{ color: 'var(--secondary)' }} /><p>尚無收藏</p><Link to="/hotel/properties" className="btn-primary">搜尋房源</Link></div>
           ) : (
             <div className="properties-grid">
               {favoriteProps.map(p => (
@@ -286,7 +286,7 @@ export default function ProfilePage() {
         <div>
           <h3 style={{ fontWeight: 700, marginBottom: '1rem' }}>我建立的行程分享連結</h3>
           {myTrips.length === 0 ? (
-            <div className="empty-state"><div style={{ fontSize: '2rem' }}>🔗</div><p>尚無分享連結</p></div>
+            <div className="empty-state"><i className="fi fi-rr-link fi-lg" style={{ color: 'var(--secondary)' }} /><p>尚無分享連結</p></div>
           ) : (
             myTrips.map(trip => (
               <div key={trip.id} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '1rem', marginBottom: '0.75rem' }}>
