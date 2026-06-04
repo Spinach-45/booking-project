@@ -245,7 +245,7 @@ export default function LandingPage() {
         <div className="hero-bg" />
         <div className="hero-content container">
           <p className="hero-eyebrow">智慧旅遊平台</p>
-          <h1 className="hero-title">旅行，<strong>由你定義</strong></h1>
+          <h1 className="hero-title">Agent TT <strong>旅行，由你定義</strong></h1>
           <p className="hero-subtitle">行程規劃 × 住宿訂房 × 火車訂票，三大功能整合於一站</p>
 
           <div className="hero-search">
