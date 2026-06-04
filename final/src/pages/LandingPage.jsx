@@ -97,7 +97,7 @@ const DESTINATIONS = [
     name: '野柳地質公園',
     city: '新北市',
     description: '奇特海蝕地形景觀，女王頭為台灣最具代表性的天然奇石',
-    image: 'https://images.unsplash.com/photo-1625456381035-e8d14c6ea3ab?w=600',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600',
     lat: 25.2072,
     lng: 121.6893,
   },
