@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Train, Hotel, Map, Heart, Share2, Edit2, Save, X, Star, Ticket, ArrowRight } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
 import useHotelStore from '../store/useHotelStore';
 import useTrainStore from '../store/useTrainStore';
@@ -10,12 +9,12 @@ import Modal from '../components/common/Modal';
 import { TRAIN_TYPES, ORDER_STATUSES, getDelayStatus } from '../modules/train/data/trainData';
 
 const TABS = [
-  { id: 'info',          label: '個人資料',   icon: <User size={15} /> },
-  { id: 'orders-train',  label: '火車票訂單', icon: <Train size={15} /> },
-  { id: 'orders-hotel',  label: '住宿訂單',   icon: <Hotel size={15} /> },
-  { id: 'trips',         label: '我的行程',   icon: <Map size={15} /> },
-  { id: 'favorites',     label: '收藏清單',   icon: <Heart size={15} /> },
-  { id: 'shares',        label: '分享連結',   icon: <Share2 size={15} /> },
+  { id: 'info',          label: '個人資料',   icon: <i className="fi fi-rr-user fi-sm" /> },
+  { id: 'orders-train',  label: '火車票訂單', icon: <i className="fi fi-rr-train-side fi-sm" /> },
+  { id: 'orders-hotel',  label: '住宿訂單',   icon: <i className="fi fi-rr-bed fi-sm" /> },
+  { id: 'trips',         label: '我的行程',   icon: <i className="fi fi-rr-map fi-sm" /> },
+  { id: 'favorites',     label: '收藏清單',   icon: <i className="fi fi-rr-heart fi-sm" /> },
+  { id: 'shares',        label: '分享連結',   icon: <i className="fi fi-rr-share fi-sm" /> },
 ];
 
 export default function ProfilePage() {
@@ -105,11 +104,11 @@ export default function ProfilePage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <h3 style={{ fontWeight: 700 }}>個人資料</h3>
             {!editing ? (
-              <button className="btn-outline btn-sm" onClick={() => setEditing(true)}><Edit2 size={14} /> 編輯</button>
+              <button className="btn-outline btn-sm" onClick={() => setEditing(true)}><i className="fi fi-rr-pencil fi-sm" /> 編輯</button>
             ) : (
               <div style={{ display: 'flex', gap: 6 }}>
-                <button className="btn-ghost btn-sm" onClick={() => setEditing(false)}><X size={14} /> 取消</button>
-                <button className="btn-primary btn-sm" onClick={handleSave}><Save size={14} /> 儲存</button>
+                <button className="btn-ghost btn-sm" onClick={() => setEditing(false)}><i className="fi fi-rr-cross fi-sm" /> 取消</button>
+                <button className="btn-primary btn-sm" onClick={handleSave}><i className="fi fi-rr-disk fi-sm" /> 儲存</button>
               </div>
             )}
           </div>
@@ -163,7 +162,7 @@ export default function ProfilePage() {
                   {/* Route + delay */}
                   <div className="order-route">
                     {o.train.fromName}
-                    <ArrowRight size={14} style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} />
+                    <i className="fi fi-rr-arrow-right fi-sm" style={{ display: 'inline', verticalAlign: 'middle', margin: '0 4px' }} />
                     {o.train.toName}
                     <span style={{ marginLeft: 8, padding: '1px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
                       {delay.status === 'ontime' ? '✓ 準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
@@ -347,7 +346,7 @@ function ProfileTicketDetailModal({ order, onClose }) {
             <div style={{ fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>乘客與座位</div>
             {passengers.map((p, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg)', borderRadius: 'var(--radius)', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
-                <Ticket size={14} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+                <i className="fi fi-rr-ticket fi-sm" style={{ color: 'var(--primary)', flexShrink: 0 }} />
                 <span style={{ fontWeight: 600, flex: 1 }}>{p.name}</span>
                 <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{p.ticketTypeName}</span>
                 {p.seatNo

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CreditCard, Smartphone, Building2, Tag, ChevronRight } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import { useToast } from '../../../../components/common/Toast';
@@ -124,7 +123,7 @@ export default function BookingPage() {
 
             {/* Coupon */}
             <section className="booking-section">
-              <h2 className="booking-section-title"><Tag size={18} /> {lang === 'zh' ? '優惠券' : 'Coupon'}</h2>
+              <h2 className="booking-section-title"><i className="fi fi-rr-tag" style={{ fontSize: 18 }} /> {lang === 'zh' ? '優惠券' : 'Coupon'}</h2>
               <div className="coupon-row">
                 <input
                   className="form-input"
@@ -145,9 +144,9 @@ export default function BookingPage() {
               <h2 className="booking-section-title">{T('booking.paymentMethod')}</h2>
               <div className="payment-options">
                 {[
-                  { id: 'creditCard', icon: <CreditCard size={20} />, label: T('booking.creditCard') },
-                  { id: 'ePayment', icon: <Smartphone size={20} />, label: T('booking.ePayment') },
-                  { id: 'bankTransfer', icon: <Building2 size={20} />, label: T('booking.bankTransfer') },
+                  { id: 'creditCard', icon: <i className="fi fi-rr-credit-card" style={{ fontSize: 20 }} />, label: T('booking.creditCard') },
+                  { id: 'ePayment', icon: <i className="fi fi-rr-phone" style={{ fontSize: 20 }} />, label: T('booking.ePayment') },
+                  { id: 'bankTransfer', icon: <i className="fi fi-rr-building" style={{ fontSize: 20 }} />, label: T('booking.bankTransfer') },
                 ].map(p => (
                   <label key={p.id} className={`payment-option ${paymentMethod === p.id ? 'selected' : ''}`}>
                     <input type="radio" name="payment" value={p.id} checked={paymentMethod === p.id} onChange={() => setPaymentMethod(p.id)} />
@@ -180,7 +179,7 @@ export default function BookingPage() {
             </section>
 
             <button type="submit" className="btn-primary btn-large full-width" disabled={submitting}>
-              {submitting ? T('common.loading') : T('booking.confirmBooking')} <ChevronRight size={18} />
+              {submitting ? T('common.loading') : T('booking.confirmBooking')} <i className="fi fi-rr-angle-right" style={{ fontSize: 18 }} />
             </button>
           </form>
 

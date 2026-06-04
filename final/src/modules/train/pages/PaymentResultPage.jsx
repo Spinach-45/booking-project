@@ -1,5 +1,4 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Home, TicketCheck, AlertCircle, RefreshCw, Star } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import { TRAIN_TYPES } from '../data/trainData';
 
@@ -44,7 +43,7 @@ export default function PaymentResultPage() {
           {/* 點數獲得 */}
           {order.pointsEarned > 0 && (
             <div className="points-earned-banner">
-              <Star size={16} fill="#f59e0b" strokeWidth={0} />
+              <i className="fi fi-sr-star fi-sm" style={{ color: '#f59e0b' }} />
               本次訂票獲得 <strong>{order.pointsEarned}</strong> 點！
             </div>
           )}
@@ -90,10 +89,10 @@ export default function PaymentResultPage() {
               🎟️ 取票 / 查看電子票
             </Link>
             <Link to="/ticket/orders" className="btn-outline">
-              <TicketCheck size={15} /> 查看我的訂單
+              <i className="fi fi-rr-ticket fi-sm" /> 查看我的訂單
             </Link>
             <Link to="/ticket" className="btn-ghost">
-              <Home size={15} /> 返回首頁
+              <i className="fi fi-rr-home fi-sm" /> 返回首頁
             </Link>
           </div>
         </div>
@@ -103,11 +102,11 @@ export default function PaymentResultPage() {
           <div className="result-title" style={{ color: 'var(--danger)' }}>付款失敗</div>
           <div className="result-sub">很抱歉，您的付款未能完成</div>
           <div className="fail-reason-box">
-            <AlertCircle size={18} />
+            <i className="fi fi-rr-exclamation" style={{ fontSize: 18 }} />
             <span>{result?.reason ?? '付款過程發生錯誤，請重新嘗試'}</span>
           </div>
           <div className="result-actions">
-            <button className="btn-primary" onClick={handleRetry}><RefreshCw size={15} /> 重新付款</button>
+            <button className="btn-primary" onClick={handleRetry}><i className="fi fi-rr-arrows-h fi-sm" /> 重新付款</button>
             <button className="btn-danger" onClick={handleCancel}>取消訂單</button>
           </div>
         </div>

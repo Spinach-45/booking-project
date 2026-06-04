@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingCart, MapPin, Train, Star, Check, X, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import StarRating from '../../../../components/common/StarRating';
@@ -81,10 +80,10 @@ export default function PropertyDetailPage() {
           <div className="gallery-main">
             <img src={property.images[activeImg]} alt={propName} className="gallery-main-img" />
             <button className="gallery-nav gallery-prev" onClick={() => setActiveImg(i => (i - 1 + property.images.length) % property.images.length)}>
-              <ChevronLeft size={24} />
+              <i className="fi fi-rr-angle-left" style={{ fontSize: 24 }} />
             </button>
             <button className="gallery-nav gallery-next" onClick={() => setActiveImg(i => (i + 1) % property.images.length)}>
-              <ChevronRight size={24} />
+              <i className="fi fi-rr-angle-right" style={{ fontSize: 24 }} />
             </button>
           </div>
           <div className="gallery-thumbs">
@@ -100,17 +99,17 @@ export default function PropertyDetailPage() {
             <div className="detail-header">
               <h1 className="detail-name">{propName}</h1>
               <div className="detail-meta">
-                <span className="detail-rating"><Star size={16} fill="#f59e0b" stroke="#f59e0b" /> {property.rating} ({property.reviewCount})</span>
-                <span className="detail-location"><MapPin size={14} /> {lang === 'zh' ? property.address : property.addressEn}</span>
-                <span className="detail-distance"><Train size={14} /> {lang === 'zh' ? property.station : property.stationEn} · {distText}</span>
+                <span className="detail-rating"><i className="fi fi-sr-star fi-sm" style={{ color: '#f59e0b' }} /> {property.rating} ({property.reviewCount})</span>
+                <span className="detail-location"><i className="fi fi-rr-marker fi-sm" /> {lang === 'zh' ? property.address : property.addressEn}</span>
+                <span className="detail-distance"><i className="fi fi-rr-train-side fi-sm" /> {lang === 'zh' ? property.station : property.stationEn} · {distText}</span>
               </div>
               <div className="detail-actions">
                 <button className={`btn-icon ${isFav ? 'btn-fav-active' : ''}`} onClick={() => { toggleFavorite(id); addToast(isFav ? T('property.removeFromFavorites') : T('property.addedToFavorites')); }}>
-                  <Heart size={20} fill={isFav ? '#ef4444' : 'none'} stroke={isFav ? '#ef4444' : 'currentColor'} />
+                  <i className={`fi ${isFav ? 'fi-sr-heart' : 'fi-rr-heart'}`} style={{ fontSize: 20, color: isFav ? '#ef4444' : 'currentColor' }} />
                   {isFav ? T('property.removeFromFavorites') : T('property.addToFavorites')}
                 </button>
                 <button className="btn-icon" onClick={handleChat}>
-                  <MessageSquare size={20} /> {lang === 'zh' ? '聯繫房東' : 'Contact Host'}
+                  <i className="fi fi-rr-comment fi-sm" /> {lang === 'zh' ? '聯繫房東' : 'Contact Host'}
                 </button>
               </div>
             </div>
@@ -125,7 +124,7 @@ export default function PropertyDetailPage() {
               <h2 className="section-subtitle">{T('property.facilities')}</h2>
               <div className="amenities-grid">
                 {property.amenities.map(a => (
-                  <div key={a} className="amenity-item"><Check size={16} className="check-icon" /> {T(`amenities.${a}`)}</div>
+                  <div key={a} className="amenity-item"><i className="fi fi-rr-check fi-sm check-icon" /> {T(`amenities.${a}`)}</div>
                 ))}
               </div>
             </section>
@@ -135,11 +134,11 @@ export default function PropertyDetailPage() {
               <h2 className="section-subtitle">{T('property.policies')}</h2>
               <div className="policies-grid">
                 <div className={`policy-item ${property.petAllowed ? 'policy-ok' : 'policy-no'}`}>
-                  {property.petAllowed ? <Check size={16} /> : <X size={16} />}
+                  {property.petAllowed ? <i className="fi fi-rr-check fi-sm" /> : <i className="fi fi-rr-cross fi-sm" />}
                   {T(`property.${property.petAllowed ? 'petAllowed' : 'petNotAllowed'}`)}
                 </div>
                 <div className={`policy-item ${property.smokingAllowed ? 'policy-ok' : 'policy-no'}`}>
-                  {property.smokingAllowed ? <Check size={16} /> : <X size={16} />}
+                  {property.smokingAllowed ? <i className="fi fi-rr-check fi-sm" /> : <i className="fi fi-rr-cross fi-sm" />}
                   {T(`property.${property.smokingAllowed ? 'smokingAllowed' : 'smokingNotAllowed'}`)}
                 </div>
                 <div className="policy-item policy-info">
@@ -161,7 +160,7 @@ export default function PropertyDetailPage() {
                   <div className="host-meta">{T('property.hostJoined')}: {property.hostJoined}</div>
                   <div className="host-meta">{T('property.hostResponse')}: {property.hostResponseRate}%</div>
                 </div>
-                <button className="btn-outline" onClick={handleChat}><MessageSquare size={16} /> {lang === 'zh' ? '發送訊息' : 'Send Message'}</button>
+                <button className="btn-outline" onClick={handleChat}><i className="fi fi-rr-comment fi-sm" /> {lang === 'zh' ? '發送訊息' : 'Send Message'}</button>
               </div>
             </section>
 
@@ -222,7 +221,7 @@ export default function PropertyDetailPage() {
                     {T('property.bookNow')}
                   </button>
                   <button className="btn-outline full-width" onClick={() => handleAddToCart(selectedRoom)}>
-                    <ShoppingCart size={16} /> {T('property.addToCart')}
+                    <i className="fi fi-rr-shopping-cart fi-sm" /> {T('property.addToCart')}
                   </button>
                 </div>
               )}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, ArrowLeftRight, ChevronDown, ChevronUp } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import useAuthStore from '../../../store/useAuthStore';
 import { STATIONS, STATION_GROUPS, STATION_MAP, TICKET_TYPES, TIME_SLOTS, CAR_TYPES } from '../data/trainData';
@@ -86,7 +85,7 @@ export default function HomePage() {
               </select>
             </div>
             <button className="swap-btn" onClick={swapStations} title="交換出發/到達站">
-              <ArrowLeftRight size={16} />
+              <i className="fi fi-rr-arrows-h fi-sm" />
             </button>
             <div className="form-group">
               <label>到達站</label>
@@ -190,7 +189,7 @@ export default function HomePage() {
             onClick={handleSearch}
             disabled={!searchParams.from || !searchParams.to || searchParams.from === searchParams.to || totalPassengers === 0 || !searchParams.date}
           >
-            <Search size={18} /> 查詢車次
+            <i className="fi fi-rr-search" style={{ fontSize: 18 }} /> 查詢車次
           </button>
         </div>
       </div>

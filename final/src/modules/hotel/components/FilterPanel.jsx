@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import useStore from '../../../store/useHotelStore';
 import { t } from '../i18n';
 
@@ -35,8 +34,8 @@ export default function FilterPanel() {
   return (
     <div className="filter-panel">
       <div className="filter-header" onClick={() => setExpanded(!expanded)}>
-        <span><SlidersHorizontal size={16} /> {T('search.filter')}</span>
-        {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        <span><i className="fi fi-rr-filter fi-sm" /> {T('search.filter')}</span>
+        {expanded ? <i className="fi fi-rr-angle-up fi-sm" /> : <i className="fi fi-rr-angle-down fi-sm" />}
       </div>
       {expanded && (
         <div className="filter-body">

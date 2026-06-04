@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Search, Calendar, Users, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../../store/useHotelStore';
 import { t } from '../i18n';
@@ -41,7 +40,7 @@ export default function SearchBar({ compact = false }) {
   return (
     <form className={`search-bar ${compact ? 'search-bar-compact' : ''}`} onSubmit={handleSearch}>
       <div className="search-field">
-        <MapPin size={18} className="field-icon" />
+        <i className="fi fi-rr-marker field-icon" style={{ fontSize: 18 }} />
         <select
           value={form.location}
           onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
@@ -57,7 +56,7 @@ export default function SearchBar({ compact = false }) {
       </div>
       <div className="search-field" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
         <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-          <Calendar size={12} /> {lang === 'zh' ? '入住日期' : 'Check-in'}
+          <i className="fi fi-rr-calendar fi-xs" /> {lang === 'zh' ? '入住日期' : 'Check-in'}
         </span>
         <input
           type="date"
@@ -70,7 +69,7 @@ export default function SearchBar({ compact = false }) {
       </div>
       <div className="search-field" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
         <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-          <Calendar size={12} /> {lang === 'zh' ? '退房日期' : 'Check-out'}
+          <i className="fi fi-rr-calendar fi-xs" /> {lang === 'zh' ? '退房日期' : 'Check-out'}
         </span>
         <input
           type="date"
@@ -82,7 +81,7 @@ export default function SearchBar({ compact = false }) {
         />
       </div>
       <div className="search-field search-field-sm">
-        <Users size={18} className="field-icon" />
+        <i className="fi fi-rr-users field-icon" style={{ fontSize: 18 }} />
         <input
           type="number"
           min={1}
@@ -94,7 +93,7 @@ export default function SearchBar({ compact = false }) {
         />
       </div>
       <button type="submit" className="btn-search">
-        <Search size={18} />
+        <i className="fi fi-rr-search" style={{ fontSize: 18 }} />
         {!compact && <span>{T('home.searchBtn')}</span>}
       </button>
     </form>

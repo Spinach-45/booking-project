@@ -1,5 +1,4 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, MapPin, Calendar, Clock } from 'lucide-react';
 import useStore from '../../../store/useTripStore';
 import { ITEM_TYPES, STATUS_OPTIONS } from '../data/attractions';
 
@@ -41,10 +40,10 @@ export default function TripOverviewPage() {
         <div className="page-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button className="btn-ghost btn-sm" onClick={() => navigate(`/trip/${id}`)}>
-              <ArrowLeft size={16} /> 返回編輯
+              <i className="fi fi-rr-arrow-left fi-sm" /> 返回編輯
             </button>
             <h1 className="page-title">
-              <MapPin size={20} /> {trip.title} — 行程總覽
+              <i className="fi fi-rr-marker" style={{ fontSize: 20 }} /> {trip.title} — 行程總覽
             </h1>
           </div>
           <Link to={`/trip/${id}`} className="btn-primary btn-sm">
@@ -99,7 +98,7 @@ export default function TripOverviewPage() {
                     return (
                       <div key={item.id} className="timeline-item">
                         <div className="timeline-time">
-                          <Clock size={11} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 2 }} />
+                          <i className="fi fi-rr-clock fi-xs" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 2 }} />
                           {item.time}
                         </div>
                         <div className={dotClass} />
@@ -118,7 +117,7 @@ export default function TripOverviewPage() {
                           </div>
                           {item.location && (
                             <div className="timeline-location">
-                              <MapPin size={11} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 2 }} />
+                              <i className="fi fi-rr-marker fi-xs" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 2 }} />
                               {item.location}
                             </div>
                           )}

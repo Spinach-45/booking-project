@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import PropertyCard from '../../components/PropertyCard';
@@ -20,10 +19,10 @@ export default function FavoritesPage() {
   return (
     <div className="page">
       <div className="container">
-        <h1 className="page-title"><Heart size={24} fill="#ef4444" stroke="#ef4444" /> {T('favorites.title')}</h1>
+        <h1 className="page-title"><i className="fi fi-sr-heart" style={{ fontSize: 24, color: '#ef4444' }} /> {T('favorites.title')}</h1>
         {favProps.length === 0 ? (
           <div className="empty-state">
-            <Heart size={48} className="empty-icon" />
+            <i className="fi fi-rr-heart fi-lg empty-icon" />
             <p>{T('favorites.noFavorites')}</p>
             <Link to="/hotel/properties" className="btn-primary">{T('favorites.browseProperties')}</Link>
           </div>

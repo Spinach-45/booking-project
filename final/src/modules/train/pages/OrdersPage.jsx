@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Ticket, ArrowRight, ChevronDown, ChevronUp, MapPin, Star } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import useAuthStore from '../../../store/useAuthStore';
 import { TRAIN_TYPES, ORDER_STATUSES, REFUND_RULES, generateTrains, TICKET_TYPES, getStopsBetween, getDelayStatus } from '../data/trainData';
@@ -55,7 +54,7 @@ export default function OrdersPage() {
   return (
     <div className="container" style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
       <div className="page-header">
-        <h1 className="page-title"><Ticket size={20} /> 我的票務</h1>
+        <h1 className="page-title"><i className="fi fi-rr-ticket" style={{ fontSize: 20 }} /> 我的票務</h1>
         <Link to="/ticket" className="btn-outline btn-sm">+ 查詢新車次</Link>
       </div>
 
@@ -167,7 +166,7 @@ function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange,
           {typeInfo.icon} {typeInfo.name}
         </span>
         {' '}{order.train.trainNo}：
-        {order.train.fromName} <ArrowRight size={14} style={{ display: 'inline', verticalAlign: 'middle' }} /> {order.train.toName}
+        {order.train.fromName} <i className="fi fi-rr-arrow-right fi-sm" style={{ display: 'inline', verticalAlign: 'middle' }} /> {order.train.toName}
         <span style={{ marginLeft: 8, padding: '1px 8px', borderRadius: 12, fontSize: '0.75rem', fontWeight: 700, background: delay.bg, color: delay.color }}>
           {delay.status === 'ontime' ? '✓ 準時' : delay.status === 'delayed' ? `⚠ ${delay.label}` : `? ${delay.label}`}
         </span>
@@ -179,7 +178,7 @@ function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange,
         <span>💺 {order.seatPref === 'window' ? '靠窗' : order.seatPref === 'aisle' ? '靠走道' : '不指定'}</span>
         {order.pointsEarned > 0 && (
           <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: 3 }}>
-            <Star size={12} fill="#f59e0b" strokeWidth={0} /> +{order.pointsEarned} 點
+            <i className="fi fi-sr-star fi-xs" style={{ color: '#f59e0b' }} /> +{order.pointsEarned} 點
           </span>
         )}
       </div>
@@ -203,14 +202,14 @@ function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange,
             onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-light)'}
             onMouseLeave={e => e.currentTarget.style.background = 'var(--bg)'}
           >
-            <Ticket size={13} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+            <i className="fi fi-rr-ticket fi-xs" style={{ color: 'var(--primary)', flexShrink: 0 }} />
             <span style={{ fontSize: '0.83rem', fontWeight: 600, flex: 1 }}>{p.name}</span>
             <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{p.ticketTypeName}</span>
             {p.seatNo
               ? <span className="seat-badge">{p.seatNo}</span>
               : <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>候補</span>
             }
-            <ArrowRight size={12} style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
+            <i className="fi fi-rr-arrow-right fi-xs" style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
           </button>
         ))}
       </div>
@@ -323,8 +322,8 @@ function OrderDetailModal({ order, onClose }) {
         {/* 沿途停靠站 */}
         <div>
           <button className="stops-toggle-btn" onClick={() => setStopsOpen(v => !v)}>
-            <MapPin size={12} /> 沿途停靠站
-            {stopsOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+            <i className="fi fi-rr-marker fi-xs" /> 沿途停靠站
+            {stopsOpen ? <i className="fi fi-rr-angle-up fi-xs" /> : <i className="fi fi-rr-angle-down fi-xs" />}
           </button>
           {stopsOpen && (
             <div className="stops-list" style={{ marginTop: 6 }}>
@@ -346,7 +345,7 @@ function OrderDetailModal({ order, onClose }) {
         {/* 點數 */}
         {order.pointsEarned > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.85rem', color: '#d97706' }}>
-            <Star size={14} fill="#f59e0b" strokeWidth={0} />
+            <i className="fi fi-sr-star fi-sm" style={{ color: '#f59e0b' }} />
             本次訂票累積 {order.pointsEarned} 點
           </div>
         )}

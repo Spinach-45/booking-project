@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Tag } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
@@ -49,7 +48,7 @@ export default function AdminDiscountsPage() {
 
   return (
     <div className="admin-page">
-      <h1 className="admin-page-title"><Tag size={20} /> {T('admin.discountManagement')}</h1>
+      <h1 className="admin-page-title"><i className="fi fi-rr-tag" style={{ fontSize: 20 }} /> {T('admin.discountManagement')}</h1>
 
       <div className="filter-tabs">
         <button className={`tab-btn ${tab === 'discounts' ? 'active' : ''}`} onClick={() => setTab('discounts')}>
@@ -65,7 +64,7 @@ export default function AdminDiscountsPage() {
           <div className="admin-page-header">
             <span>{lang === 'zh' ? `共 ${discounts.length} 個活動` : `${discounts.length} promotions`}</span>
             <button className="btn-primary" onClick={() => { setDForm(emptyDiscount()); setDiscountModal({}); }}>
-              <Plus size={16} /> {T('admin.discount.addDiscount')}
+              <i className="fi fi-rr-plus fi-sm" /> {T('admin.discount.addDiscount')}
             </button>
           </div>
           <div className="admin-table-wrap">
@@ -96,8 +95,8 @@ export default function AdminDiscountsPage() {
                     </td>
                     <td>
                       <div className="action-btns">
-                        <button className="btn-icon-sm" onClick={() => { setDForm({ ...d }); setDiscountModal(d); }}><Edit size={16} /></button>
-                        <button className="btn-icon-sm btn-danger-icon" onClick={() => deleteDiscount(d.id)}><Trash2 size={16} /></button>
+                        <button className="btn-icon-sm" onClick={() => { setDForm({ ...d }); setDiscountModal(d); }}><i className="fi fi-rr-pencil fi-sm" /></button>
+                        <button className="btn-icon-sm btn-danger-icon" onClick={() => deleteDiscount(d.id)}><i className="fi fi-rr-trash fi-sm" /></button>
                       </div>
                     </td>
                   </tr>
@@ -113,7 +112,7 @@ export default function AdminDiscountsPage() {
           <div className="admin-page-header">
             <span>{lang === 'zh' ? `共 ${coupons.length} 張優惠券` : `${coupons.length} coupons`}</span>
             <button className="btn-primary" onClick={() => { setCForm(emptyCoupon()); setCouponModal({}); }}>
-              <Plus size={16} /> {lang === 'zh' ? '新增優惠券' : 'Add Coupon'}
+              <i className="fi fi-rr-plus fi-sm" /> {lang === 'zh' ? '新增優惠券' : 'Add Coupon'}
             </button>
           </div>
           <div className="admin-table-wrap">
@@ -147,7 +146,7 @@ export default function AdminDiscountsPage() {
                       </button>
                     </td>
                     <td>
-                      <button className="btn-icon-sm" onClick={() => { setCForm({ ...c }); setCouponModal(c); }}><Edit size={16} /></button>
+                      <button className="btn-icon-sm" onClick={() => { setCForm({ ...c }); setCouponModal(c); }}><i className="fi fi-rr-pencil fi-sm" /></button>
                     </td>
                   </tr>
                 ))}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ClipboardList, X, RefreshCw } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
@@ -45,11 +44,11 @@ export default function OrdersPage() {
   return (
     <div className="orders-page">
       <div className="container">
-        <h1 className="page-title"><ClipboardList size={24} /> {T('orders.title')}</h1>
+        <h1 className="page-title"><i className="fi fi-rr-clipboard-list" style={{ fontSize: 24 }} /> {T('orders.title')}</h1>
 
         {myOrders.length === 0 ? (
           <div className="empty-state">
-            <ClipboardList size={48} className="empty-icon" />
+            <i className="fi fi-rr-clipboard-list fi-lg empty-icon" />
             <p>{T('orders.noOrders')}</p>
             <Link to="/hotel/properties" className="btn-primary">{lang === 'zh' ? '瀏覽房源' : 'Browse Properties'}</Link>
           </div>
@@ -108,7 +107,7 @@ export default function OrdersPage() {
                   <span className="order-date">{lang === 'zh' ? '訂單時間' : 'Created'}: {new Date(order.createdAt).toLocaleString(lang === 'zh' ? 'zh-TW' : 'en-US')}</span>
                   {order.status === 'confirmed' && (
                     <button className="btn-danger-outline" onClick={() => handleCancel(order)}>
-                      <X size={16} /> {T('orders.cancelOrder')}
+                      <i className="fi fi-rr-cross fi-sm" /> {T('orders.cancelOrder')}
                     </button>
                   )}
                 </div>
@@ -119,7 +118,7 @@ export default function OrdersPage() {
 
         {/* Refund Policy */}
         <div className="refund-policy-card">
-          <h3><RefreshCw size={18} /> {T('orders.refundPolicy')}</h3>
+          <h3><i className="fi fi-rr-arrows-h" style={{ fontSize: 18 }} /> {T('orders.refundPolicy')}</h3>
           <ul>
             <li className="refund-ok">✓ {T('orders.refundFull')}</li>
             <li className="refund-partial">◐ {T('orders.refund70')}</li>

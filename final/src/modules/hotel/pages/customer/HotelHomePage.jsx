@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Shield, RefreshCw, Headphones, ChevronRight } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import SearchBar from '../../components/SearchBar';
@@ -54,7 +53,7 @@ export default function HomePage() {
                 <span className="dest-emoji">{d.emoji}</span>
                 <span className="dest-name">{lang === 'zh' ? d.zh : d.en}</span>
                 <span className="dest-count">{d.count} {lang === 'zh' ? '個房源' : 'properties'}</span>
-                <ChevronRight size={16} className="dest-arrow" />
+                <i className="fi fi-rr-angle-right fi-sm dest-arrow" />
               </Link>
             ))}
           </div>
@@ -67,7 +66,7 @@ export default function HomePage() {
           <div className="section-header">
             <h2 className="section-title">{T('home.featuredProperties')}</h2>
             <Link to="/hotel/properties" className="see-all-link">
-              {lang === 'zh' ? '查看全部' : 'View All'} <ChevronRight size={16} />
+              {lang === 'zh' ? '查看全部' : 'View All'} <i className="fi fi-rr-angle-right fi-sm" />
             </Link>
           </div>
           <div className="properties-grid">
@@ -82,17 +81,17 @@ export default function HomePage() {
           <h2 className="section-title">{T('home.whyUs')}</h2>
           <div className="why-grid">
             <div className="why-card">
-              <Shield size={40} className="why-icon" />
+              <i className="fi fi-rr-lock fi-lg why-icon" />
               <h3>{T('home.reason1Title')}</h3>
               <p>{T('home.reason1Desc')}</p>
             </div>
             <div className="why-card">
-              <RefreshCw size={40} className="why-icon" />
+              <i className="fi fi-rr-arrows-h fi-lg why-icon" />
               <h3>{T('home.reason2Title')}</h3>
               <p>{T('home.reason2Desc')}</p>
             </div>
             <div className="why-card">
-              <Headphones size={40} className="why-icon" />
+              <i className="fi fi-rr-comment fi-lg why-icon" />
               <h3>{T('home.reason3Title')}</h3>
               <p>{T('home.reason3Desc')}</p>
             </div>

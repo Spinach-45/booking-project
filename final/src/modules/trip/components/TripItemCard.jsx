@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { GripVertical, Clock, MapPin, Edit2, Trash2, ThumbsUp, ThumbsDown, StickyNote, Star } from 'lucide-react';
 import { ITEM_TYPES, STATUS_OPTIONS, TYPE_ICONS } from '../data/attractions';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
 import useStore from '../../../store/useTripStore';
@@ -51,9 +50,9 @@ export default function TripItemCard({
         onDragEnd={dragHandlers?.onDragEnd}
       >
         <div className="trip-item-header">
-          <span className="trip-item-drag"><GripVertical size={14} /></span>
+          <span className="trip-item-drag"><i className="fi fi-rr-grip-dots-vertical fi-sm" /></span>
           <span className="trip-item-time">
-            <Clock size={11} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 2 }} />
+            <i className="fi fi-rr-clock fi-xs" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 2 }} />
             {item.time}
           </span>
           <span className="trip-item-title">
@@ -67,17 +66,17 @@ export default function TripItemCard({
               onClick={handleCandidateToggle}
               style={item.isCandidate ? { background: '#fef3c7', borderColor: '#fde68a', color: '#d97706' } : {}}
             >
-              <Star size={13} />
+              <i className="fi fi-rr-star fi-xs" />
             </button>
-            <button className="btn-icon-sm" title="編輯" onClick={onEdit}><Edit2 size={13} /></button>
-            <button className="btn-icon-sm btn-danger-icon" title="刪除" onClick={() => setConfirmDelete(true)}><Trash2 size={13} /></button>
+            <button className="btn-icon-sm" title="編輯" onClick={onEdit}><i className="fi fi-rr-pencil fi-xs" /></button>
+            <button className="btn-icon-sm btn-danger-icon" title="刪除" onClick={() => setConfirmDelete(true)}><i className="fi fi-rr-trash fi-xs" /></button>
           </div>
         </div>
 
         <div className="trip-item-meta">
           {item.location && (
             <span className="trip-item-location">
-              <MapPin size={11} /> {item.location}
+              <i className="fi fi-rr-marker fi-xs" /> {item.location}
             </span>
           )}
           <span
@@ -109,7 +108,7 @@ export default function TripItemCard({
 
         {item.notes && (
           <div className="trip-item-notes">
-            <StickyNote size={11} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+            <i className="fi fi-rr-info fi-xs" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
             {item.notes}
           </div>
         )}
@@ -122,7 +121,7 @@ export default function TripItemCard({
               onClick={() => handleVote('for')}
               disabled={!currentUser}
             >
-              <ThumbsUp size={12} />
+              <i className="fi fi-rr-check fi-xs" />
               <span className="vote-count">{item.votes.for.length}</span>
             </button>
             <button
@@ -130,7 +129,7 @@ export default function TripItemCard({
               onClick={() => handleVote('against')}
               disabled={!currentUser}
             >
-              <ThumbsDown size={12} />
+              <i className="fi fi-rr-cross fi-xs" />
               <span className="vote-count">{item.votes.against.length}</span>
             </button>
             {item.votes.for.length > item.votes.against.length && item.votes.for.length > 0 && (

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import { TRAIN_TYPES, TICKET_TYPES, formatDuration, getStopsBetween } from '../data/trainData';
 
@@ -32,7 +31,7 @@ export default function SearchResultsPage() {
     <div className="container" style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
         <button className="btn-ghost btn-sm" onClick={() => navigate('/ticket')}>
-          <ArrowLeft size={14} /> 修改查詢
+          <i className="fi fi-rr-arrow-left fi-sm" /> 修改查詢
         </button>
         <h1 className="page-title">🔍 車次查詢結果</h1>
       </div>
@@ -40,7 +39,7 @@ export default function SearchResultsPage() {
       <div className="results-summary-bar">
         <span>
           {sorted[0]?.fromName ?? searchParams.from}
-          <ArrowRight size={14} style={{ display: 'inline', margin: '0 4px', verticalAlign: 'middle' }} />
+          <i className="fi fi-rr-arrow-right fi-sm" style={{ display: 'inline', margin: '0 4px', verticalAlign: 'middle' }} />
           {sorted[0]?.toName ?? searchParams.to}
         </span>
         <span>📅 {searchParams.date}</span>
@@ -144,7 +143,7 @@ function TrainCard({ train, ticketCounts, onSelect }) {
             </div>
           )}
           <button className="btn-primary btn-sm" onClick={() => onSelect(train)}>
-            選擇此車次 <ArrowRight size={13} />
+            選擇此車次 <i className="fi fi-rr-arrow-right fi-xs" />
           </button>
         </div>
       </div>
@@ -155,9 +154,9 @@ function TrainCard({ train, ticketCounts, onSelect }) {
           className="stops-toggle-btn"
           onClick={() => setStopsOpen(v => !v)}
         >
-          <MapPin size={12} />
+          <i className="fi fi-rr-marker fi-xs" />
           沿途停靠站
-          {stopsOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+          {stopsOpen ? <i className="fi fi-rr-angle-up fi-xs" /> : <i className="fi fi-rr-angle-down fi-xs" />}
         </button>
 
         {stopsOpen && (

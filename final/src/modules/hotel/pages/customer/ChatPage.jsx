@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Send, MessageSquare } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 
@@ -60,7 +59,7 @@ export default function ChatPage() {
   return (
     <div className="chat-page">
       <div className="container">
-        <h1 className="page-title"><MessageSquare size={24} /> {T('chat.title')}</h1>
+        <h1 className="page-title"><i className="fi fi-rr-comment" style={{ fontSize: 24 }} /> {T('chat.title')}</h1>
         <div className="chat-layout">
           {/* Conversation list */}
           <div className="chat-sidebar">
@@ -93,7 +92,7 @@ export default function ChatPage() {
           <div className="chat-window">
             {!activeChat ? (
               <div className="chat-window-empty">
-                <MessageSquare size={48} />
+                <i className="fi fi-rr-comment fi-lg" />
                 <p>{T('chat.selectConversation')}</p>
               </div>
             ) : (
@@ -123,7 +122,7 @@ export default function ChatPage() {
                     onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleSend()}
                   />
                   <button className="btn-send" onClick={handleSend} disabled={!message.trim()}>
-                    <Send size={18} />
+                    <i className="fi fi-rr-paper-plane" style={{ fontSize: 18 }} />
                   </button>
                 </div>
               </>

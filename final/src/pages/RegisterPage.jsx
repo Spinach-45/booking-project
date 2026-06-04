@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserPlus, Globe2 } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
 import { useToast } from '../components/common/Toast';
 
@@ -72,13 +71,13 @@ export default function RegisterPage() {
           </div>
           {error && <p className="text-danger" style={{ fontSize: '0.85rem' }}>{error}</p>}
           <button className="btn-primary full-width" onClick={handleRegister}>
-            <UserPlus size={16} /> 建立帳號
+            <i className="fi fi-rr-user-add fi-sm" /> 建立帳號
           </button>
 
           <div style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.5rem 0' }}>— 或使用第三方快速註冊 —</div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <button className="btn-outline full-width" onClick={() => handleOAuth('google')} style={{ flex: 1 }}>
-              <Globe2 size={16} /> Google
+              <i className="fi fi-rr-globe fi-sm" /> Google
             </button>
             <button className="btn-outline full-width" onClick={() => handleOAuth('line')} style={{ flex: 1, color: '#06C755', borderColor: '#06C755' }}>
               💬 LINE

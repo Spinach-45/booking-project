@@ -5,7 +5,6 @@ import PropertyCard from '../../components/PropertyCard';
 import FilterPanel from '../../components/FilterPanel';
 import SearchBar from '../../components/SearchBar';
 import AdBanner from '../../../../components/common/AdBanner';
-import { Search } from 'lucide-react';
 
 export default function PropertiesPage() {
   const { lang, properties, searchParams, filterParams } = useStore();
@@ -96,7 +95,7 @@ export default function PropertiesPage() {
             </div>
             {filtered.length === 0 ? (
               <div className="empty-state">
-                <Search size={48} className="empty-icon" />
+                <i className="fi fi-rr-search fi-lg empty-icon" />
                 <p>{T('search.noResults')}</p>
                 <p className="empty-hint">{T('search.tryAdjust')}</p>
               </div>

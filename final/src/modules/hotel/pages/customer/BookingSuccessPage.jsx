@@ -1,5 +1,4 @@
 import { useLocation, Link } from 'react-router-dom';
-import { CheckCircle, ClipboardList, Home } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 
@@ -17,7 +16,7 @@ export default function BookingSuccessPage() {
   return (
     <div className="success-page">
       <div className="success-card">
-        <CheckCircle size={64} className="success-icon" />
+        <i className="fi fi-sr-check-circle fi-lg success-icon" />
         <h1>{T('booking.bookingSuccess')}</h1>
         <div className="order-info">
           <div className="order-row">
@@ -54,8 +53,8 @@ export default function BookingSuccessPage() {
           </div>
         </div>
         <div className="success-actions">
-          <Link to="/hotel/orders" className="btn-primary"><ClipboardList size={18} /> {T('nav.orders')}</Link>
-          <Link to="/hotel" className="btn-outline"><Home size={18} /> {T('nav.home')}</Link>
+          <Link to="/hotel/orders" className="btn-primary"><i className="fi fi-rr-clipboard-list" style={{ fontSize: 18 }} /> {T('nav.orders')}</Link>
+          <Link to="/hotel" className="btn-outline"><i className="fi fi-rr-home" style={{ fontSize: 18 }} /> {T('nav.home')}</Link>
         </div>
       </div>
     </div>

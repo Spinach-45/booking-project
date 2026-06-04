@@ -35,6 +35,17 @@ img { max-width: 100%; display: block; }
 input, select, textarea, button { font-family: inherit; }
 button { cursor: pointer; border: none; background: none; }
 
+/* ── Uicons global ───────────────────────────────────────── */
+.fi { font-size: 1.1rem; color: inherit; vertical-align: middle; line-height: 1; display: inline-block; }
+.fi-lg { font-size: 2rem; }
+.fi-sm { font-size: 0.9rem; }
+.fi-xs { font-size: 0.75rem; }
+.fi-success { color: #10b981; }
+.fi-warning { color: #f59e0b; }
+.fi-danger  { color: #ef4444; }
+.fi-accent  { color: #f5a623; }
+.fi-primary { color: #6e7c87; }
+
 .app { display: flex; flex-direction: column; min-height: 100vh; }
 .app-content { flex: 1; min-height: calc(100vh - var(--nav-height)); padding-top: var(--nav-height); }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2, AlertTriangle, DollarSign } from 'lucide-react';
 import useStore from '../../../store/useTripStore';
 import { useToast } from '../../../components/common/Toast';
 import Modal from '../../../components/common/Modal';
@@ -64,21 +63,21 @@ export default function ExpensePage() {
         <div className="page-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button className="btn-ghost btn-sm" onClick={() => navigate(`/trip/${id}`)}>
-              <ArrowLeft size={16} /> 返回行程
+              <i className="fi fi-rr-arrow-left fi-sm" /> 返回行程
             </button>
             <h1 className="page-title">
-              <DollarSign size={20} /> {trip.title} — 費用管理
+              <i className="fi fi-rr-dollar" style={{ fontSize: 20 }} /> {trip.title} — 費用管理
             </h1>
           </div>
           <button className="btn-primary" onClick={() => setAddModal(true)}>
-            <Plus size={16} /> 記錄費用
+            <i className="fi fi-rr-plus fi-sm" /> 記錄費用
           </button>
         </div>
 
         {/* Budget alert */}
         {overBudget && (
           <div className="expense-alert">
-            <AlertTriangle size={20} />
+            <i className="fi fi-rr-exclamation" style={{ fontSize: 20 }} />
             <span>
               總花費 NT${totalExpense.toLocaleString()} 已超出預算上限 NT${trip.budget.toLocaleString()}
               （超出 NT${(totalExpense - trip.budget).toLocaleString()}）
@@ -165,7 +164,7 @@ export default function ExpensePage() {
             <div style={{ fontSize: '3rem' }}>💸</div>
             <p>尚未記錄任何費用</p>
             <button className="btn-primary" onClick={() => setAddModal(true)}>
-              <Plus size={16} /> 記錄第一筆費用
+              <i className="fi fi-rr-plus fi-sm" /> 記錄第一筆費用
             </button>
           </div>
         ) : (
@@ -198,7 +197,7 @@ export default function ExpensePage() {
                       onClick={() => setDeleteExpId(exp.id)}
                       title="刪除"
                     >
-                      <Trash2 size={14} />
+                      <i className="fi fi-rr-trash fi-sm" />
                     </button>
                   </div>
                 );
@@ -335,7 +334,7 @@ function AddExpenseModal({ isOpen, onClose, onSave, trip, collabNames, currentUs
         <div className="modal-footer">
           <button className="btn-ghost" onClick={onClose}>取消</button>
           <button className="btn-primary" onClick={handleSubmit} disabled={!form.title.trim() || !form.amount}>
-            <Plus size={16} /> 記錄費用
+            <i className="fi fi-rr-plus fi-sm" /> 記錄費用
           </button>
         </div>
       </div>

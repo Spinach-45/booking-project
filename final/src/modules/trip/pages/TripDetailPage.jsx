@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import {
-  MapPin, Calendar, Users, Plus, Share2, Mail, Eye,
-  DollarSign, History, MessageSquare, Copy, CheckCheck,
-} from 'lucide-react';
 import useStore from '../../../store/useTripStore';
 import { useToast } from '../../../components/common/Toast';
 import DayBlock from '../components/DayBlock';
 import Modal from '../../../components/common/Modal';
 
 const TABS = [
-  { id: 'days',     label: '行程安排', icon: <Calendar size={15} /> },
-  { id: 'comments', label: '留言討論', icon: <MessageSquare size={15} /> },
-  { id: 'history',  label: '編輯紀錄', icon: <History size={15} /> },
+  { id: 'days',     label: '行程安排', icon: <i className="fi fi-rr-calendar fi-sm" /> },
+  { id: 'comments', label: '留言討論', icon: <i className="fi fi-rr-comment fi-sm" /> },
+  { id: 'history',  label: '編輯紀錄', icon: <i className="fi fi-rr-clock fi-sm" /> },
 ];
 
 export default function TripDetailPage() {
@@ -92,10 +88,10 @@ export default function TripDetailPage() {
             <div>
               <h1 className="trip-detail-title">{trip.title}</h1>
               <div className="trip-detail-meta">
-                <span><MapPin size={14} /> {trip.stationName}</span>
-                <span><Calendar size={14} /> {formatDate(trip.startDate)} – {formatDate(trip.endDate)}</span>
+                <span><i className="fi fi-rr-marker fi-sm" /> {trip.stationName}</span>
+                <span><i className="fi fi-rr-calendar fi-sm" /> {formatDate(trip.startDate)} – {formatDate(trip.endDate)}</span>
                 <span>🗓️ {trip.days.length} 天</span>
-                <span><Users size={14} /> {collabNames.length} 位旅伴</span>
+                <span><i className="fi fi-rr-users fi-sm" /> {collabNames.length} 位旅伴</span>
                 {trip.budget > 0 && <span>💰 預算 NT${trip.budget.toLocaleString()}</span>}
               </div>
               {trip.description && (
@@ -104,19 +100,19 @@ export default function TripDetailPage() {
             </div>
             <div className="trip-detail-actions">
               <Link to={`/trip/${id}/overview`} className="btn-outline btn-sm">
-                <Eye size={14} /> 總覽
+                <i className="fi fi-rr-eye fi-sm" /> 總覽
               </Link>
               <Link to={`/trip/${id}/expenses`} className="btn-outline btn-sm">
-                <DollarSign size={14} /> 費用
+                <i className="fi fi-rr-dollar fi-sm" /> 費用
               </Link>
               <button className="btn-outline btn-sm" onClick={() => setInviteModal(true)}>
-                <Mail size={14} /> 邀請
+                <i className="fi fi-rr-envelope fi-sm" /> 邀請
               </button>
               <button className="btn-outline btn-sm" onClick={() => setShareModal(true)}>
-                <Share2 size={14} /> 分享
+                <i className="fi fi-rr-share fi-sm" /> 分享
               </button>
               <button className="btn-primary btn-sm" onClick={() => addDay(id)}>
-                <Plus size={14} /> 新增一天
+                <i className="fi fi-rr-plus fi-sm" /> 新增一天
               </button>
             </div>
           </div>
@@ -144,7 +140,7 @@ export default function TripDetailPage() {
                     <div style={{ fontSize: '3rem' }}>📅</div>
                     <p>尚未安排任何天數</p>
                     <button className="btn-primary" onClick={() => addDay(id)}>
-                      <Plus size={16} /> 新增第一天
+                      <i className="fi fi-rr-plus fi-sm" /> 新增第一天
                     </button>
                   </div>
                 ) : (
@@ -157,7 +153,7 @@ export default function TripDetailPage() {
                   style={{ marginTop: '0.75rem' }}
                   onClick={() => addDay(id)}
                 >
-                  <Plus size={16} /> 新增一天
+                  <i className="fi fi-rr-plus fi-sm" /> 新增一天
                 </button>
               </div>
             )}
@@ -231,7 +227,7 @@ export default function TripDetailPage() {
           <div className="trip-sidebar">
             <div className="sidebar-panel">
               <div className="sidebar-panel-header">
-                <Users size={15} /> 旅伴清單
+                <i className="fi fi-rr-users fi-sm" /> 旅伴清單
               </div>
               <div className="sidebar-panel-body">
                 <div className="collab-list">
@@ -251,7 +247,7 @@ export default function TripDetailPage() {
                   ))}
                 </div>
                 <button className="btn-outline btn-sm full-width" onClick={() => setInviteModal(true)}>
-                  <Mail size={14} /> 邀請旅伴
+                  <i className="fi fi-rr-envelope fi-sm" /> 邀請旅伴
                 </button>
               </div>
             </div>
@@ -259,7 +255,7 @@ export default function TripDetailPage() {
             {/* Quick Comments sidebar */}
             <div className="sidebar-panel">
               <div className="sidebar-panel-header">
-                <MessageSquare size={15} /> 最新留言
+                <i className="fi fi-rr-comment fi-sm" /> 最新留言
               </div>
               <div className="sidebar-panel-body">
                 <div className="comments-list" style={{ maxHeight: '200px' }}>
@@ -305,7 +301,7 @@ export default function TripDetailPage() {
         <div className="modal-footer">
           <button className="btn-ghost" onClick={() => setInviteModal(false)}>取消</button>
           <button className="btn-primary" onClick={handleInvite} disabled={!inviteEmail.trim()}>
-            <Mail size={15} /> 發送邀請
+            <i className="fi fi-rr-envelope fi-sm" /> 發送邀請
           </button>
         </div>
       </Modal>
@@ -322,7 +318,7 @@ export default function TripDetailPage() {
             onClick={handleCopyLink}
             style={{ flexShrink: 0 }}
           >
-            {copied ? <><CheckCheck size={14} /> 已複製</> : <><Copy size={14} /> 複製</>}
+            {copied ? <><i className="fi fi-sr-check-circle fi-sm" /> 已複製</> : <><i className="fi fi-rr-copy fi-sm" /> 複製</>}
           </button>
         </div>
         <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: 12 }}>

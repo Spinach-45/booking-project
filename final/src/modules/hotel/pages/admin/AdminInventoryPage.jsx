@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Package } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import { useToast } from '../../../../components/common/Toast';
@@ -38,7 +37,7 @@ export default function AdminInventoryPage() {
 
   return (
     <div className="admin-page">
-      <h1 className="admin-page-title"><Package size={20} /> {T('admin.inventoryManagement')}</h1>
+      <h1 className="admin-page-title"><i className="fi fi-rr-layer-plus" style={{ fontSize: 20 }} /> {T('admin.inventoryManagement')}</h1>
 
       <div className="inventory-controls">
         <div className="form-group">

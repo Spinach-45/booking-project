@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Trash2 } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import { useToast } from '../../../../components/common/Toast';
@@ -30,10 +29,10 @@ export default function CartPage() {
   return (
     <div className="page">
       <div className="container">
-        <h1 className="page-title"><ShoppingCart size={24} /> {T('nav.cart')}</h1>
+        <h1 className="page-title"><i className="fi fi-rr-shopping-cart" style={{ fontSize: 24 }} /> {T('nav.cart')}</h1>
         {myCart.length === 0 ? (
           <div className="empty-state">
-            <ShoppingCart size={48} className="empty-icon" />
+            <i className="fi fi-rr-shopping-cart fi-lg empty-icon" />
             <p>{lang === 'zh' ? '購物車是空的' : 'Your cart is empty'}</p>
             <Link to="/hotel/properties" className="btn-primary">{lang === 'zh' ? '瀏覽房源' : 'Browse Properties'}</Link>
           </div>
@@ -54,7 +53,7 @@ export default function CartPage() {
                   <div className="cart-item-actions">
                     <button className="btn-primary btn-sm" onClick={() => handleBook(item)}>{T('property.bookNow')}</button>
                     <button className="btn-icon-sm" onClick={() => { removeFromCart(item.cartId); addToast(lang === 'zh' ? '已移除' : 'Removed', 'success'); }}>
-                      <Trash2 size={16} />
+                      <i className="fi fi-rr-trash fi-sm" />
                     </button>
                   </div>
                 </div>

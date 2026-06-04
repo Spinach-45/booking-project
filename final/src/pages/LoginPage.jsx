@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogIn, Phone, Mail, Globe2 } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
 import { useToast } from '../components/common/Toast';
 
@@ -52,10 +51,10 @@ export default function LoginPage() {
 
         <div className="login-tabs">
           <button className={`login-tab ${method === 'email' ? 'active' : ''}`} onClick={() => { setMethod('email'); setError(''); }}>
-            <Mail size={14} /> Email
+            <i className="fi fi-rr-envelope fi-sm" /> Email
           </button>
           <button className={`login-tab ${method === 'phone' ? 'active' : ''}`} onClick={() => { setMethod('phone'); setError(''); }}>
-            <Phone size={14} /> 手機號碼
+            <i className="fi fi-rr-phone fi-sm" /> 手機號碼
           </button>
         </div>
 
@@ -78,14 +77,14 @@ export default function LoginPage() {
           </div>
           {error && <p className="text-danger" style={{ fontSize: '0.85rem' }}>{error}</p>}
           <button className="btn-primary full-width" onClick={handleLogin}>
-            <LogIn size={16} /> 登入
+            <i className="fi fi-rr-sign-in-alt fi-sm" /> 登入
           </button>
 
           <div style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0.5rem 0' }}>— 或使用第三方登入 —</div>
 
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <button className="btn-outline full-width" onClick={() => handleOAuth('google')} style={{ flex: 1 }}>
-              <Globe2 size={16} /> Google
+              <i className="fi fi-rr-globe fi-sm" /> Google
             </button>
             <button className="btn-outline full-width" onClick={() => handleOAuth('line')} style={{ flex: 1, color: '#06C755', borderColor: '#06C755' }}>
               💬 LINE

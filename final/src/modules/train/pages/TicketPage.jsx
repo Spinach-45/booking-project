@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Printer, Copy, CheckCheck, ArrowLeft } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import { TRAIN_TYPES, formatDuration, getDelayStatus } from '../data/trainData';
 
@@ -74,11 +73,11 @@ export default function TicketPage() {
       <div className="container" style={{ paddingTop: '1.5rem', maxWidth: 540 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
           <button className="btn-ghost btn-sm" onClick={() => navigate(-1)}>
-            <ArrowLeft size={14} /> 返回
+            <i className="fi fi-rr-arrow-left fi-sm" /> 返回
           </button>
           <h1 className="page-title">🎟️ 電子票</h1>
           <button className="btn-ghost btn-sm" style={{ marginLeft: 'auto' }} onClick={() => window.print()}>
-            <Printer size={14} /> 列印
+            <i className="fi fi-rr-print fi-sm" /> 列印
           </button>
         </div>
 
@@ -160,7 +159,7 @@ export default function TicketPage() {
                   {order.cvsPickupCode ?? 'CV--------'}
                 </span>
                 <button className="btn-ghost btn-sm" onClick={copyCvs}>
-                  {copied ? <CheckCheck size={14} style={{ color: 'var(--success)' }} /> : <Copy size={14} />}
+                  {copied ? <i className="fi fi-sr-check-circle fi-sm" style={{ color: 'var(--success)' }} /> : <i className="fi fi-rr-copy fi-sm" />}
                 </button>
               </div>
               <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: 6 }}>

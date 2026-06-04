@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Plus, MapPin, Calendar, Trash2, Eye, DollarSign, LogIn } from 'lucide-react';
 import useStore from '../../../store/useTripStore';
 import { useToast } from '../../../components/common/Toast';
 import Modal from '../../../components/common/Modal';
@@ -52,11 +51,11 @@ export default function HomePage() {
           <p className="hero-subtitle">以火車站為核心，規劃精彩行程，與旅伴協作共遊</p>
           {currentUser ? (
             <button className="btn-primary btn-large" onClick={() => setCreateModal(true)}>
-              <Plus size={20} /> 建立新行程
+              <i className="fi fi-rr-plus" style={{ fontSize: 20 }} /> 建立新行程
             </button>
           ) : (
             <Link to="/login" className="btn-primary btn-large">
-              <LogIn size={20} /> 登入開始規劃
+              <i className="fi fi-rr-sign-in-alt" style={{ fontSize: 20 }} /> 登入開始規劃
             </Link>
           )}
         </div>
@@ -71,20 +70,20 @@ export default function HomePage() {
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>請先登入</h3>
               <p className="empty-hint">登入後即可建立、管理您的行程</p>
               <Link to="/login" className="btn-primary">
-                <LogIn size={16} /> 前往登入
+                <i className="fi fi-rr-sign-in-alt fi-sm" /> 前往登入
               </Link>
             </div>
           ) : (
             <>
               <div className="page-header">
                 <h2 className="page-title">
-                  <MapPin size={22} /> 我的行程
+                  <i className="fi fi-rr-marker" style={{ fontSize: 22 }} /> 我的行程
                   <span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-secondary)', marginLeft: 8 }}>
                     {trips.length} 筆
                   </span>
                 </h2>
                 <button className="btn-primary" onClick={() => setCreateModal(true)}>
-                  <Plus size={16} /> 建立行程
+                  <i className="fi fi-rr-plus fi-sm" /> 建立行程
                 </button>
               </div>
 
@@ -94,7 +93,7 @@ export default function HomePage() {
                   <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>還沒有行程</h3>
                   <p className="empty-hint">點擊「建立行程」開始規劃您的旅程</p>
                   <button className="btn-primary" onClick={() => setCreateModal(true)}>
-                    <Plus size={16} /> 建立第一個行程
+                    <i className="fi fi-rr-plus fi-sm" /> 建立第一個行程
                   </button>
                 </div>
               ) : (
@@ -109,9 +108,9 @@ export default function HomePage() {
                       <div className="trip-card-body">
                         <div className="trip-card-title">{trip.title}</div>
                         <div className="trip-card-meta">
-                          <span><MapPin size={12} /> {trip.stationName}</span>
+                          <span><i className="fi fi-rr-marker fi-xs" /> {trip.stationName}</span>
                           <span>
-                            <Calendar size={12} />
+                            <i className="fi fi-rr-calendar fi-xs" />
                             {formatDate(trip.startDate)} – {formatDate(trip.endDate)}
                           </span>
                           {trip.collaborators.length > 0 && (
@@ -127,17 +126,17 @@ export default function HomePage() {
                           <span className="trip-days-badge">{getDays(trip)} 天</span>
                           <div className="trip-card-actions">
                             <Link to={`/trip/${trip.id}/expenses`} className="btn-icon-sm" title="費用管理">
-                              <DollarSign size={14} />
+                              <i className="fi fi-rr-dollar fi-sm" />
                             </Link>
                             <Link to={`/trip/${trip.id}/overview`} className="btn-icon-sm" title="行程總覽">
-                              <Eye size={14} />
+                              <i className="fi fi-rr-eye fi-sm" />
                             </Link>
                             <button
                               className="btn-icon-sm btn-danger-icon"
                               title="刪除行程"
                               onClick={() => handleDelete(trip.id, trip.title)}
                             >
-                              <Trash2 size={14} />
+                              <i className="fi fi-rr-trash fi-sm" />
                             </button>
                             <Link to={`/trip/${trip.id}`} className="btn-primary btn-sm">
                               開始規劃
@@ -272,7 +271,7 @@ function CreateTripModal({ isOpen, onClose, onSave }) {
             onClick={handleSubmit}
             disabled={!form.title.trim() || !form.stationId}
           >
-            <Plus size={16} /> 建立行程
+            <i className="fi fi-rr-plus fi-sm" /> 建立行程
           </button>
         </div>
       </div>

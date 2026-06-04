@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Search, MapPin, Star } from 'lucide-react';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -227,7 +226,7 @@ export default function GoogleMapPicker({ stationLat, stationLng, stationName, o
           disabled={searching || !ready}
           style={{ flexShrink: 0, minWidth: 64 }}
         >
-          {searching ? '搜尋中…' : <><Search size={13} /> 搜尋</>}
+          {searching ? '搜尋中…' : <><i className="fi fi-rr-search fi-xs" /> 搜尋</>}
         </button>
       </div>
 
@@ -255,7 +254,7 @@ export default function GoogleMapPicker({ stationLat, stationLng, stationName, o
               style={{ width: '100%', textAlign: 'left', gap: 8 }}
               onClick={() => handleListClick(place)}
             >
-              <MapPin size={13} style={{ flexShrink: 0, color: 'var(--primary)' }} />
+              <i className="fi fi-rr-marker fi-xs" style={{ flexShrink: 0, color: 'var(--primary)' }} />
               <span className="attraction-info" style={{ flex: 1, minWidth: 0 }}>
                 <span className="attraction-name" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {place.name}
@@ -266,7 +265,7 @@ export default function GoogleMapPicker({ stationLat, stationLng, stationName, o
               </span>
               {place.rating != null && (
                 <span style={{ fontSize: '0.72rem', color: '#f59e0b', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Star size={11} fill="#f59e0b" strokeWidth={0} /> {place.rating}
+                  <i className="fi fi-sr-star fi-xs" style={{ color: '#f59e0b' }} /> {place.rating}
                 </span>
               )}
             </button>
@@ -277,7 +276,7 @@ export default function GoogleMapPicker({ stationLat, stationLng, stationName, o
       {/* Confirm selection bar */}
       {selected && (
         <div className="map-selection-bar">
-          <MapPin size={16} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+          <i className="fi fi-rr-marker fi-sm" style={{ color: 'var(--primary)', flexShrink: 0 }} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 600, fontSize: '0.88rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {selected.name}

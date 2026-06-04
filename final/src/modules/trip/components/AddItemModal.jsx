@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Map } from 'lucide-react';
 import Modal from '../../../components/common/Modal';
 import GoogleMapPicker from './GoogleMapPicker';
 import { ITEM_TYPES, STATUS_OPTIONS, getStationById } from '../data/attractions';
@@ -93,7 +92,7 @@ export default function AddItemModal({ isOpen, onClose, onSave, initialData, sta
                 className={`rec-source-tab ${recSource === 'map' ? 'active' : ''}`}
                 onClick={() => setRecSource('map')}
               >
-                <Map size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 3 }} />
+                <i className="fi fi-rr-map fi-xs" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 3 }} />
                 地圖探索
               </button>
             </div>

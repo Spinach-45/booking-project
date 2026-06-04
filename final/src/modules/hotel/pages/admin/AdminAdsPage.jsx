@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Megaphone } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
@@ -35,8 +34,8 @@ export default function AdminAdsPage() {
   return (
     <div className="admin-page">
       <div className="admin-page-header">
-        <h1 className="admin-page-title"><Megaphone size={20} /> {T('admin.adManagement')}</h1>
-        <button className="btn-primary" onClick={openAdd}><Plus size={16} /> {T('admin.ad.addAd')}</button>
+        <h1 className="admin-page-title"><i className="fi fi-rr-megaphone" style={{ fontSize: 20 }} /> {T('admin.adManagement')}</h1>
+        <button className="btn-primary" onClick={openAdd}><i className="fi fi-rr-plus fi-sm" /> {T('admin.ad.addAd')}</button>
       </div>
 
       <div className="ads-grid">
@@ -55,8 +54,8 @@ export default function AdminAdsPage() {
                 <button className={`toggle-btn ${ad.active ? 'active' : ''}`} onClick={() => updateAd(ad.id, { active: !ad.active })}>
                   {ad.active ? T('admin.ad.active') : T('admin.ad.inactive')}
                 </button>
-                <button className="btn-icon-sm" onClick={() => openEdit(ad)}><Edit size={16} /></button>
-                <button className="btn-icon-sm btn-danger-icon" onClick={() => { if (window.confirm('確定刪除此廣告？')) deleteAd(ad.id); }}><Trash2 size={16} /></button>
+                <button className="btn-icon-sm" onClick={() => openEdit(ad)}><i className="fi fi-rr-pencil fi-sm" /></button>
+                <button className="btn-icon-sm btn-danger-icon" onClick={() => { if (window.confirm('確定刪除此廣告？')) deleteAd(ad.id); }}><i className="fi fi-rr-trash fi-sm" /></button>
               </div>
             </div>
           </div>

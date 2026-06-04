@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import TripItemCard from './TripItemCard';
 import AddItemModal from './AddItemModal';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
@@ -76,14 +75,14 @@ export default function DayBlock({ day, trip }) {
             onClick={() => setCollapsed(!collapsed)}
             title={collapsed ? '展開' : '收合'}
           >
-            {collapsed ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+            {collapsed ? <i className="fi fi-rr-angle-down fi-sm" /> : <i className="fi fi-rr-angle-up fi-sm" />}
           </button>
           <button
             className="btn-icon-sm btn-danger-icon"
             onClick={() => setConfirmDelDay(true)}
             title="刪除此天"
           >
-            <Trash2 size={14} />
+            <i className="fi fi-rr-trash fi-sm" />
           </button>
         </div>
       </div>
@@ -115,7 +114,7 @@ export default function DayBlock({ day, trip }) {
           </div>
 
           <button className="day-add-btn" onClick={() => setAddModal(true)}>
-            <Plus size={15} /> 新增行程項目
+            <i className="fi fi-rr-plus fi-sm" /> 新增行程項目
           </button>
         </>
       )}

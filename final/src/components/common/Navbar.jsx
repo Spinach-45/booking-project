@@ -1,10 +1,5 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import {
-  Map, Train, Hotel, User, LogOut, LogIn, Menu, X,
-  Home, ClipboardList, Heart, ShoppingCart, MessageSquare,
-  Settings, Globe,
-} from 'lucide-react';
 import useAuthStore from '../../store/useAuthStore';
 import useHotelStore from '../../store/useHotelStore';
 import { useToast } from './Toast';
@@ -51,33 +46,33 @@ export default function Navbar() {
         {/* Desktop nav */}
         <div className="navbar-links desktop-only">
           <Link to="/" className={navCls('/')} style={{ marginRight: 4 }}>
-            <Home size={15} /> 首頁
+            <i className="fi fi-rr-home fi-sm" /> 首頁
           </Link>
           <Link to="/trip" className={navCls('/trip')}>
-            <Map size={15} /> 行程規劃
+            <i className="fi fi-rr-map fi-sm" /> 行程規劃
           </Link>
           <Link to="/hotel" className={navCls('/hotel')}>
-            <Hotel size={15} /> 住宿訂房
+            <i className="fi fi-rr-bed fi-sm" /> 住宿訂房
           </Link>
           <Link to="/ticket" className={navCls('/ticket')}>
-            <Train size={15} /> 火車訂票
+            <i className="fi fi-rr-train-side fi-sm" /> 火車訂票
           </Link>
           {currentUser && (
             <>
               <Link to="/profile/orders-hotel" className={navCls('/profile')}>
-                <ClipboardList size={15} /> 我的訂單
+                <i className="fi fi-rr-clipboard-list fi-sm" /> 我的訂單
               </Link>
               <Link to="/hotel/favorites" className="nav-link" style={{ position: 'relative' }}>
-                <Heart size={15} />
+                <i className="fi fi-rr-heart fi-sm" />
                 {favorites.length > 0 && <span className="badge" style={{ position: 'absolute', top: 0, right: 0, transform: 'translate(30%,-30%)', background: 'var(--danger)', color: 'white', minWidth: 16, height: 16, borderRadius: 8, fontSize: '0.68rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{favorites.length}</span>}
               </Link>
               <Link to="/hotel/cart" className="nav-link" style={{ position: 'relative' }}>
-                <ShoppingCart size={15} />
+                <i className="fi fi-rr-shopping-cart fi-sm" />
                 {cartCount > 0 && <span className="badge" style={{ position: 'absolute', top: 0, right: 0, transform: 'translate(30%,-30%)', background: 'var(--danger)', color: 'white', minWidth: 16, height: 16, borderRadius: 8, fontSize: '0.68rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{cartCount}</span>}
               </Link>
-              <Link to="/hotel/chat" className="nav-link"><MessageSquare size={15} /></Link>
+              <Link to="/hotel/chat" className="nav-link"><i className="fi fi-rr-comment fi-sm" /></Link>
               {currentUser.role === 'admin' && (
-                <Link to="/admin" className="nav-link admin-link"><Settings size={15} /> 後台</Link>
+                <Link to="/admin" className="nav-link admin-link"><i className="fi fi-rr-settings fi-sm" /> 後台</Link>
               )}
             </>
           )}
@@ -86,28 +81,28 @@ export default function Navbar() {
         {/* Desktop actions */}
         <div className="navbar-actions desktop-only">
           <button className="btn-ghost lang-btn" onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}>
-            <Globe size={15} /> {lang === 'zh' ? 'EN' : '中文'}
+            <i className="fi fi-rr-globe fi-sm" /> {lang === 'zh' ? 'EN' : '中文'}
           </button>
           {currentUser ? (
             <div className="user-menu">
               <Link to="/profile" className="user-name">
-                <User size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+                <i className="fi fi-rr-user" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
                 {currentUser.name}
               </Link>
               <button className="btn-ghost btn-sm" onClick={handleLogout}>
-                <LogOut size={14} /> 登出
+                <i className="fi fi-rr-sign-out-alt fi-sm" /> 登出
               </button>
             </div>
           ) : (
             <Link to="/login" className="btn-primary btn-sm">
-              <LogIn size={14} /> 登入
+              <i className="fi fi-rr-sign-in-alt fi-sm" /> 登入
             </Link>
           )}
         </div>
 
         {/* Mobile hamburger */}
         <button className="hamburger mobile-only" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          {menuOpen ? <i className="fi fi-rr-cross" style={{ fontSize: 24 }} /> : <i className="fi fi-rr-menu-burger" style={{ fontSize: 24 }} />}
         </button>
       </div>
 
@@ -136,12 +131,12 @@ export default function Navbar() {
           )}
           <div className="mobile-actions">
             <button className="btn-ghost" onClick={() => { setLang(lang === 'zh' ? 'en' : 'zh'); setMenuOpen(false); }}>
-              <Globe size={15} /> {lang === 'zh' ? 'English' : '中文'}
+              <i className="fi fi-rr-globe fi-sm" /> {lang === 'zh' ? 'English' : '中文'}
             </button>
             {currentUser ? (
-              <button className="btn-ghost" onClick={handleLogout}><LogOut size={15} /> 登出</button>
+              <button className="btn-ghost" onClick={handleLogout}><i className="fi fi-rr-sign-out-alt fi-sm" /> 登出</button>
             ) : (
-              <Link to="/login" className="btn-primary" onClick={() => setMenuOpen(false)}><LogIn size={15} /> 登入</Link>
+              <Link to="/login" className="btn-primary" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-sign-in-alt fi-sm" /> 登入</Link>
             )}
           </div>
         </div>

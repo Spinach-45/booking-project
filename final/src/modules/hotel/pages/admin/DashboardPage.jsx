@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Building2, ClipboardList, DollarSign, TrendingUp } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 
@@ -27,28 +26,28 @@ export default function DashboardPage() {
 
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon stat-blue"><Building2 size={24} /></div>
+          <div className="stat-icon stat-blue"><i className="fi fi-rr-building" style={{ fontSize: 24 }} /></div>
           <div>
             <div className="stat-value">{stats.totalProperties}</div>
             <div className="stat-label">{T('admin.totalProperties')}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon stat-green"><ClipboardList size={24} /></div>
+          <div className="stat-icon stat-green"><i className="fi fi-rr-clipboard-list" style={{ fontSize: 24 }} /></div>
           <div>
             <div className="stat-value">{stats.confirmed}</div>
             <div className="stat-label">{T('admin.totalOrders')}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon stat-purple"><DollarSign size={24} /></div>
+          <div className="stat-icon stat-purple"><i className="fi fi-rr-dollar" style={{ fontSize: 24 }} /></div>
           <div>
             <div className="stat-value">NT$ {stats.revenue.toLocaleString()}</div>
             <div className="stat-label">{T('admin.totalRevenue')}</div>
           </div>
         </div>
         <div className="stat-card">
-          <div className="stat-icon stat-orange"><TrendingUp size={24} /></div>
+          <div className="stat-icon stat-orange"><i className="fi fi-rr-sort" style={{ fontSize: 24 }} /></div>
           <div>
             <div className="stat-value">{stats.occupancyRate}%</div>
             <div className="stat-label">{T('admin.occupancyRate')}</div>

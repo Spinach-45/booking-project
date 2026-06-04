@@ -1,4 +1,3 @@
-import { Heart, ShoppingCart, MapPin, Star, Train } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useStore from '../../../store/useHotelStore';
 import { t } from '../i18n';
@@ -61,21 +60,21 @@ export default function PropertyCard({ property }) {
           loading="lazy"
         />
         <button className={`fav-btn ${isFav ? 'fav-active' : ''}`} onClick={handleFavorite}>
-          <Heart size={20} fill={isFav ? '#ef4444' : 'none'} stroke={isFav ? '#ef4444' : 'white'} />
+          <i className={`fi ${isFav ? 'fi-sr-heart' : 'fi-rr-heart'}`} style={{ fontSize: 20, color: isFav ? '#ef4444' : 'white' }} />
         </button>
         {property.featured && <span className="badge-featured">{lang === 'zh' ? '精選' : 'Featured'}</span>}
       </div>
       <div className="property-card-body">
         <h3 className="property-card-name">{name}</h3>
         <div className="property-card-location">
-          <MapPin size={14} />
+          <i className="fi fi-rr-marker fi-sm" />
           <span>{lang === 'zh' ? property.station : property.stationEn}</span>
           <span className="distance">
-            <Train size={12} /> {distanceText}
+            <i className="fi fi-rr-train-side fi-xs" /> {distanceText}
           </span>
         </div>
         <div className="property-card-rating">
-          <Star size={14} fill="#f59e0b" stroke="#f59e0b" />
+          <i className="fi fi-sr-star fi-sm" style={{ color: '#f59e0b' }} />
           <span className="rating-value">{property.rating.toFixed(1)}</span>
           <span className="review-count">({property.reviewCount})</span>
         </div>
@@ -91,7 +90,7 @@ export default function PropertyCard({ property }) {
             <span className="price-unit">/ {T('common.night')}</span>
           </div>
           <button className="btn-cart" onClick={handleAddToCart}>
-            <ShoppingCart size={16} />
+            <i className="fi fi-rr-shopping-cart fi-sm" />
           </button>
         </div>
       </div>

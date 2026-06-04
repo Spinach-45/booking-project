@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, AlertCircle, User, Star } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import useAuthStore from '../../../store/useAuthStore';
 import { TICKET_TYPES, TRAIN_TYPES, formatDuration, getMultiDiscount, POINTS_RATE } from '../data/trainData';
@@ -93,7 +92,7 @@ export default function BookingPage() {
     <div className="container" style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
         <button className="btn-ghost btn-sm" onClick={() => navigate('/ticket/search')}>
-          <ArrowLeft size={14} /> 返回車次列表
+          <i className="fi fi-rr-arrow-left fi-sm" /> 返回車次列表
         </button>
         <h1 className="page-title">🎫 填寫乘客資料</h1>
       </div>
@@ -136,7 +135,7 @@ export default function BookingPage() {
             </div>
             {!hasEnoughSeats && (
               <div className="seat-warn">
-                <AlertCircle size={16} />
+                <i className="fi fi-rr-exclamation fi-sm" />
                 <span>所選座位類型餘票不足（需要 {totalPassengers} 席，剩餘 {availableSeats} 席），請換選其他座位類型或返回選擇其他車次。</span>
               </div>
             )}
@@ -144,7 +143,7 @@ export default function BookingPage() {
 
           {/* Passenger forms */}
           <div className="form-section">
-            <div className="form-section-title"><User size={16} /> 乘客資料（共 {totalPassengers} 位）</div>
+            <div className="form-section-title"><i className="fi fi-rr-user fi-sm" /> 乘客資料（共 {totalPassengers} 位）</div>
             {allPassengerTickets.map((pt, idx) => (
               <div key={pt.key} className="passenger-card">
                 <div className="passenger-header">
@@ -220,7 +219,7 @@ export default function BookingPage() {
 
             {/* 可累積點數預覽 */}
             <div className="points-preview">
-              <Star size={13} fill="#f59e0b" strokeWidth={0} />
+              <i className="fi fi-sr-star fi-xs" style={{ color: '#f59e0b' }} />
               本次可累積 <strong>{pointsPreview}</strong> 點
             </div>
 

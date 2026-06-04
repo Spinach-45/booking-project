@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Copy, CheckCheck } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import useAuthStore from '../../../store/useAuthStore';
 import { PAYMENT_METHODS, TRAIN_TYPES, formatDuration } from '../data/trainData';
@@ -96,7 +95,7 @@ export default function PaymentPage() {
     <div className="container" style={{ paddingTop: '1rem', paddingBottom: '2rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
         <button className="btn-ghost btn-sm" onClick={() => navigate(-1)}>
-          <ArrowLeft size={14} /> 返回
+          <i className="fi fi-rr-arrow-left fi-sm" /> 返回
         </button>
         <h1 className="page-title">💳 付款</h1>
       </div>
@@ -123,7 +122,7 @@ export default function PaymentPage() {
             {/* Credit card form */}
             {method === 'credit' && (
               <div className="payment-form-area">
-                <div className="pfa-title"><CreditCard size={16} /> 信用卡資訊</div>
+                <div className="pfa-title"><i className="fi fi-rr-credit-card fi-sm" /> 信用卡資訊</div>
                 <div className="form-group" style={{ marginBottom: '0.75rem' }}>
                   <label>卡號</label>
                   <input
@@ -232,7 +231,7 @@ export default function PaymentPage() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <span className="bank-value bank-account">{bankAcct}</span>
                         <button className="btn-ghost btn-sm" onClick={copyAcct}>
-                          {copied ? <CheckCheck size={13} /> : <Copy size={13} />}
+                          {copied ? <i className="fi fi-sr-check-circle fi-xs" /> : <i className="fi fi-rr-copy fi-xs" />}
                         </button>
                       </div>
                     </div>

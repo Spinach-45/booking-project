@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { DollarSign, History } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
@@ -42,7 +41,7 @@ export default function AdminPricingPage() {
 
   return (
     <div className="admin-page">
-      <h1 className="admin-page-title"><DollarSign size={20} /> {T('admin.pricingManagement')}</h1>
+      <h1 className="admin-page-title"><i className="fi fi-rr-dollar" style={{ fontSize: 20 }} /> {T('admin.pricingManagement')}</h1>
 
       <div className="admin-table-wrap">
         <table className="admin-table">
@@ -66,7 +65,7 @@ export default function AdminPricingPage() {
                       {T('admin.pricing.adjustPrice')}
                     </button>
                     <button className="btn-sm btn-outline" onClick={() => setHistoryModal({ propertyId: p.id, roomId: room.id, propName: lang === 'zh' ? p.name : p.nameEn, roomName: lang === 'zh' ? room.typeName : room.typeNameEn })}>
-                      <History size={14} /> {T('admin.pricing.history')}
+                      <i className="fi fi-rr-clock fi-sm" /> {T('admin.pricing.history')}
                     </button>
                   </div>
                 </td>

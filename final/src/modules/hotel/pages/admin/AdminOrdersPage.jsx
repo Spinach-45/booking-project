@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ClipboardList, AlertTriangle, Gift } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
@@ -58,11 +57,11 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="admin-page">
-      <h1 className="admin-page-title"><ClipboardList size={20} /> {T('admin.order.title')}</h1>
+      <h1 className="admin-page-title"><i className="fi fi-rr-clipboard-list" style={{ fontSize: 20 }} /> {T('admin.order.title')}</h1>
 
       {conflicts.length > 0 && (
         <div className="conflict-alert">
-          <AlertTriangle size={18} />
+          <i className="fi fi-rr-exclamation fi-sm" />
           {lang === 'zh' ? `發現 ${conflicts.length} 組重疊訂單，需要處理！` : `Found ${conflicts.length} conflicting orders!`}
           <button className="btn-sm btn-warning" onClick={() => setFilter('conflict')}>
             {T('admin.order.conflictOrders')}
@@ -123,7 +122,7 @@ export default function AdminOrdersPage() {
                           const conflictGroup = conflicts.find(c => c.ids.includes(order.id));
                           setConflictModal({ order, conflictGroup });
                         }}>
-                          <Gift size={14} /> {T('admin.order.handleConflict')}
+                          <i className="fi fi-rr-tag fi-sm" /> {T('admin.order.handleConflict')}
                         </button>
                       )}
                     </div>

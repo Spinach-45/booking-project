@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
@@ -96,7 +95,7 @@ export default function AdminPropertiesPage() {
     <div className="admin-page">
       <div className="admin-page-header">
         <h1 className="admin-page-title">{T('admin.propertyManagement')}</h1>
-        <button className="btn-primary" onClick={openAdd}><Plus size={16} /> {T('admin.addProperty')}</button>
+        <button className="btn-primary" onClick={openAdd}><i className="fi fi-rr-plus fi-sm" /> {T('admin.addProperty')}</button>
       </div>
 
       <div className="admin-table-wrap">
@@ -131,8 +130,8 @@ export default function AdminPropertiesPage() {
                 <td>⭐ {p.rating}</td>
                 <td>
                   {p.hostVerified
-                    ? <span className="badge badge-confirmed"><CheckCircle size={14} /> {T('admin.verified')}</span>
-                    : <span className="badge badge-cancelled"><XCircle size={14} /> {T('admin.unverified')}</span>
+                    ? <span className="badge badge-confirmed"><i className="fi fi-rr-check fi-sm" /> {T('admin.verified')}</span>
+                    : <span className="badge badge-cancelled"><i className="fi fi-rr-cross fi-sm" /> {T('admin.unverified')}</span>
                   }
                 </td>
                 <td>
@@ -140,14 +139,14 @@ export default function AdminPropertiesPage() {
                     className={`toggle-btn ${p.active ? 'active' : ''}`}
                     onClick={() => updateProperty(p.id, { active: !p.active })}
                   >
-                    {p.active ? <Eye size={14} /> : <EyeOff size={14} />}
+                    {p.active ? <i className="fi fi-rr-eye fi-sm" /> : <i className="fi fi-rr-eye-crossed fi-sm" />}
                     {p.active ? (lang === 'zh' ? '上架' : 'Active') : (lang === 'zh' ? '下架' : 'Inactive')}
                   </button>
                 </td>
                 <td>
                   <div className="action-btns">
-                    <button className="btn-icon-sm" onClick={() => openEdit(p)}><Edit size={16} /></button>
-                    <button className="btn-icon-sm btn-danger-icon" onClick={() => handleDelete(p.id)}><Trash2 size={16} /></button>
+                    <button className="btn-icon-sm" onClick={() => openEdit(p)}><i className="fi fi-rr-pencil fi-sm" /></button>
+                    <button className="btn-icon-sm btn-danger-icon" onClick={() => handleDelete(p.id)}><i className="fi fi-rr-trash fi-sm" /></button>
                   </div>
                 </td>
               </tr>
@@ -243,7 +242,7 @@ export default function AdminPropertiesPage() {
           <div className="form-group">
             <div className="rooms-header">
               <label>{lang === 'zh' ? '房型設定' : 'Room Types'}</label>
-              <button type="button" className="btn-outline btn-sm" onClick={addRoom}><Plus size={14} /> {lang === 'zh' ? '新增房型' : 'Add Room'}</button>
+              <button type="button" className="btn-outline btn-sm" onClick={addRoom}><i className="fi fi-rr-plus fi-sm" /> {lang === 'zh' ? '新增房型' : 'Add Room'}</button>
             </div>
             {form.rooms.map((room, idx) => (
               <div key={room.id} className="room-form-row">
@@ -253,7 +252,7 @@ export default function AdminPropertiesPage() {
                 <input className="form-input" type="number" min={0} placeholder={lang === 'zh' ? '價格' : 'Price'} value={room.price} onChange={e => updateRoom(idx, 'price', Number(e.target.value))} />
                 <input className="form-input" type="number" min={1} placeholder={lang === 'zh' ? '最多人數' : 'Max Guests'} value={room.maxGuests} onChange={e => updateRoom(idx, 'maxGuests', Number(e.target.value))} />
                 <input className="form-input" type="number" min={0} placeholder={lang === 'zh' ? '數量' : 'Qty'} value={room.quantity} onChange={e => updateRoom(idx, 'quantity', Number(e.target.value))} />
-                <button type="button" className="btn-icon-sm btn-danger-icon" onClick={() => removeRoom(idx)}><Trash2 size={14} /></button>
+                <button type="button" className="btn-icon-sm btn-danger-icon" onClick={() => removeRoom(idx)}><i className="fi fi-rr-trash fi-sm" /></button>
               </div>
             ))}
           </div>

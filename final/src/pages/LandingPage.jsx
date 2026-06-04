@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Map, Hotel, Train, ArrowRight, Search, MapPin, Calendar, Users, Star } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
 import useTrainStore from '../store/useTrainStore';
 import useHotelStore from '../store/useHotelStore';
@@ -148,9 +147,9 @@ const DESTINATIONS = [
 ];
 
 const MODULES = [
-  { to: '/trip',   icon: <Map size={26} />,   title: '行程規劃', desc: '多人協作規劃行程，支援候選投票、衝突檢測、費用分帳，讓旅遊更順暢',   cta: '開始規劃' },
-  { to: '/hotel',  icon: <Hotel size={26} />,  title: '住宿訂房', desc: '台灣各地火車站周邊住宿一鍵訂房，訂兩晚以上享八折優惠，並自動同步行程', cta: '搜尋住宿' },
-  { to: '/ticket', icon: <Train size={26} />,  title: '火車訂票', desc: '太魯閣、普悠瑪、自強等各車種一次查詢，訂票完成自動加入旅遊行程',   cta: '查詢車次' },
+  { to: '/trip',   icon: <i className="fi fi-rr-map fi-lg" />,         title: '行程規劃', desc: '多人協作規劃行程，支援候選投票、衝突檢測、費用分帳，讓旅遊更順暢',   cta: '開始規劃' },
+  { to: '/hotel',  icon: <i className="fi fi-rr-bed fi-lg" />,         title: '住宿訂房', desc: '台灣各地火車站周邊住宿一鍵訂房，訂兩晚以上享八折優惠，並自動同步行程', cta: '搜尋住宿' },
+  { to: '/ticket', icon: <i className="fi fi-rr-train-side fi-lg" />,  title: '火車訂票', desc: '太魯閣、普悠瑪、自強等各車種一次查詢，訂票完成自動加入旅遊行程',   cta: '查詢車次' },
 ];
 
 // ── 景點卡片（含 hover 展開）────────────────────────────────
@@ -188,7 +187,7 @@ function DestCard({ dest, station, hotels }) {
         <div className="dest-hover-label">最近車站</div>
         {station ? (
           <button className="dest-hover-station" onClick={handleStationClick}>
-            <Train size={12} />
+            <i className="fi fi-rr-train-side fi-xs" />
             {station.name}站（約 {station.walkMins} 分鐘步行）
           </button>
         ) : (
@@ -204,7 +203,7 @@ function DestCard({ dest, station, hotels }) {
             <div className="dest-hotel-name">{h.name}</div>
             <div className="dest-hotel-meta">
               <span style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Star size={9} fill="rgba(255,200,50,0.9)" stroke="none" />
+                <i className="fi fi-sr-star" style={{ fontSize: 9, color: 'rgba(255,200,50,0.9)' }} />
                 {h.rating}
               </span>
               <span>NT${h.minPrice.toLocaleString()}/晚</span>
@@ -251,7 +250,7 @@ export default function LandingPage() {
 
           <div className="hero-search">
             <div className="hero-search-field">
-              <MapPin size={16} />
+              <i className="fi fi-rr-marker" style={{ fontSize: 16 }} />
               <select
                 className="hero-search-input"
                 value={destination}
@@ -266,15 +265,15 @@ export default function LandingPage() {
               </select>
             </div>
             <div className="hero-search-field">
-              <Calendar size={16} />
+              <i className="fi fi-rr-calendar" style={{ fontSize: 16 }} />
               <input className="hero-search-input" type="date" />
             </div>
             <div className="hero-search-field">
-              <Calendar size={16} />
+              <i className="fi fi-rr-calendar" style={{ fontSize: 16 }} />
               <input className="hero-search-input" type="date" />
             </div>
             <div className="hero-search-field">
-              <Users size={16} />
+              <i className="fi fi-rr-users" style={{ fontSize: 16 }} />
               <input
                 className="hero-search-input"
                 type="number" min="1" max="10"
@@ -291,7 +290,7 @@ export default function LandingPage() {
                 navigate('/hotel/properties');
               }}
             >
-              <Search size={18} />
+              <i className="fi fi-rr-search" style={{ fontSize: 18 }} />
             </button>
           </div>
         </div>
@@ -306,7 +305,7 @@ export default function LandingPage() {
                 <div className="module-card-icon">{m.icon}</div>
                 <div className="module-card-title">{m.title}</div>
                 <div className="module-card-desc">{m.desc}</div>
-                <div className="module-card-link">{m.cta} <ArrowRight size={14} /></div>
+                <div className="module-card-link">{m.cta} <i className="fi fi-rr-arrow-right fi-sm" /></div>
               </Link>
             ))}
           </div>
@@ -322,7 +321,7 @@ export default function LandingPage() {
               <div className="destinations-subtitle">探索北北基桃精選景點，自動比對最近車站與住宿</div>
             </div>
             <Link to="/hotel" style={{ fontSize: '0.88rem', color: 'var(--primary)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4 }}>
-              查看全部 <ArrowRight size={14} />
+              查看全部 <i className="fi fi-rr-arrow-right fi-sm" />
             </Link>
           </div>
           <div className="destinations-scroll">
