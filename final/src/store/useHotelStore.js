@@ -21,6 +21,14 @@ function initLS() {
     LS.set('bk_orders', []);
     LS.set('bk_chats', []);
     LS.set('bk_initialized', true);
+  } else {
+    // migration：補入首頁廣告（舊用戶不會有 position=landing 的廣告）
+    const existing = LS.get('bk_ads', []);
+    const hasLanding = existing.some(a => a.position === 'landing');
+    if (!hasLanding) {
+      const landingAds = SEED_ADS.filter(a => a.position === 'landing');
+      LS.set('bk_ads', [...existing, ...landingAds]);
+    }
   }
 }
 initLS();

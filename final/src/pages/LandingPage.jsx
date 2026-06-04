@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Map, Hotel, Train, ArrowRight, Search, MapPin, Calendar, Users, Star } from 'lucide-react';
 import useAuthStore from '../store/useAuthStore';
 import useTrainStore from '../store/useTrainStore';
+import useHotelStore from '../store/useHotelStore';
 import { STATIONS } from '../modules/train/data/trainData';
 import { SEED_PROPERTIES } from '../modules/hotel/data/seedData';
 
@@ -222,7 +223,11 @@ function DestCard({ dest, station, hotels }) {
 export default function LandingPage() {
   const { currentUser } = useAuthStore();
   const navigate = useNavigate();
+  const { ads } = useHotelStore();
   const [guests, setGuests] = useState('2');
+
+  const today = new Date().toISOString().split('T')[0];
+  const landingAds = ads.filter(a => a.active && a.position === 'landing' && a.endDate >= today);
 
   // 預先計算每個景點的最近車站與推薦住宿（只算一次）
   const enrichedDests = useMemo(() =>
@@ -310,34 +315,49 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ── 跨模組亮點 ── */}
-      <div style={{ background: 'white', padding: '3rem 0 4rem' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--text)' }}>跨模組整合亮點</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 300, color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-              三大功能無縫串接，打造最順暢的旅遊體驗
+      {/* ── 首頁廣告欄位（由後台管理） ── */}
+      {landingAds.length > 0 && (
+        <div style={{ background: 'white', padding: '3rem 0 4rem' }}>
+          <div className="container">
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <div style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--text)' }}>精選優惠</div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 300, color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                為您精選最新旅遊資訊與優惠方案
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
+              {landingAds.map(ad => (
+                <Link
+                  key={ad.id}
+                  to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
+                  style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+                >
+                  <div style={{
+                    background: 'var(--bg)', border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-lg)', overflow: 'hidden',
+                    transition: 'all 0.2s', cursor: 'pointer',
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+                  >
+                    {ad.image && (
+                      <img
+                        src={ad.image}
+                        alt={ad.title}
+                        style={{ width: '100%', height: 150, objectFit: 'cover', display: 'block' }}
+                        loading="lazy"
+                      />
+                    )}
+                    <div style={{ padding: '1rem 1.1rem' }}>
+                      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text)' }}>{ad.title}</div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
-            {[
-              { icon: '🔗', title: '訂房自動入行程', desc: '訂房成功後，住宿資訊自動加入對應行程天數' },
-              { icon: '🎫', title: '訂票自動入行程', desc: '車次時間與票券資訊自動同步至行程交通安排' },
-              { icon: '⚡', title: '衝突智慧提醒',   desc: '系統自動偵測車班時間與行程安排是否衝突' },
-              { icon: '🎁', title: '兩晚八折優惠',   desc: '訂房兩晚以上自動享八折優惠，折扣明細清楚呈現' },
-            ].map(f => (
-              <div key={f.title} style={{
-                background: 'var(--bg)', border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-lg)', padding: '1.5rem', textAlign: 'center',
-              }}>
-                <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>{f.icon}</div>
-                <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.4rem', color: 'var(--text)' }}>{f.title}</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 300, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{f.desc}</div>
-              </div>
-            ))}
-          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

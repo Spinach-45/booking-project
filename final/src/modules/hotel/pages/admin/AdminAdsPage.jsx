@@ -44,7 +44,9 @@ export default function AdminAdsPage() {
           <div key={ad.id} className={`ad-manage-card ${!ad.active ? 'ad-inactive' : ''}`}>
             <div className="ad-preview">
               <img src={ad.image} alt={ad.title} className="ad-preview-img" />
-              <span className="ad-position-badge">{ad.position}</span>
+              <span className="ad-position-badge">
+                {{ banner: '頂部橫幅', sidebar: '側欄', landing: '首頁廣告' }[ad.position] ?? ad.position}
+              </span>
             </div>
             <div className="ad-manage-info">
               <h3>{lang === 'zh' ? ad.title : (ad.titleEn || ad.title)}</h3>
@@ -85,6 +87,7 @@ export default function AdminAdsPage() {
             <select className="form-input" value={form.position} onChange={e => setForm(f => ({ ...f, position: e.target.value }))}>
               <option value="banner">{lang === 'zh' ? '頂部橫幅' : 'Top Banner'}</option>
               <option value="sidebar">{lang === 'zh' ? '側欄' : 'Sidebar'}</option>
+              <option value="landing">{lang === 'zh' ? '首頁廣告欄位' : 'Landing Page'}</option>
             </select>
           </div>
           <div className="form-group">
