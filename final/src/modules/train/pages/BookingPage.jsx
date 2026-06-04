@@ -151,8 +151,9 @@ export default function BookingPage() {
                   <span className="train-type-badge" style={{ background: '#f1f5f9', color: 'var(--text)' }}>
                     乘客 {idx + 1}
                   </span>
-                  <span style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.82rem' }}>
-                    {pt.name}（{pt.desc}）
+                  <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                    <span style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.82rem' }}>{pt.name}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 400 }}>{pt.desc}</span>
                   </span>
                 </div>
                 <div className="form-grid-3">
