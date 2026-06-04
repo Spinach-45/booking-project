@@ -345,7 +345,6 @@ export const SEED_ADS = [
   { id: 'ad-002', title: '早鳥優惠 提前30天訂房享9折', titleEn: 'Early Bird 10% Off Book 30 Days Ahead', image: 'https://picsum.photos/seed/ad002/400/300', link: '#', position: 'sidebar', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
   { id: 'ad-003', title: '訂房自動入行程', titleEn: 'Hotel Auto-Sync to Itinerary', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', link: '/hotel', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
   { id: 'ad-004', title: '訂票自動入行程', titleEn: 'Ticket Auto-Sync to Itinerary', image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=600&q=80', link: '/ticket', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
-  { id: 'ad-005', title: '衝突智慧提醒', titleEn: 'Smart Conflict Detection', image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80', link: '/trip', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
   { id: 'ad-006', title: '訂房兩晚享八折', titleEn: '20% Off for 2+ Nights', image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80', link: '/hotel', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
 ];
 

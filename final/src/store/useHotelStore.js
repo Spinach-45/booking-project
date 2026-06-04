@@ -23,12 +23,15 @@ function initLS() {
     LS.set('bk_initialized', true);
   } else {
     // migration：補入首頁廣告（舊用戶不會有 position=landing 的廣告）
-    const existing = LS.get('bk_ads', []);
+    let existing = LS.get('bk_ads', []);
+    // 移除不再需要的廣告
+    existing = existing.filter(a => a.id !== 'ad-005');
     const hasLanding = existing.some(a => a.position === 'landing');
     if (!hasLanding) {
       const landingAds = SEED_ADS.filter(a => a.position === 'landing');
-      LS.set('bk_ads', [...existing, ...landingAds]);
+      existing = [...existing, ...landingAds];
     }
+    LS.set('bk_ads', existing);
   }
 }
 initLS();
