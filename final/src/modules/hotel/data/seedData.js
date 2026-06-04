@@ -343,9 +343,9 @@ export const SEED_COUPONS = [
 export const SEED_ADS = [
   { id: 'ad-001', title: '夏季特惠！全館85折', titleEn: 'Summer Sale! 15% Off', image: 'https://picsum.photos/seed/ad001/1200/300', link: '#', position: 'banner', startDate: '2024-06-01', endDate: '2026-08-31', active: true },
   { id: 'ad-002', title: '早鳥優惠 提前30天訂房享9折', titleEn: 'Early Bird 10% Off Book 30 Days Ahead', image: 'https://picsum.photos/seed/ad002/400/300', link: '#', position: 'sidebar', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
-  { id: 'ad-003', title: '訂房自動入行程', titleEn: 'Hotel Auto-Sync to Itinerary', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', link: '/hotel', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
-  { id: 'ad-004', title: '訂票自動入行程', titleEn: 'Ticket Auto-Sync to Itinerary', image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=600&q=80', link: '/ticket', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
-  { id: 'ad-006', title: '訂房兩晚享八折', titleEn: '20% Off for 2+ Nights', image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80', link: '/hotel', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
+  { id: 'ad-003', title: '訂房自動入行程', titleEn: 'Hotel Auto-Sync to Itinerary', image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&q=90', video: 'https://videos.pexels.com/video-files/3571264/3571264-hd_1920_1080_30fps.mp4', link: '/hotel', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
+  { id: 'ad-004', title: '訂票自動入行程', titleEn: 'Ticket Auto-Sync to Itinerary', image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1200&q=90', video: 'https://videos.pexels.com/video-files/2795750/2795750-hd_1920_1080_25fps.mp4', link: '/ticket', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
+  { id: 'ad-006', title: '訂房兩晚享八折', titleEn: '20% Off for 2+ Nights', image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=90', video: 'https://videos.pexels.com/video-files/3753658/3753658-hd_1920_1080_25fps.mp4', link: '/hotel', position: 'landing', startDate: '2024-01-01', endDate: '2026-12-31', active: true },
 ];
 
 export const SEED_REVIEWS = [

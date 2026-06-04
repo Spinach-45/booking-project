@@ -317,24 +317,33 @@ export default function LandingPage() {
 
       {/* ── 首頁廣告欄位（由後台管理） ── */}
       {landingAds.length > 0 && (
-        <div style={{ padding: '2rem 0', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {landingAds.map(ad => (
-            <Link
-              key={ad.id}
-              to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
-              style={{ display: 'block', textDecoration: 'none', position: 'relative', overflow: 'hidden' }}
-            >
-              <img
-                src={ad.image}
-                alt={ad.title}
-                style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block', transition: 'transform 0.3s' }}
-                loading="lazy"
-                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
-                onMouseLeave={e => e.currentTarget.style.transform = ''}
-              />
-              <span style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.45)', color: 'white', fontSize: '0.62rem', padding: '1px 6px', borderRadius: 3 }}>廣告</span>
-            </Link>
-          ))}
+        <div style={{ padding: '1.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className="container">
+            {landingAds.map(ad => (
+              <Link
+                key={ad.id}
+                to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
+                style={{ display: 'block', textDecoration: 'none', position: 'relative', overflow: 'hidden', borderRadius: 'var(--radius-lg)', marginBottom: '0.75rem' }}
+              >
+                {ad.video ? (
+                  <video
+                    src={ad.video}
+                    poster={ad.image}
+                    autoPlay muted loop playsInline
+                    style={{ width: '100%', height: 88, objectFit: 'cover', display: 'block' }}
+                  />
+                ) : (
+                  <img
+                    src={ad.image}
+                    alt={ad.title}
+                    style={{ width: '100%', height: 88, objectFit: 'cover', display: 'block' }}
+                    loading="lazy"
+                  />
+                )}
+                <span style={{ position: 'absolute', top: 6, right: 8, background: 'rgba(0,0,0,0.4)', color: 'white', fontSize: '0.6rem', padding: '1px 5px', borderRadius: 3 }}>廣告</span>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>

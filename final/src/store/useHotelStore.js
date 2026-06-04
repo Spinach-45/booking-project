@@ -30,6 +30,10 @@ function initLS() {
     if (!hasLanding) {
       const landingAds = SEED_ADS.filter(a => a.position === 'landing');
       existing = [...existing, ...landingAds];
+    } else {
+      // 補入 video 欄位（舊版資料沒有 video）
+      const videoMap = Object.fromEntries(SEED_ADS.map(a => [a.id, a.video]));
+      existing = existing.map(a => (!a.video && videoMap[a.id]) ? { ...a, video: videoMap[a.id] } : a);
     }
     LS.set('bk_ads', existing);
   }
