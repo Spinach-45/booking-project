@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Search, ArrowLeftRight, ChevronDown, ChevronUp } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
 import useAuthStore from '../../../store/useAuthStore';
-import { STATIONS, TICKET_TYPES, TIME_SLOTS, CAR_TYPES } from '../data/trainData';
+import { STATIONS, STATION_GROUPS, STATION_MAP, TICKET_TYPES, TIME_SLOTS, CAR_TYPES } from '../data/trainData';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -70,7 +70,19 @@ export default function HomePage() {
             <div className="form-group">
               <label>出發站</label>
               <select className="form-input" value={searchParams.from} onChange={e => set('from', e.target.value)}>
-                {STATIONS.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                {STATION_GROUPS.map(g => (
+                  <optgroup key={g.label} label={g.label}>
+                    {g.stations.map(id => {
+                      const s = STATIONS.find(st => st.id === id);
+                      if (!s) return null;
+                      return (
+                        <option key={id} value={id}>
+                          {s.name}{s.transfer ? ' ⇄' : ''}
+                        </option>
+                      );
+                    })}
+                  </optgroup>
+                ))}
               </select>
             </div>
             <button className="swap-btn" onClick={swapStations} title="交換出發/到達站">
@@ -79,7 +91,19 @@ export default function HomePage() {
             <div className="form-group">
               <label>到達站</label>
               <select className="form-input" value={searchParams.to} onChange={e => set('to', e.target.value)}>
-                {STATIONS.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                {STATION_GROUPS.map(g => (
+                  <optgroup key={g.label} label={g.label}>
+                    {g.stations.map(id => {
+                      const s = STATIONS.find(st => st.id === id);
+                      if (!s) return null;
+                      return (
+                        <option key={id} value={id}>
+                          {s.name}{s.transfer ? ' ⇄' : ''}
+                        </option>
+                      );
+                    })}
+                  </optgroup>
+                ))}
               </select>
             </div>
           </div>
