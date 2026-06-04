@@ -319,12 +319,12 @@ export default function LandingPage() {
       {landingAds.length > 0 && (
         <div style={{ padding: '1.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div className="container">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
               {landingAds.map(ad => (
                 <Link
                   key={ad.id}
                   to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
-                  style={{ display: 'block', textDecoration: 'none', position: 'relative', overflow: 'hidden', borderRadius: 'var(--radius-lg)' }}
+                  style={{ flex: 1, minWidth: 0, display: 'block', textDecoration: 'none', position: 'relative', overflow: 'hidden', borderRadius: 'var(--radius-lg)' }}
                 >
                   {ad.video ? (
                     <video
