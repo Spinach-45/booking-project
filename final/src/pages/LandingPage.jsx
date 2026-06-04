@@ -317,45 +317,24 @@ export default function LandingPage() {
 
       {/* ── 首頁廣告欄位（由後台管理） ── */}
       {landingAds.length > 0 && (
-        <div style={{ background: 'white', padding: '3rem 0 4rem' }}>
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--text)' }}>精選優惠</div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 300, color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                為您精選最新旅遊資訊與優惠方案
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.25rem' }}>
-              {landingAds.map(ad => (
-                <Link
-                  key={ad.id}
-                  to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
-                  style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
-                >
-                  <div style={{
-                    background: 'var(--bg)', border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius-lg)', overflow: 'hidden',
-                    transition: 'all 0.2s', cursor: 'pointer',
-                  }}
-                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
-                  >
-                    {ad.image && (
-                      <img
-                        src={ad.image}
-                        alt={ad.title}
-                        style={{ width: '100%', height: 150, objectFit: 'cover', display: 'block' }}
-                        loading="lazy"
-                      />
-                    )}
-                    <div style={{ padding: '1rem 1.1rem' }}>
-                      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text)' }}>{ad.title}</div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
+        <div style={{ padding: '2rem 0', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {landingAds.map(ad => (
+            <Link
+              key={ad.id}
+              to={ad.link && ad.link !== '#' ? ad.link : '/hotel'}
+              style={{ display: 'block', textDecoration: 'none', position: 'relative', overflow: 'hidden' }}
+            >
+              <img
+                src={ad.image}
+                alt={ad.title}
+                style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block', transition: 'transform 0.3s' }}
+                loading="lazy"
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                onMouseLeave={e => e.currentTarget.style.transform = ''}
+              />
+              <span style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.45)', color: 'white', fontSize: '0.62rem', padding: '1px 6px', borderRadius: 3 }}>廣告</span>
+            </Link>
+          ))}
         </div>
       )}
     </div>
