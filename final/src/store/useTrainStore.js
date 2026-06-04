@@ -3,15 +3,21 @@ import useAuthStore from './useAuthStore';
 import { generateTrains, STATION_MAP, TICKET_TYPES, POINTS_RATE } from '../modules/train/data/trainData';
 
 function assignSeats(passengers, seatPref, seed) {
+  if (!passengers.length) return passengers;
   let s = seed >>> 0;
   const rand = () => { s = Math.imul(1664525, s) + 1013904223 >>> 0; return s / 0x100000000; };
-  const windowL = ['A', 'F'];
-  const aisleL  = ['C', 'D'];
-  const anyL    = ['A', 'B', 'C', 'D', 'F'];
-  const letters = seatPref === 'window' ? windowL : seatPref === 'aisle' ? aisleL : anyL;
-  return passengers.map(p => ({
+  const allLetters = ['A', 'B', 'C', 'D', 'F'];
+  const carNo  = 1 + Math.floor(rand() * 12);
+  const rowNo  = 1 + Math.floor(rand() * Math.max(1, 68 - passengers.length));
+  if (passengers.length === 1) {
+    const prefL = seatPref === 'window' ? ['A','F'] : seatPref === 'aisle' ? ['C','D'] : allLetters;
+    return [{ ...passengers[0], seatNo: `${carNo}車${rowNo}${prefL[Math.floor(rand() * prefL.length)]}` }];
+  }
+  // 多人：同車廂、同排號、連續字母（連號優先於偏好）
+  const startIdx = seatPref === 'aisle' ? 2 : 0; // C=2, A=0
+  return passengers.map((p, i) => ({
     ...p,
-    seatNo: `${1 + Math.floor(rand() * 12)}車${1 + Math.floor(rand() * 68)}${letters[Math.floor(rand() * letters.length)]}`,
+    seatNo: `${carNo}車${rowNo}${allLetters[(startIdx + i) % allLetters.length]}`,
   }));
 }
 
@@ -115,7 +121,7 @@ const useTrainStore = create((set, get) => ({
     return order.id;
   },
 
-  processPayment: (orderId, method, cardNumber = '') => {
+  processPayment: (orderId, method, cardNumber = '', pointsToUse = 0) => {
     const orders = get().orders;
     const order = orders.find(o => o.id === orderId);
     if (!order) return { success: false, reason: '找不到訂單' };
@@ -127,7 +133,9 @@ const useTrainStore = create((set, get) => ({
     }
     const bookingNo = `TR${Date.now().toString().slice(-10)}`;
     const cvsPickupCode = `CV${Date.now().toString().slice(-8)}`;
-    const pointsEarned = Math.floor(order.totalAmount / (100 / POINTS_RATE));
+    const finalAmount = order.totalAmount - (pointsToUse || 0);
+    const pointsEarned = Math.floor(finalAmount / (100 / POINTS_RATE));
+    if (pointsToUse > 0) useAuthStore.getState().addPoints(-pointsToUse);
     useAuthStore.getState().addPoints(pointsEarned);
     const updated = {
       ...order,
@@ -137,6 +145,8 @@ const useTrainStore = create((set, get) => ({
       paidAt: Date.now(),
       cvsPickupCode,
       pointsEarned,
+      pointsUsed: pointsToUse || 0,
+      finalAmount,
     };
     const newOrders = orders.map(o => o.id === orderId ? updated : o);
     LS.set('tr_orders', newOrders);

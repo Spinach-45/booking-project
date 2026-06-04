@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Copy, CheckCheck } from 'lucide-react';
 import useStore from '../../../store/useTrainStore';
+import useAuthStore from '../../../store/useAuthStore';
 import { PAYMENT_METHODS, TRAIN_TYPES, formatDuration } from '../data/trainData';
 import { useToast } from '../../../components/common/Toast';
 
@@ -19,6 +20,9 @@ export default function PaymentPage() {
   const [paying, setPaying] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const { currentUser } = useAuthStore();
+  const [pointsToUse, setPointsToUse] = useState(0);
+
   const order = getOrder(orderId);
 
   if (!order) return (
@@ -31,7 +35,10 @@ export default function PaymentPage() {
     </div>
   );
 
-  const typeInfo = TRAIN_TYPES[order.train.type] ?? {};
+  const typeInfo   = TRAIN_TYPES[order.train.type] ?? {};
+  const userPoints = currentUser?.points || 0;
+  const maxPoints  = Math.min(userPoints, order.totalAmount);
+  const finalAmount = order.totalAmount - pointsToUse;
 
   const formatCard = (val) => val.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
   const formatExpiry = (val) => {
@@ -65,7 +72,7 @@ export default function PaymentPage() {
   const handlePay = () => {
     setPaying(true);
     setTimeout(() => {
-      const { success } = processPayment(orderId, method, creditCard.number);
+      const { success } = processPayment(orderId, method, creditCard.number, pointsToUse);
       setPaying(false);
       if (success) toast('付款成功！', 'success');
       else toast('付款失敗', 'error');
@@ -245,7 +252,7 @@ export default function PaymentPage() {
 
           <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
             <button className="btn-primary btn-lg" onClick={handlePay} disabled={!canPay() || paying} style={{ flex: 1 }}>
-              {paying ? '處理中…' : `確認付款 NT$${order.totalAmount.toLocaleString()}`}
+              {paying ? '處理中…' : `確認付款 NT$${finalAmount.toLocaleString()}`}
             </button>
             <button className="btn-danger" onClick={handleCancel} disabled={paying}>
               取消訂單
@@ -278,11 +285,44 @@ export default function PaymentPage() {
                   <span>NT${t.subtotal.toLocaleString()}</span>
                 </div>
               ))}
+              {order.multiDiscount && (
+                <div className="order-row" style={{ color: 'var(--success)' }}>
+                  <span>優惠折扣</span>
+                  <span>－NT${order.discountAmount?.toLocaleString()}</span>
+                </div>
+              )}
+              {pointsToUse > 0 && (
+                <div className="order-row" style={{ color: 'var(--success)' }}>
+                  <span>點數折抵</span>
+                  <span>－NT${pointsToUse.toLocaleString()}</span>
+                </div>
+              )}
               <div className="order-row total">
-                <span>合計</span>
-                <span>NT${order.totalAmount.toLocaleString()}</span>
+                <span>實付金額</span>
+                <span>NT${finalAmount.toLocaleString()}</span>
               </div>
             </div>
+
+            {/* 點數折抵 */}
+            {userPoints > 0 && (
+              <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                  🌟 點數折抵（持有 {userPoints} 點）
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="number" min={0} max={maxPoints}
+                    value={pointsToUse}
+                    onChange={e => setPointsToUse(Math.min(Math.max(0, parseInt(e.target.value) || 0), maxPoints))}
+                    className="form-input"
+                    style={{ width: 90 }}
+                  />
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                    點（＝ NT${pointsToUse}，最多可折抵 {maxPoints} 點）
+                  </span>
+                </div>
+              </div>
+            )}
             <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
               訂單編號：{order.id}
             </div>

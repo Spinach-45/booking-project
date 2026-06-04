@@ -279,17 +279,45 @@ function OrderDetailModal({ order, onClose }) {
           </div>
         )}
 
-        {/* 乘客名單 + 座位 */}
+        {/* 乘客名單 + 座位 + 個別票價 */}
         <div style={{ background: 'var(--bg)', borderRadius: 'var(--radius)', padding: '0.85rem', marginTop: '0.25rem' }}>
           <div style={{ fontWeight: 700, fontSize: '0.88rem', marginBottom: '0.5rem' }}>乘客名單與座位</div>
-          {order.passengers.map((p, i) => (
-            <div key={i} style={{ display: 'flex', gap: '0.75rem', fontSize: '0.83rem', marginBottom: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span style={{ color: 'var(--text-secondary)', minWidth: 60 }}>{p.ticketTypeName}</span>
-              <span style={{ fontWeight: 600 }}>{p.name}</span>
-              <span style={{ color: 'var(--text-secondary)' }}>{p.phone}</span>
-              {p.seatNo && <span className="seat-badge">{p.seatNo}</span>}
+          {order.passengers.map((p, i) => {
+            const ticket = order.tickets?.find(t => t.typeId === p.ticketType);
+            const unitPrice = ticket?.unitPrice ?? 0;
+            return (
+              <div key={i} style={{ display: 'flex', gap: '0.6rem', fontSize: '0.82rem', marginBottom: '0.4rem', alignItems: 'center', flexWrap: 'wrap', paddingBottom: '0.35rem', borderBottom: '1px solid var(--border)' }}>
+                <span style={{ fontWeight: 700, minWidth: 52 }}>{p.ticketTypeName}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>1張</span>
+                <span style={{ color: 'var(--primary)', fontWeight: 600, minWidth: 70 }}>NT${unitPrice.toLocaleString()}</span>
+                <span style={{ flex: 1, color: 'var(--text-secondary)' }}>{p.name}</span>
+                {p.seatNo && <span className="seat-badge">{p.seatNo}</span>}
+              </div>
+            );
+          })}
+          {/* 票價小計 / 折抵 / 實付 */}
+          <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', fontSize: '0.82rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>票價小計</span>
+              <span>NT${order.baseAmount?.toLocaleString() ?? order.totalAmount.toLocaleString()}</span>
             </div>
-          ))}
+            {order.multiDiscount && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--success)' }}>
+                <span>優惠折扣</span>
+                <span>－NT${order.discountAmount?.toLocaleString()}</span>
+              </div>
+            )}
+            {order.pointsUsed > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--success)' }}>
+                <span>點數折抵</span>
+                <span>－NT${order.pointsUsed.toLocaleString()}</span>
+              </div>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, borderTop: '1px solid var(--border)', paddingTop: '0.25rem', color: 'var(--primary)' }}>
+              <span>實付金額</span>
+              <span>NT${(order.finalAmount ?? order.totalAmount).toLocaleString()}</span>
+            </div>
+          </div>
         </div>
 
         {/* 沿途停靠站 */}

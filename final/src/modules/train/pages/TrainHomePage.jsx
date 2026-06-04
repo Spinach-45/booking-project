@@ -195,29 +195,14 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Feature highlights */}
-      <div className="features-section">
-        {currentUser && (
-          <div style={{ marginBottom: '1.5rem', padding: '1rem 1.25rem', background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+      {currentUser && (
+        <div className="features-section" style={{ paddingTop: 0 }}>
+          <div style={{ padding: '1rem 1.25rem', background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
             <span style={{ fontWeight: 700 }}>👋 歡迎回來，{currentUser.name}！</span>
             <Link to="/ticket/orders" className="btn-outline btn-sm">查看我的訂單</Link>
           </div>
-        )}
-        <div className="features-grid">
-          {[
-            { icon: '⚡', title: '即時查詢', desc: '即時顯示各車次座位餘量' },
-            { icon: '🎫', title: '多票種支援', desc: '全票、孩童、敬老、愛心、學生' },
-            { icon: '💳', title: '多元付款', desc: '信用卡、LINE Pay、超商、銀行轉帳' },
-            { icon: '🔄', title: '彈性退改票', desc: '依規定辦理退票或改票服務' },
-          ].map(f => (
-            <div key={f.title} className="feature-card">
-              <div className="feature-icon">{f.icon}</div>
-              <div className="feature-title">{f.title}</div>
-              <div className="feature-desc">{f.desc}</div>
-            </div>
-          ))}
         </div>
-      </div>
+      )}
     </>
   );
 }
