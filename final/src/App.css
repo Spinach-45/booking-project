@@ -227,13 +227,33 @@ button { cursor: pointer; border: none; background: none; }
 .destinations-subtitle { font-size: 0.88rem; font-weight: 300; color: var(--text-secondary); margin-top: 0.35rem; }
 .destinations-scroll { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
 .destinations-scroll::-webkit-scrollbar { display: none; }
-.dest-photo-card { flex-shrink: 0; width: 220px; border-radius: var(--radius-lg); overflow: hidden; position: relative; cursor: pointer; transition: transform 0.2s; }
+.dest-photo-card { flex-shrink: 0; width: 220px; height: 280px; border-radius: var(--radius-lg); overflow: hidden; position: relative; cursor: pointer; transition: transform 0.2s; }
 .dest-photo-card:hover { transform: scale(1.02); }
-.dest-photo-card img { width: 100%; height: 280px; object-fit: cover; display: block; }
-.dest-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(30,38,46,0.75) 0%, transparent 55%); }
-.dest-photo-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; color: white; }
+.dest-photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.dest-photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(30,38,46,0.75) 0%, transparent 55%); transition: opacity 0.25s; pointer-events: none; }
+.dest-photo-card:hover .dest-photo-overlay { opacity: 0; }
+.dest-photo-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; color: white; transition: opacity 0.2s; z-index: 1; }
+.dest-photo-card:hover .dest-photo-info { opacity: 0; pointer-events: none; }
 .dest-photo-name { font-size: 1.05rem; font-weight: 600; }
 .dest-photo-region { font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.75); margin-top: 2px; }
+
+/* Destination card hover overlay */
+.dest-hover-overlay { position: absolute; inset: 0; background: rgba(20,28,36,0.92); opacity: 0; transition: opacity 0.25s; padding: 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; overflow-y: auto; z-index: 2; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent; }
+.dest-hover-overlay::-webkit-scrollbar { width: 4px; }
+.dest-hover-overlay::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+.dest-photo-card:hover .dest-hover-overlay { opacity: 1; }
+.dest-hover-name { font-size: 1rem; font-weight: 700; color: white; }
+.dest-hover-city { font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-bottom: 2px; }
+.dest-hover-desc { font-size: 0.76rem; font-weight: 300; color: rgba(255,255,255,0.82); line-height: 1.55; margin-bottom: 4px; }
+.dest-hover-divider { border: none; border-top: 1px solid rgba(255,255,255,0.12); margin: 2px 0; }
+.dest-hover-station { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #c4cacd; background: rgba(255,255,255,0.1); border-radius: 6px; padding: 5px 8px; cursor: pointer; transition: background 0.15s; border: none; width: 100%; text-align: left; }
+.dest-hover-station:hover { background: rgba(255,255,255,0.2); }
+.dest-hover-label { font-size: 0.68rem; font-weight: 600; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+.dest-hotel-item { display: block; padding: 5px 7px; background: rgba(255,255,255,0.07); border-radius: 6px; margin-bottom: 3px; transition: background 0.15s; text-decoration: none; }
+.dest-hotel-item:hover { background: rgba(255,255,255,0.16); }
+.dest-hotel-name { font-size: 0.75rem; font-weight: 600; color: white; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dest-hotel-meta { font-size: 0.68rem; color: rgba(255,255,255,0.6); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.dest-no-data { font-size: 0.73rem; color: rgba(255,255,255,0.45); padding: 4px 0; }
 
 @media (max-width: 768px) {
   .hero { min-height: 100svh; }
