@@ -330,13 +330,13 @@ export default function LandingPage() {
                     src={ad.video}
                     poster={ad.image}
                     autoPlay muted loop playsInline
-                    style={{ width: '100%', height: 88, objectFit: 'cover', display: 'block' }}
+                    style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }}
                   />
                 ) : (
                   <img
                     src={ad.image}
                     alt={ad.title}
-                    style={{ width: '100%', height: 88, objectFit: 'cover', display: 'block' }}
+                    style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }}
                     loading="lazy"
                   />
                 )}
