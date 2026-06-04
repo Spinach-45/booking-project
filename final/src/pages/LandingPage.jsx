@@ -223,7 +223,8 @@ function DestCard({ dest, station, hotels }) {
 export default function LandingPage() {
   const { currentUser } = useAuthStore();
   const navigate = useNavigate();
-  const { ads } = useHotelStore();
+  const { ads, setSearchParams: setHotelSearchParams } = useHotelStore();
+  const [destination, setDestination] = useState('');
   const [guests, setGuests] = useState('2');
 
   const today = new Date().toISOString().split('T')[0];
@@ -251,7 +252,18 @@ export default function LandingPage() {
           <div className="hero-search">
             <div className="hero-search-field">
               <MapPin size={16} />
-              <input className="hero-search-input" placeholder="目的地" />
+              <select
+                className="hero-search-input"
+                value={destination}
+                onChange={e => setDestination(e.target.value)}
+                style={{ cursor: 'pointer' }}
+              >
+                <option value="">選擇目的地</option>
+                <option value="taipei">台北（含松山、台北車站）</option>
+                <option value="newTaipei">新北（板橋、汐止、三重）</option>
+                <option value="keelung">基隆</option>
+                <option value="taoyuan">桃園（含中壢）</option>
+              </select>
             </div>
             <div className="hero-search-field">
               <Calendar size={16} />
@@ -272,7 +284,13 @@ export default function LandingPage() {
                 style={{ width: 80 }}
               />
             </div>
-            <button className="hero-search-btn" onClick={() => navigate('/hotel')}>
+            <button
+              className="hero-search-btn"
+              onClick={() => {
+                if (destination) setHotelSearchParams({ location: destination });
+                navigate('/hotel/properties');
+              }}
+            >
               <Search size={18} />
             </button>
           </div>

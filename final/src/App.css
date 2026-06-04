@@ -207,6 +207,8 @@ button { cursor: pointer; border: none; background: none; }
 .hero-search-field svg { color: var(--secondary); flex-shrink: 0; }
 .hero-search-input { border: none; outline: none; background: transparent; font-size: 0.88rem; color: var(--text); width: 100%; font-weight: 400; }
 .hero-search-input::placeholder { color: var(--secondary); font-weight: 300; }
+select.hero-search-input { appearance: none; -webkit-appearance: none; color: var(--text); }
+select.hero-search-input option { color: var(--text); background: white; }
 .hero-search-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; border: none; cursor: pointer; }
 .hero-search-btn:hover { background: var(--primary-dark); }
 
