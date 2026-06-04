@@ -21,10 +21,10 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 98,
     hostVerified: true,
     images: [
-      'https://picsum.photos/seed/prop001a/800/600',
-      'https://picsum.photos/seed/prop001b/800/600',
-      'https://picsum.photos/seed/prop001c/800/600',
-      'https://picsum.photos/seed/prop001d/800/600',
+      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80',
+      'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&q=80',
+      'https://images.unsplash.com/photo-1514565131-fce0801e6173?w=800&q=80',
     ],
     rooms: [
       { id: 'room-001-1', type: 'double', typeName: '雙人房', typeNameEn: 'Double Room', price: 2800, maxGuests: 2, quantity: 3 },
@@ -63,9 +63,9 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 95,
     hostVerified: true,
     images: [
-      'https://picsum.photos/seed/prop002a/800/600',
-      'https://picsum.photos/seed/prop002b/800/600',
-      'https://picsum.photos/seed/prop002c/800/600',
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800&q=80',
+      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80',
     ],
     rooms: [
       { id: 'room-002-1', type: 'single', typeName: '單人房', typeNameEn: 'Single Room', price: 1200, maxGuests: 1, quantity: 5 },
@@ -104,10 +104,10 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 92,
     hostVerified: true,
     images: [
-      'https://picsum.photos/seed/prop003a/800/600',
-      'https://picsum.photos/seed/prop003b/800/600',
-      'https://picsum.photos/seed/prop003c/800/600',
-      'https://picsum.photos/seed/prop003d/800/600',
+      'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
+      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80',
     ],
     rooms: [
       { id: 'room-003-1', type: 'double', typeName: '雙人房', typeNameEn: 'Double Room', price: 2200, maxGuests: 2, quantity: 3 },
@@ -146,9 +146,9 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 99,
     hostVerified: true,
     images: [
-      'https://picsum.photos/seed/prop004a/800/600',
-      'https://picsum.photos/seed/prop004b/800/600',
-      'https://picsum.photos/seed/prop004c/800/600',
+      'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80',
+      'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800&q=80',
+      'https://images.unsplash.com/photo-1512918728675-4d32249d4746?w=800&q=80',
     ],
     rooms: [
       { id: 'room-004-1', type: 'single', typeName: '單人房', typeNameEn: 'Single Room', price: 1500, maxGuests: 1, quantity: 4 },
@@ -187,11 +187,11 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 97,
     hostVerified: true,
     images: [
-      'https://picsum.photos/seed/prop005a/800/600',
-      'https://picsum.photos/seed/prop005b/800/600',
-      'https://picsum.photos/seed/prop005c/800/600',
-      'https://picsum.photos/seed/prop005d/800/600',
-      'https://picsum.photos/seed/prop005e/800/600',
+      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80',
+      'https://images.unsplash.com/photo-1590490360182-d33122ca2699?w=800&q=80',
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+      'https://images.unsplash.com/photo-1554995207-c5bb540b10e8?w=800&q=80',
+      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80',
     ],
     rooms: [
       { id: 'room-005-1', type: 'double', typeName: '雙人房', typeNameEn: 'Double Room', price: 3200, maxGuests: 2, quantity: 4 },
@@ -230,9 +230,9 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 88,
     hostVerified: true,
     images: [
-      'https://picsum.photos/seed/prop006a/800/600',
-      'https://picsum.photos/seed/prop006b/800/600',
-      'https://picsum.photos/seed/prop006c/800/600',
+      'https://images.unsplash.com/photo-1576354302919-96748cb8299e?w=800&q=80',
+      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&q=80',
+      'https://images.unsplash.com/photo-1551882547-ff40c4a49ce7?w=800&q=80',
     ],
     rooms: [
       { id: 'room-006-1', type: 'single', typeName: '單人房', typeNameEn: 'Single Room', price: 900, maxGuests: 1, quantity: 6 },
@@ -271,9 +271,9 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 96,
     hostVerified: false,
     images: [
-      'https://picsum.photos/seed/prop007a/800/600',
-      'https://picsum.photos/seed/prop007b/800/600',
-      'https://picsum.photos/seed/prop007c/800/600',
+      'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
+      'https://images.unsplash.com/photo-1469022563428-aa04fef9f5a4?w=800&q=80',
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
     ],
     rooms: [
       { id: 'room-007-1', type: 'double', typeName: '雙人房', typeNameEn: 'Double Room', price: 1800, maxGuests: 2, quantity: 2 },
@@ -311,9 +311,9 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 94,
     hostVerified: true,
     images: [
-      'https://picsum.photos/seed/prop008a/800/600',
-      'https://picsum.photos/seed/prop008b/800/600',
-      'https://picsum.photos/seed/prop008c/800/600',
+      'https://images.unsplash.com/photo-1463740839922-2d3b2a89b8f3?w=800&q=80',
+      'https://images.unsplash.com/photo-1553653924-39b70295f8da?w=800&q=80',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
     ],
     rooms: [
       { id: 'room-008-1', type: 'single', typeName: '單人房', typeNameEn: 'Single Room', price: 1600, maxGuests: 1, quantity: 8 },

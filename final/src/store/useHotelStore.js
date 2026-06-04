@@ -22,6 +22,14 @@ function initLS() {
     LS.set('bk_chats', []);
     LS.set('bk_initialized', true);
   } else {
+    // migration：更新房源圖片（替換 picsum 為 Unsplash 無人臉圖片）
+    const existingProps = LS.get('bk_properties', []);
+    const needsImgUpdate = existingProps.some(p => p.images?.[0]?.includes('picsum.photos'));
+    if (needsImgUpdate) {
+      const imgMap = Object.fromEntries(SEED_PROPERTIES.map(p => [p.id, p.images]));
+      const updated = existingProps.map(p => imgMap[p.id] ? { ...p, images: imgMap[p.id] } : p);
+      LS.set('bk_properties', updated);
+    }
     // migration：補入首頁廣告（舊用戶不會有 position=landing 的廣告）
     let existing = LS.get('bk_ads', []);
     // 移除不再需要的廣告
