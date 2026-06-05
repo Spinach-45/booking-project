@@ -5,15 +5,20 @@ import SearchBar from '../../components/SearchBar';
 import PropertyCard from '../../components/PropertyCard';
 import AdBanner from '../../../../components/common/AdBanner';
 
-const DESTINATIONS = [
-  { value: 'taipei',   zh: '台北', en: 'Taipei',     icon: 'fi-sr-city',   count: 2 },
-  { value: 'keelung',  zh: '基隆', en: 'Keelung',    icon: 'fi-sr-anchor', count: 1 },
-  { value: 'newTaipei',zh: '新北', en: 'New Taipei', icon: 'fi-sr-bridge', count: 3 },
-  { value: 'taoyuan',  zh: '桃園', en: 'Taoyuan',    icon: 'fi-sr-plane',  count: 2 },
+const DESTINATION_DEFS = [
+  { value: 'taipei',    zh: '台北', en: 'Taipei',     icon: 'fi-sr-city'   },
+  { value: 'keelung',   zh: '基隆', en: 'Keelung',    icon: 'fi-sr-anchor' },
+  { value: 'newTaipei', zh: '新北', en: 'New Taipei', icon: 'fi-sr-bridge' },
+  { value: 'taoyuan',   zh: '桃園', en: 'Taoyuan',    icon: 'fi-sr-plane'  },
 ];
 
 export default function HomePage() {
   const { lang, properties, searchParams, setSearchParams } = useStore();
+
+  const DESTINATIONS = DESTINATION_DEFS.map(d => ({
+    ...d,
+    count: properties.filter(p => p.area === d.value && (p.active || p.status === 'active')).length,
+  }));
   const T = (key) => t(lang, key);
   const featured = properties.filter(p => p.featured && p.active).slice(0, 4);
 
