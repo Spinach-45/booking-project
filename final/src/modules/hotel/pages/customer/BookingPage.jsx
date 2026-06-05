@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useStore from '../../../../store/useHotelStore';
+import useAuthStore from '../../../../store/useAuthStore';
 import { t } from '../../i18n';
 import { useToast } from '../../../../components/common/Toast';
 
@@ -9,7 +10,8 @@ const LOCK_SECS = 600; // 10 分鐘
 export default function BookingPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { lang, currentUser, createOrder, validateCoupon, useCoupon, lockRoom, releaseLock, checkRoomAvailability } = useStore();
+  const { lang, createOrder, validateCoupon, useCoupon, lockRoom, releaseLock, checkRoomAvailability } = useStore();
+  const { currentUser } = useAuthStore();
   const addToast = useToast();
   const T = (key) => t(lang, key);
 

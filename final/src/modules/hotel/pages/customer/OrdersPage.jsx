@@ -6,7 +6,12 @@ import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
 import { useToast } from '../../../../components/common/Toast';
 
-const STATUS_COLOR = { confirmed: 'badge-confirmed', cancelled: 'badge-cancelled', completed: 'badge-completed' };
+const STATUS_COLOR = {
+  confirmed: 'badge-confirmed',
+  cancelled: 'badge-cancelled',
+  completed: 'badge-completed',
+  conflict_cancelled: 'badge-cancelled',
+};
 
 export default function OrdersPage() {
   const { lang, orders, cancelOrder, getUserOrders } = useStore();
@@ -27,7 +32,7 @@ export default function OrdersPage() {
     let policyKey = 'noRefund';
     if (diffDays >= 10) { refundPercent = 100; policyKey = 'refundFull'; }
     else if (diffDays >= 4) { refundPercent = 70; policyKey = 'refund70'; }
-    setCancelTarget({ order, refundPercent, policyKey, refundAmount: Math.round(order.finalAmount * refundPercent / 100) });
+    setCancelTarget({ order, refundPercent, policyKey, refundAmount: Math.round((order.finalAmount ?? 0) * refundPercent / 100) });
   };
 
   const confirmCancel = () => {
@@ -96,7 +101,7 @@ export default function OrdersPage() {
                     )}
                     <div className="price-row price-total">
                       <span>{T('orders.totalAmount')}</span>
-                      <strong>NT$ {order.finalAmount.toLocaleString()}</strong>
+                      <strong>NT$ {(order.finalAmount ?? 0).toLocaleString()}</strong>
                     </div>
                     {order.refundAmount > 0 && (
                       <div className="price-row price-refund">
