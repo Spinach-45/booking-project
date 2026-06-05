@@ -8,10 +8,14 @@ export default function DashboardPage() {
 
   const stats = useMemo(() => {
     const allOrders = orders;
-    const revenue = allOrders.filter(o => o.status !== 'cancelled').reduce((s, o) => s + o.finalAmount, 0);
+    const revenue = allOrders
+      .filter(o => o.status !== 'cancelled' && o.status !== 'conflict_cancelled')
+      .reduce((s, o) => s + (o.finalAmount ?? 0), 0);
     const confirmed = allOrders.filter(o => o.status === 'confirmed').length;
-    const totalNights = allOrders.filter(o => o.status !== 'cancelled').reduce((s, o) => s + (o.nights || 0), 0);
-    const totalRooms = properties.reduce((s, p) => s + p.rooms.reduce((r, rm) => r + rm.quantity, 0), 0);
+    const totalNights = allOrders
+      .filter(o => o.status !== 'cancelled' && o.status !== 'conflict_cancelled')
+      .reduce((s, o) => s + (o.nights || 0), 0);
+    const totalRooms = properties.reduce((s, p) => s + (p.rooms || []).reduce((r, rm) => r + (rm.quantity || 0), 0), 0);
     const occupancyRate = totalRooms > 0 ? Math.round((totalNights / (totalRooms * 30)) * 100) : 0;
     return { revenue, confirmed, occupancyRate, totalProperties: properties.filter(p => p.active).length };
   }, [properties, orders]);
@@ -77,7 +81,7 @@ export default function DashboardPage() {
                     <td className="order-id">{o.id.slice(-8)}</td>
                     <td>{o.propertyName}</td>
                     <td>{o.checkIn}</td>
-                    <td>NT$ {o.finalAmount.toLocaleString()}</td>
+                    <td>NT$ {(o.finalAmount ?? 0).toLocaleString()}</td>
                     <td><span className="status-dot" style={{ background: STATUS_COLOR[o.status] }} /> {T(`orders.${o.status}`)}</td>
                   </tr>
                 ))}
