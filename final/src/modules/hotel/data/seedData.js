@@ -311,7 +311,7 @@ export const SEED_PROPERTIES = [
     hostResponseRate: 94,
     hostVerified: true,
     images: [
-      'https://images.unsplash.com/photo-1463740839922-2d3b2a89b8f3?w=800&q=80',
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
       'https://images.unsplash.com/photo-1553653924-39b70295f8da?w=800&q=80',
       'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
     ],

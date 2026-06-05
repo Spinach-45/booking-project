@@ -30,6 +30,17 @@ function initLS() {
       const updated = existingProps.map(p => imgMap[p.id] ? { ...p, images: imgMap[p.id] } : p);
       LS.set('bk_properties', updated);
     }
+    // migration：修正 prop-008 第一張圖片失效連結
+    const props008 = LS.get('bk_properties', []);
+    const brokenUrl = 'photo-1463740839922-2d3b2a89b8f3';
+    if (props008.some(p => p.id === 'prop-008' && p.images?.[0]?.includes(brokenUrl))) {
+      const fixed = props008.map(p =>
+        p.id === 'prop-008'
+          ? { ...p, images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80', ...p.images.slice(1)] }
+          : p
+      );
+      LS.set('bk_properties', fixed);
+    }
     // migration：補入首頁廣告（舊用戶不會有 position=landing 的廣告）
     let existing = LS.get('bk_ads', []);
     // 移除不再需要的廣告
