@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { path: '/admin/approval', icon: <i className="fi fi-rr-building fi-sm" />, label: '審核房源' },
   { path: '/admin/accounts', icon: <i className="fi fi-rr-users fi-sm" />, label: '帳號管理' },
   { path: '/admin/pricing-rules', icon: <i className="fi fi-rr-dollar fi-sm" />, label: '定價規則' },
+  { path: '/admin/conflict-logs', icon: <i className="fi fi-rr-exclamation fi-sm" />, label: '衝突紀錄' },
 ];
 
 export default function AdminLayout() {

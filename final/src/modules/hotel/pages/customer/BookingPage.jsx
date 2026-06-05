@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 import { useToast } from '../../../../components/common/Toast';
 
+const LOCK_SECS = 600; // 10 分鐘
+
 export default function BookingPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { lang, currentUser, createOrder, validateCoupon, useCoupon } = useStore();
+  const { lang, currentUser, createOrder, validateCoupon, useCoupon, lockRoom, releaseLock, checkRoomAvailability } = useStore();
   const addToast = useToast();
   const T = (key) => t(lang, key);
 
@@ -25,6 +27,36 @@ export default function BookingPage() {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+
+  // ── 房間鎖定與倒數 ─────────────────────────────────────
+  const lockIdRef = useRef(null);
+  const timerRef = useRef(null);
+  const [lockSecs, setLockSecs] = useState(LOCK_SECS);
+  const [lockExpired, setLockExpired] = useState(false);
+
+  useEffect(() => {
+    if (!property || !room || !currentUser) return;
+    const { lockId } = lockRoom(property.id, room.id, checkIn, checkOut, currentUser.id);
+    lockIdRef.current = lockId;
+    timerRef.current = setInterval(() => {
+      setLockSecs(s => {
+        if (s <= 1) {
+          setLockExpired(true);
+          clearInterval(timerRef.current);
+          releaseLock(lockIdRef.current);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => {
+      clearInterval(timerRef.current);
+      if (lockIdRef.current) releaseLock(lockIdRef.current);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const timerMin = Math.floor(lockSecs / 60);
+  const timerSec = String(lockSecs % 60).padStart(2, '0');
 
   if (!property || !room) {
     return (
@@ -54,12 +86,25 @@ export default function BookingPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (lockExpired) {
+      addToast('預訂保留時間已過期，請重新選擇房間', 'error');
+      navigate(-1);
+      return;
+    }
     if (!form.name || !form.phone || !form.email) {
       addToast(lang === 'zh' ? '請填寫完整聯絡資訊' : 'Please fill in all contact info', 'error');
       return;
     }
     setSubmitting(true);
     try {
+      // ── 二次驗證：送出前再確認房間是否仍有空房 ──────────
+      const stillAvailable = checkRoomAvailability(property.id, room.id, checkIn, checkOut);
+      if (!stillAvailable) {
+        releaseLock(lockIdRef.current);
+        navigate('/hotel/booking/conflict', { state: { property, room, checkIn, checkOut, nights, isPreConflict: true } });
+        return;
+      }
+
       if (appliedCoupon) useCoupon(appliedCoupon.id, currentUser.id);
       const order = createOrder({
         userId: currentUser.id,
@@ -80,6 +125,13 @@ export default function BookingPage() {
         couponCode: appliedCoupon?.code || null,
         finalAmount: finalPrice,
       });
+
+      // ── 建立後偵測到衝突（極少數競態條件）─────────────
+      if (order.isConflict) {
+        navigate('/hotel/booking/conflict', { state: { property, room, checkIn, checkOut, nights, conflictOrder: order } });
+        return;
+      }
+
       addToast(T('booking.bookingSuccess'), 'success');
       navigate('/hotel/booking/success', { state: { order } });
     } finally {
@@ -97,6 +149,18 @@ export default function BookingPage() {
           {/* Form */}
           <form className="booking-form" onSubmit={handleSubmit}>
             <h1 className="page-title">{T('booking.title')}</h1>
+
+            {/* 鎖定倒數計時器 */}
+            {lockExpired ? (
+              <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 14, color: '#dc2626', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <i className="fi fi-rr-exclamation fi-sm" />預訂保留時間已過期，請重新選擇房間。
+              </div>
+            ) : (
+              <div style={{ background: lockSecs <= 60 ? '#fef3c7' : '#eff6ff', border: `1px solid ${lockSecs <= 60 ? '#fcd34d' : '#bfdbfe'}`, borderRadius: 8, padding: '10px 14px', marginBottom: 16, fontSize: 14, color: lockSecs <= 60 ? '#92400e' : '#1d4ed8', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <i className="fi fi-rr-clock fi-sm" />
+                您的預訂保留剩餘 <strong>{timerMin}:{timerSec}</strong>，請在時限內完成付款
+              </div>
+            )}
 
             {/* Contact Info */}
             <section className="booking-section">

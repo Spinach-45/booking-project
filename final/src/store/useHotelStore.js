@@ -142,6 +142,43 @@ const useHotelStore = create((set, get) => ({
       discountApplied,
       createdAt: new Date().toISOString(),
     };
+
+    // ── 衝突偵測：檢查同房間同日期是否已有確認訂單 ──────────────
+    const conflicts = orders.filter(o =>
+      o.propertyId === newOrder.propertyId &&
+      o.roomId === newOrder.roomId &&
+      o.status === 'confirmed' &&
+      new Date(o.checkIn) < new Date(newOrder.checkOut) &&
+      new Date(o.checkOut) > new Date(newOrder.checkIn)
+    );
+
+    if (conflicts.length > 0) {
+      const validOrder = [...conflicts].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))[0];
+      const conflictOrder = {
+        ...newOrder,
+        status: 'conflict_cancelled',
+        conflictReason: '因訂房衝突自動退款',
+        refundAmount: newOrder.finalAmount ?? orderData.finalAmount ?? 0,
+      };
+      orders.push(conflictOrder);
+      LS.set('bk_orders', orders);
+      set({ orders });
+      const user = useAuthStore.getState().currentUser;
+      if (user) get().issueConflictCoupon(user.id, user.name, conflictOrder.id);
+      get().addConflictLog({
+        propertyId: newOrder.propertyId,
+        propertyName: newOrder.propertyName,
+        hostId: newOrder.hostId,
+        validOrderId: validOrder.id,
+        conflictOrderId: conflictOrder.id,
+        conflictUserId: newOrder.userId,
+        conflictUserName: newOrder.contactName,
+        refundAmount: conflictOrder.refundAmount,
+        couponIssued: !!user,
+      });
+      return { ...conflictOrder, isConflict: true, validOrder };
+    }
+
     orders.push(newOrder);
     LS.set('bk_orders', orders);
     set({ orders });
@@ -187,6 +224,7 @@ const useHotelStore = create((set, get) => ({
     const usedCoupons = LS.get('bk_usedCoupons', {});
     if (usedCoupons[userId]?.includes(coupon.id)) return { valid: false, error: 'couponUsed' };
     if (amount < coupon.minAmount) return { valid: false, error: `最低消費 NT$${coupon.minAmount}` };
+    if (coupon.targetUserId && coupon.targetUserId !== userId) return { valid: false, error: '此優惠券為個人專屬，無法使用' };
     const discount = coupon.type === 'percent' ? Math.round(amount * coupon.value / 100) : coupon.value;
     return { valid: true, coupon, discount };
   },
@@ -197,6 +235,13 @@ const useHotelStore = create((set, get) => ({
     const usedCoupons = LS.get('bk_usedCoupons', {});
     usedCoupons[userId] = [...(usedCoupons[userId] || []), couponId];
     LS.set('bk_usedCoupons', usedCoupons);
+    // Mark user coupon as used if it's a system-issued conflict compensation coupon
+    const coupon = coupons.find(c => c.id === couponId);
+    if (coupon?.isConflictCompensation) {
+      const ucs = LS.get('bk_user_coupons', []).map(uc => uc.code === coupon.code ? { ...uc, status: 'used', usedAt: new Date().toISOString() } : uc);
+      LS.set('bk_user_coupons', ucs);
+      set({ userCoupons: ucs });
+    }
   },
   addCoupon: (coupon) => {
     const coupons = LS.get('bk_coupons', []);
@@ -352,6 +397,75 @@ const useHotelStore = create((set, get) => ({
     const propIds = props.map(p => p.id);
     return LS.get('bk_orders', []).filter(o => propIds.includes(o.propertyId));
   },
+
+  // ── Room Locks (in-memory, 10 分鐘) ──────────────────────
+  roomLocks: {},
+  lockRoom: (propertyId, roomId, checkIn, checkOut, userId) => {
+    const lockId = `lock-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`;
+    const expiresAt = Date.now() + 10 * 60 * 1000;
+    set(s => ({ roomLocks: { ...s.roomLocks, [lockId]: { propertyId, roomId, checkIn, checkOut, userId, expiresAt } } }));
+    return { lockId, expiresAt };
+  },
+  releaseLock: (lockId) => {
+    set(s => { const l = { ...s.roomLocks }; delete l[lockId]; return { roomLocks: l }; });
+  },
+  isRoomLocked: (propertyId, roomId, checkIn, checkOut, excludeUserId = null) => {
+    const now = Date.now();
+    return Object.values(get().roomLocks).some(l =>
+      l.propertyId === propertyId && l.roomId === roomId &&
+      l.checkIn === checkIn && l.checkOut === checkOut &&
+      l.expiresAt > now && (excludeUserId === null || l.userId !== excludeUserId)
+    );
+  },
+  checkRoomAvailability: (propertyId, roomId, checkIn, checkOut) => {
+    return !LS.get('bk_orders', []).some(o =>
+      o.propertyId === propertyId && o.roomId === roomId &&
+      o.status === 'confirmed' &&
+      new Date(o.checkIn) < new Date(checkOut) &&
+      new Date(o.checkOut) > new Date(checkIn)
+    );
+  },
+
+  // ── Conflict Logs ─────────────────────────────────────────
+  conflictLogs: LS.get('bk_conflict_logs', []),
+  addConflictLog: (log) => {
+    const logs = LS.get('bk_conflict_logs', []);
+    const newLog = { ...log, id: `cfl-${Date.now()}`, occurredAt: new Date().toISOString() };
+    logs.push(newLog);
+    LS.set('bk_conflict_logs', logs);
+    set({ conflictLogs: logs });
+    return newLog;
+  },
+  getConflictLogs: () => LS.get('bk_conflict_logs', []),
+
+  // ── User Coupons（系統補發，個人專屬）────────────────────
+  userCoupons: LS.get('bk_user_coupons', []),
+  issueConflictCoupon: (userId, userName, conflictOrderId) => {
+    const code = `COMP${Date.now().toString().slice(-8)}`;
+    const expiresAt = new Date(Date.now() + 90 * 86400000).toISOString().split('T')[0];
+    const uc = {
+      id: `uc-${Date.now()}`, userId, userName, conflictOrderId,
+      name: '訂房衝突補償券', amount: 500, code,
+      issuedAt: new Date().toISOString(), expiresAt, status: 'unused',
+    };
+    const list = [...LS.get('bk_user_coupons', []), uc];
+    LS.set('bk_user_coupons', list);
+    set({ userCoupons: list });
+    // 注冊至主要折價券池，讓結帳時可套用
+    const coupons = LS.get('bk_coupons', []);
+    coupons.push({
+      id: `coup-${Date.now()}`, code, type: 'fixed', value: 500, minAmount: 0,
+      startDate: new Date().toISOString().split('T')[0], endDate: expiresAt,
+      usageLimit: 1, usedCount: 0, active: true,
+      isConflictCompensation: true, targetUserId: userId, conflictOrderId,
+      name: '訂房衝突補償券',
+    });
+    LS.set('bk_coupons', coupons);
+    set({ coupons });
+    return uc;
+  },
+  getUserCoupons: (userId) => LS.get('bk_user_coupons', []).filter(c => c.userId === userId),
+  getAdminUserCoupons: () => LS.get('bk_user_coupons', []),
 }));
 
 export default useHotelStore;

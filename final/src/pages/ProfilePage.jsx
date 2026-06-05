@@ -14,6 +14,7 @@ const TABS = [
   { id: 'orders-hotel',  label: '住宿訂單',   icon: <i className="fi fi-rr-bed fi-sm" /> },
   { id: 'trips',         label: '我的行程',   icon: <i className="fi fi-rr-map fi-sm" /> },
   { id: 'favorites',     label: '收藏清單',   icon: <i className="fi fi-rr-heart fi-sm" /> },
+  { id: 'coupons',       label: '我的優惠券', icon: <i className="fi fi-rr-tag fi-sm" /> },
   { id: 'shares',        label: '分享連結',   icon: <i className="fi fi-rr-share fi-sm" /> },
 ];
 
@@ -281,6 +282,61 @@ export default function ProfilePage() {
           )}
         </div>
       )}
+
+      {activeTab === 'coupons' && (() => {
+        const myCoupons = hotelStore.getUserCoupons(currentUser.id);
+        const now = new Date();
+        return (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontWeight: 700 }}>我的優惠券（{myCoupons.length} 張）</h3>
+            </div>
+            {myCoupons.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-secondary)' }}>
+                <i className="fi fi-rr-tag" style={{ fontSize: 40, display: 'block', marginBottom: 8 }} />
+                <p>目前沒有優惠券</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {myCoupons.map(uc => {
+                  const expired = new Date(uc.expiresAt) < now && uc.status === 'unused';
+                  const status = expired ? 'expired' : uc.status;
+                  const statusLabel = { unused: '未使用', used: '已使用', expired: '已過期' }[status] || status;
+                  const statusColor = { unused: '#2563eb', used: '#16a34a', expired: '#6b7280' }[status];
+                  const statusBg = { unused: '#eff6ff', used: '#f0fdf4', expired: '#f9fafb' }[status];
+                  return (
+                    <div key={uc.id} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 10, padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', opacity: status === 'expired' || status === 'used' ? 0.65 : 1 }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                          <i className="fi fi-rr-tag fi-sm" style={{ color: '#2563eb' }} />
+                          <span style={{ fontWeight: 700 }}>{uc.name}</span>
+                          <span style={{ fontSize: '0.7rem', padding: '1px 7px', borderRadius: 8, background: statusBg, color: statusColor, fontWeight: 600 }}>{statusLabel}</span>
+                        </div>
+                        <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                          有效期限：{uc.expiresAt}
+                          {uc.conflictOrderId && uc.conflictOrderId !== 'MANUAL' && (
+                            <span style={{ marginLeft: 8 }}>· 來自衝突補償</span>
+                          )}
+                        </div>
+                        {status === 'unused' && (
+                          <div style={{ fontSize: '0.8rem', color: '#2563eb', marginTop: 4 }}>
+                            折價券代碼：<strong style={{ fontFamily: 'monospace', letterSpacing: 1 }}>{uc.code}</strong>
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontSize: '1.6rem', fontWeight: 900, color: status === 'unused' ? '#dc2626' : 'var(--text-secondary)' }}>
+                          NT${uc.amount}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {activeTab === 'shares' && (
         <div>

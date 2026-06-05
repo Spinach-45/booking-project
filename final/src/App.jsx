@@ -23,6 +23,7 @@ import PropertiesPage from './modules/hotel/pages/customer/PropertiesPage';
 import PropertyDetailPage from './modules/hotel/pages/customer/PropertyDetailPage';
 import HotelBookingPage from './modules/hotel/pages/customer/BookingPage';
 import BookingSuccessPage from './modules/hotel/pages/customer/BookingSuccessPage';
+import BookingConflictPage from './modules/hotel/pages/customer/BookingConflictPage';
 import HotelOrdersPage from './modules/hotel/pages/customer/OrdersPage';
 import FavoritesPage from './modules/hotel/pages/customer/FavoritesPage';
 import CartPage from './modules/hotel/pages/customer/CartPage';
@@ -41,6 +42,7 @@ import AdminRefundsPage from './modules/hotel/pages/admin/AdminRefundsPage';
 import AdminAccountsPage from './modules/hotel/pages/admin/AdminAccountsPage';
 import AdminPricingRulesPage from './modules/hotel/pages/admin/AdminPricingRulesPage';
 import AdminPropertiesApprovalPage from './modules/hotel/pages/admin/AdminPropertiesApprovalPage';
+import ConflictLogsPage from './modules/hotel/pages/admin/ConflictLogsPage';
 
 // Hotel module — host
 import HostLayout from './modules/hotel/pages/host/HostLayout';
@@ -120,6 +122,7 @@ export default function App() {
               <Route path="/hotel/property/:id" element={<PropertyDetailPage />} />
               <Route path="/hotel/booking" element={<RequireAuth><HotelBookingPage /></RequireAuth>} />
               <Route path="/hotel/booking/success" element={<RequireAuth><BookingSuccessPage /></RequireAuth>} />
+              <Route path="/hotel/booking/conflict" element={<RequireAuth><BookingConflictPage /></RequireAuth>} />
               <Route path="/hotel/orders" element={<RequireAuth><HotelOrdersPage /></RequireAuth>} />
               <Route path="/hotel/favorites" element={<RequireAuth><FavoritesPage /></RequireAuth>} />
               <Route path="/hotel/cart" element={<CartPage />} />
@@ -147,6 +150,7 @@ export default function App() {
                 <Route path="approval" element={<AdminPropertiesApprovalPage />} />
                 <Route path="accounts" element={<AdminAccountsPage />} />
                 <Route path="pricing-rules" element={<AdminPricingRulesPage />} />
+                <Route path="conflict-logs" element={<ConflictLogsPage />} />
               </Route>
 
               {/* Host */}
