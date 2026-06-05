@@ -215,8 +215,11 @@ export default function HostPropertyFormPage() {
                 className="form-input"
                 type="number"
                 min={0}
-                value={form.stationDistance || form.distanceToStation || 500}
-                onChange={e => setForm(f => ({ ...f, stationDistance: Number(e.target.value), distanceToStation: Number(e.target.value) }))}
+                value={form.stationDistance ?? form.distanceToStation ?? 500}
+                onChange={e => {
+                  const n = e.target.value === '' ? '' : Number(e.target.value);
+                  setForm(f => ({ ...f, stationDistance: n, distanceToStation: n }));
+                }}
               />
             </div>
             <div className="form-group form-full">
