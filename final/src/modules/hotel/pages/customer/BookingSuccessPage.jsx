@@ -45,7 +45,7 @@ export default function BookingSuccessPage() {
           </div>
           <div className="order-row order-total">
             <span>{T('booking.finalPrice')}</span>
-            <strong>NT$ {order.finalAmount.toLocaleString()}</strong>
+            <strong>NT$ {(order.finalAmount ?? 0).toLocaleString()}</strong>
           </div>
           <div className="order-row">
             <span>{T('booking.paymentStatus')}</span>

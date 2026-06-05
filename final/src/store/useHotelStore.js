@@ -149,7 +149,9 @@ const useHotelStore = create((set, get) => ({
       id: `ORD-${Date.now()}`,
       status: 'confirmed',
       paymentStatus: 'paid',
-      finalAmount,
+      // finalAmount 可能為 undefined（totalAmount 未傳）或 NaN（undefined * 0.8），
+      // 兩者皆 falsy，安全退回 BookingPage 傳入的 finalAmount
+      finalAmount: finalAmount || orderData.finalAmount || 0,
       discountApplied,
       createdAt: new Date().toISOString(),
     };
