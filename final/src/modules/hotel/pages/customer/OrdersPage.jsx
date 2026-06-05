@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useStore from '../../../../store/useHotelStore';
+import useAuthStore from '../../../../store/useAuthStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
 import { useToast } from '../../../../components/common/Toast';
@@ -8,13 +9,15 @@ import { useToast } from '../../../../components/common/Toast';
 const STATUS_COLOR = { confirmed: 'badge-confirmed', cancelled: 'badge-cancelled', completed: 'badge-completed' };
 
 export default function OrdersPage() {
-  const { lang, currentUser, orders, cancelOrder } = useStore();
+  const { lang, orders, cancelOrder, getUserOrders } = useStore();
+  const { currentUser } = useAuthStore();
   const addToast = useToast();
   const T = (key) => t(lang, key);
   const [cancelTarget, setCancelTarget] = useState(null);
   const [refundInfo, setRefundInfo] = useState(null);
 
-  const myOrders = orders.filter(o => o.userId === currentUser?.id).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  // 訂閱 orders 狀態以取得響應式更新，但改用 getUserOrders 直接讀 localStorage 確保正確性
+  const myOrders = getUserOrders(currentUser?.id).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const handleCancel = (order) => {
     const today = new Date();
