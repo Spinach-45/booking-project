@@ -6,7 +6,7 @@ import { STATIONS, STATION_GROUPS, STATION_MAP, TICKET_TYPES, TIME_SLOTS, CAR_TY
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { searchParams, setSearchParams } = useStore();
+  const { searchParams, setSearchParams, searchTrains } = useStore();
   const { currentUser } = useAuthStore();
   const [showAdvanced, setShowAdvanced] = useState(searchParams.queryType === 'advanced');
 
@@ -33,7 +33,7 @@ export default function HomePage() {
     if (searchParams.from === searchParams.to) return;
     if (totalPassengers === 0) return;
     const type = showAdvanced ? 'advanced' : 'basic';
-    setSearchParams({ queryType: type });
+    searchTrains({ queryType: type });
     navigate('/ticket/search');
   };
 
