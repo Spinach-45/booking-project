@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useStore from '../../../../store/useHotelStore';
+import useAuthStore from '../../../../store/useAuthStore';
 import { t } from '../../i18n';
 import StarRating from '../../../../components/common/StarRating';
 import Modal from '../../../../components/common/Modal';
@@ -8,7 +9,8 @@ import { useToast } from '../../../../components/common/Toast';
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
-  const { lang, properties, favorites, toggleFavorite, addToCart, currentUser, searchParams, reviews, addReview } = useStore();
+  const { lang, properties, favorites, toggleFavorite, addToCart, searchParams, reviews, addReview } = useStore();
+  const { currentUser } = useAuthStore();
   const navigate = useNavigate();
   const addToast = useToast();
   const T = (key) => t(lang, key);
@@ -198,15 +200,32 @@ export default function PropertyDetailPage() {
                 <span><i className="fi fi-rr-moon fi-xs" style={{ marginRight: 3 }} />{nights} {T('common.nights')}</span>
               </div>
               {property.rooms.map(room => (
-                <div key={room.id} className={`room-option ${selectedRoom?.id === room.id ? 'room-selected' : ''}`}
-                  onClick={() => setSelectedRoom(room)}>
+                <div
+                  key={room.id}
+                  className={`room-option ${selectedRoom?.id === room.id ? 'room-selected' : ''}`}
+                  onClick={() => setSelectedRoom(room)}
+                >
                   <div className="room-info">
                     <span className="room-type-name">{lang === 'zh' ? room.typeName : (room.typeNameEn || room.typeName)}</span>
-                    <span className="room-guests"><i className="fi fi-rr-user fi-xs" style={{ marginRight: 3 }} />{lang === 'zh' ? `最多${room.maxGuests}人` : `Max ${room.maxGuests} guests`}</span>
+                    <span className="room-guests">
+                      <i className="fi fi-rr-user fi-xs" style={{ marginRight: 3 }} />
+                      {lang === 'zh' ? `最多${room.maxGuests}人` : `Max ${room.maxGuests} guests`}
+                    </span>
                   </div>
-                  <div className="room-price-wrap">
-                    <span className="room-price">NT$ {room.price.toLocaleString()}</span>
-                    <span className="room-price-unit">/{T('common.night')}</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+                    <div className="room-price-wrap">
+                      <span className="room-price">NT$ {room.price.toLocaleString()}</span>
+                      <span className="room-price-unit">/{T('common.night')}</span>
+                    </div>
+                    {/* 加入購物車按鈕（每張房型卡片都顯示） */}
+                    <button
+                      className="btn-outline btn-sm"
+                      style={{ fontSize: '0.78rem', padding: '3px 10px' }}
+                      onClick={e => { e.stopPropagation(); handleAddToCart(room); }}
+                    >
+                      <i className="fi fi-rr-shopping-cart fi-xs" style={{ marginRight: 4 }} />
+                      {lang === 'zh' ? '加入購物車' : 'Add to Cart'}
+                    </button>
                   </div>
                   {selectedRoom?.id === room.id && (
                     <div className="room-total">
