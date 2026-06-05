@@ -8,53 +8,132 @@ export default function BookingSuccessPage() {
   const T = (key) => t(lang, key);
   const order = state?.order;
 
-  if (!order) return <div className="container" style={{ padding: '4rem 1rem', textAlign: 'center' }}>
-    <p>{lang === 'zh' ? '找不到訂單資訊' : 'Order not found'}</p>
-    <Link to="/hotel" className="btn-primary">{T('nav.home')}</Link>
-  </div>;
+  if (!order) return (
+    <div className="container" style={{ paddingTop: '3rem' }}>
+      <div className="empty-state">
+        <i className="fi fi-rr-question fi-lg" style={{ color: 'var(--secondary)' }} />
+        <p>{lang === 'zh' ? '找不到訂單資訊' : 'Order not found'}</p>
+        <Link to="/hotel" className="btn-primary">{T('nav.home')}</Link>
+      </div>
+    </div>
+  );
+
+  const pmLabels = {
+    creditCard:   lang === 'zh' ? '信用卡' : 'Credit Card',
+    ePayment:     'LINE Pay / 電子支付',
+    bankTransfer: lang === 'zh' ? '銀行轉帳' : 'Bank Transfer',
+  };
+
+  const rows = [
+    ['訂單編號', order.id],
+    ['房源名稱', order.propertyName],
+    ['房型',     order.roomType],
+    ['入住日期', order.checkIn],
+    ['退房日期', order.checkOut],
+    ['住宿晚數', `${order.nights ?? 1} 晚`],
+    ['入住人數', `${order.guests ?? 1} 位`],
+    ['付款方式', pmLabels[order.paymentMethod] ?? order.paymentMethod ?? '—'],
+  ];
+
+  const baseAmount  = order.baseAmount  ?? order.finalAmount ?? 0;
+  const finalAmount = order.finalAmount ?? 0;
+  const discount    = order.couponDiscount ?? 0;
+  const multiDisc   = order.discountApplied;
 
   return (
-    <div className="success-page">
-      <div className="success-card">
-        <i className="fi fi-sr-check-circle fi-lg success-icon" />
-        <h1>{T('booking.bookingSuccess')}</h1>
-        <div className="order-info">
-          <div className="order-row">
-            <span>{T('booking.orderNumber')}</span>
-            <strong>{order.id}</strong>
+    <div className="container">
+      <div className="result-page">
+        {/* 成功圖示 */}
+        <div className="result-icon">
+          <i className="fi fi-sr-check-circle fi-lg" style={{ color: 'var(--success)' }} />
+        </div>
+        <div className="result-title" style={{ color: 'var(--success)' }}>
+          {lang === 'zh' ? '訂房成功！' : 'Booking Confirmed!'}
+        </div>
+        <div className="result-sub">
+          {lang === 'zh' ? '訂房完成，確認信已寄至您的 Email' : 'Booking complete. A confirmation email has been sent.'}
+        </div>
+
+        {/* 訂單編號大卡 */}
+        <div className="booking-no-card">
+          <div className="booking-no-label">{lang === 'zh' ? '訂單編號' : 'Order ID'}</div>
+          <div className="booking-no" style={{ fontSize: '1rem', letterSpacing: 1 }}>{order.id}</div>
+        </div>
+
+        {/* 多晚折扣 banner */}
+        {multiDisc && (
+          <div className="points-earned-banner">
+            <i className="fi fi-rr-gift fi-sm" style={{ color: '#f59e0b' }} />
+            {multiDisc.reason}，省下 NT$ {multiDisc.savedAmount?.toLocaleString()}！
           </div>
-          <div className="order-row">
-            <span>{lang === 'zh' ? '房源' : 'Property'}</span>
-            <strong>{order.propertyName}</strong>
+        )}
+
+        {/* 訂單明細 */}
+        <div className="result-detail-card">
+          {rows.map(([label, val]) => (
+            <div key={label} className="result-detail-row">
+              <span className="result-detail-label">{label}</span>
+              <span className="result-detail-value">{val}</span>
+            </div>
+          ))}
+
+          {/* 金額明細 */}
+          {discount > 0 && (
+            <div className="result-detail-row">
+              <span className="result-detail-label">原始金額</span>
+              <span className="result-detail-value">NT$ {baseAmount.toLocaleString()}</span>
+            </div>
+          )}
+          {discount > 0 && (
+            <div className="result-detail-row">
+              <span className="result-detail-label">優惠券折抵</span>
+              <span className="result-detail-value" style={{ color: 'var(--success)' }}>
+                - NT$ {discount.toLocaleString()}
+              </span>
+            </div>
+          )}
+          <div className="result-detail-row" style={{ borderTop: '1px solid var(--border)', paddingTop: '0.75rem', marginTop: '0.25rem' }}>
+            <span className="result-detail-label" style={{ fontWeight: 700 }}>
+              {lang === 'zh' ? '實付金額' : 'Total Paid'}
+            </span>
+            <span className="result-detail-value" style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.1rem' }}>
+              NT$ {finalAmount.toLocaleString()}
+            </span>
           </div>
-          <div className="order-row">
-            <span>{T('orders.roomType')}</span>
-            <strong>{order.roomType}</strong>
-          </div>
-          <div className="order-row">
-            <span>{T('booking.checkIn')}</span>
-            <strong>{order.checkIn}</strong>
-          </div>
-          <div className="order-row">
-            <span>{T('booking.checkOut')}</span>
-            <strong>{order.checkOut}</strong>
-          </div>
-          <div className="order-row">
-            <span>{T('booking.paymentMethod')}</span>
-            <strong>{T(`booking.${order.paymentMethod}`)}</strong>
-          </div>
-          <div className="order-row order-total">
-            <span>{T('booking.finalPrice')}</span>
-            <strong>NT$ {(order.finalAmount ?? 0).toLocaleString()}</strong>
-          </div>
-          <div className="order-row">
-            <span>{T('booking.paymentStatus')}</span>
-            <span className="badge-paid">{T('booking.paid')}</span>
+
+          {/* 付款狀態 */}
+          <div className="result-detail-row">
+            <span className="result-detail-label">{lang === 'zh' ? '付款狀態' : 'Payment'}</span>
+            <span className="result-detail-value">
+              <span style={{ padding: '2px 10px', borderRadius: 20, background: '#dcfce7', color: '#16a34a', fontWeight: 700, fontSize: '0.82rem' }}>
+                <i className="fi fi-sr-check fi-xs" style={{ marginRight: 3 }} />
+                {lang === 'zh' ? '已付款' : 'Paid'}
+              </span>
+            </span>
           </div>
         </div>
-        <div className="success-actions">
-          <Link to="/hotel/orders" className="btn-primary"><i className="fi fi-rr-clipboard-list" style={{ fontSize: 18 }} /> {T('nav.orders')}</Link>
-          <Link to="/hotel" className="btn-outline"><i className="fi fi-rr-home" style={{ fontSize: 18 }} /> {T('nav.home')}</Link>
+
+        {/* 通知提示 */}
+        <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.5rem', textAlign: 'center', lineHeight: 1.7 }}>
+          <i className="fi fi-rr-envelope fi-xs" style={{ marginRight: 3 }} />訂房確認通知已發送至您的 Email
+          <br />
+          <i className="fi fi-rr-bell fi-xs" style={{ marginRight: 3 }} />入住前一天將以簡訊提醒
+        </p>
+
+        {/* 操作按鈕 */}
+        <div className="result-actions">
+          <Link to="/hotel/orders" className="btn-primary">
+            <i className="fi fi-rr-clipboard-list fi-sm" style={{ marginRight: 4 }} />
+            {lang === 'zh' ? '查看我的訂單' : 'My Orders'}
+          </Link>
+          <Link to="/hotel/properties" className="btn-outline">
+            <i className="fi fi-rr-search fi-sm" style={{ marginRight: 4 }} />
+            {lang === 'zh' ? '繼續瀏覽房源' : 'Browse More'}
+          </Link>
+          <Link to="/hotel" className="btn-ghost">
+            <i className="fi fi-rr-home fi-sm" style={{ marginRight: 4 }} />
+            {lang === 'zh' ? '返回首頁' : 'Home'}
+          </Link>
         </div>
       </div>
     </div>
