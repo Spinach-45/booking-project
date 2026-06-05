@@ -13,12 +13,12 @@ const DESTINATIONS = [
 ];
 
 export default function HomePage() {
-  const { lang, properties, setSearchParams } = useStore();
+  const { lang, properties, searchParams, setSearchParams } = useStore();
   const T = (key) => t(lang, key);
   const featured = properties.filter(p => p.featured && p.active).slice(0, 4);
 
   const handleDestClick = (area) => {
-    setSearchParams(s => ({ ...s, location: area }));
+    setSearchParams({ ...searchParams, location: area });
   };
 
   return (
