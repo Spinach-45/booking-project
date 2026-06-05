@@ -65,7 +65,8 @@ init();
 
 const DEFAULT_SEARCH = {
   queryType: 'basic', from: 'taipei', to: 'kaohsiung', date: tomorrow,
-  timeSlot: 'all', carType: 'any', transferAllowed: false, seatPref: 'any',
+  timeSlot: 'all', carType: 'any', trainType: 'any', businessClass: false,
+  transferAllowed: false, seatPref: 'any',
   ticketCounts: { adult: 1, child: 0, senior: 0, disability: 0, student: 0 },
 };
 
@@ -93,7 +94,7 @@ const useTrainStore = create((set, get) => ({
   selectTrain: (train) => set({ selectedTrain: train }),
 
   // ── Orders ────────────────────────────────────────────────
-  createOrder: ({ train, tickets, passengers, seatPref, multiDiscount = null }) => {
+  createOrder: ({ train, tickets, passengers, seatPref, multiDiscount = null, businessClass = false, origBaseAmount = 0, businessSurcharge = 0 }) => {
     const user = useAuthStore.getState().currentUser;
     if (!user) return null;
     const baseAmount = tickets.reduce((s, t) => s + t.subtotal, 0);
@@ -111,6 +112,9 @@ const useTrainStore = create((set, get) => ({
       baseAmount,
       discountAmount,
       multiDiscount,
+      businessClass,
+      origBaseAmount: businessClass ? origBaseAmount : baseAmount,
+      businessSurcharge,
       totalAmount: baseAmount - discountAmount,
       status: 'pending',
       createdAt: Date.now(), paidAt: null,
@@ -133,6 +137,7 @@ const useTrainStore = create((set, get) => ({
     }
     const bookingNo = `TR${Date.now().toString().slice(-10)}`;
     const cvsPickupCode = `CV${Date.now().toString().slice(-8)}`;
+    const stationPickupCode = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join('');
     const finalAmount = order.totalAmount - (pointsToUse || 0);
     const pointsEarned = Math.floor(finalAmount / (100 / POINTS_RATE));
     if (pointsToUse > 0) useAuthStore.getState().addPoints(-pointsToUse);
@@ -144,6 +149,7 @@ const useTrainStore = create((set, get) => ({
       bookingNo,
       paidAt: Date.now(),
       cvsPickupCode,
+      stationPickupCode,
       pointsEarned,
       pointsUsed: pointsToUse || 0,
       finalAmount,
@@ -185,6 +191,47 @@ const useTrainStore = create((set, get) => ({
     LS.set('tr_orders', newOrders);
     set({ orders: newOrders });
     return true;
+  },
+
+  splitTicket: (orderId, passengerIdx, receiverUser) => {
+    const orders = get().orders;
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return { success: false, reason: '找不到訂單' };
+    const passenger = order.passengers[passengerIdx];
+    if (!passenger || passenger.splitStatus === 'transferred') return { success: false, reason: '票券不可分票' };
+    const senderUser = useAuthStore.getState().currentUser;
+    const updatedPassengers = order.passengers.map((p, i) =>
+      i === passengerIdx ? { ...p, splitStatus: 'transferred', splitTo: receiverUser.name } : p
+    );
+    const newOrderId = uid('ORD');
+    const ticketInfo = order.tickets?.find(t => t.typeId === passenger.ticketType) ?? {};
+    const newOrder = {
+      id: newOrderId,
+      userId: receiverUser.id,
+      bookingNo: `TR${Date.now().toString().slice(-10)}`,
+      train: { ...order.train },
+      tickets: [{ typeId: passenger.ticketType, typeName: passenger.ticketTypeName, count: 1, unitPrice: ticketInfo.unitPrice ?? 0, subtotal: ticketInfo.unitPrice ?? 0 }],
+      passengers: [{ ...passenger, splitStatus: 'received', splitFrom: senderUser?.name ?? '' }],
+      seatPref: order.seatPref,
+      paymentMethod: 'split',
+      totalAmount: 0,
+      baseAmount: 0,
+      discountAmount: 0,
+      status: 'paid',
+      isFromSplit: true,
+      splitFromOrderId: orderId,
+      splitFromUserName: senderUser?.name ?? '',
+      cvsPickupCode: order.cvsPickupCode,
+      stationPickupCode: order.stationPickupCode,
+      createdAt: Date.now(),
+      paidAt: Date.now(),
+    };
+    const updatedOrders = orders
+      .map(o => o.id === orderId ? { ...o, passengers: updatedPassengers } : o)
+      .concat(newOrder);
+    LS.set('tr_orders', updatedOrders);
+    set({ orders: updatedOrders });
+    return { success: true };
   },
 
   getOrder: (id) => get().orders.find(o => o.id === id),

@@ -6,6 +6,7 @@ import { TRAIN_TYPES, ORDER_STATUSES, REFUND_RULES, generateTrains, TICKET_TYPES
 import Modal from '../../../components/common/Modal';
 import ConfirmDialog from '../../../components/common/ConfirmDialog';
 import { useToast } from '../../../components/common/Toast';
+import SplitTicketModal from './SplitTicketModal';
 
 const STATUS_TABS = [
   { key: 'all',       label: '全部' },
@@ -20,7 +21,7 @@ const STATUS_TABS = [
 export default function OrdersPage() {
   const navigate = useNavigate();
   const toast = useToast();
-  const { getUserOrders, requestRefund, changeTicket, cancelOrder } = useStore();
+  const { getUserOrders, requestRefund, changeTicket, cancelOrder, splitTicket } = useStore();
   const { currentUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState('all');
   const [detailOrder, setDetailOrder] = useState(null);
@@ -28,6 +29,7 @@ export default function OrdersPage() {
   const [refundOrder, setRefundOrder] = useState(null);
   const [changeOrder, setChangeOrder] = useState(null);
   const [confirmRefund, setConfirmRefund] = useState(false);
+  const [splitTarget, setSplitTarget] = useState(null); // { order, passenger, passengerIdx }
 
   if (!currentUser) return (
     <div className="container" style={{ paddingTop: '3rem' }}>
@@ -89,10 +91,28 @@ export default function OrdersPage() {
             onChange={() => setChangeOrder(order)}
             onPay={() => navigate(`/ticket/payment/${order.id}`)}
             onTicket={() => navigate(`/ticket/ticket/${order.id}`)}
+            onSplitTicket={(passenger, passengerIdx) => setSplitTarget({ order, passenger, passengerIdx })}
           />
         ))
       )}
 
+      {splitTarget && (
+        <SplitTicketModal
+          order={splitTarget.order}
+          passenger={splitTarget.passenger}
+          passengerIdx={splitTarget.passengerIdx}
+          onClose={() => setSplitTarget(null)}
+          onConfirm={(receiverUser) => {
+            const { success } = splitTicket(splitTarget.order.id, splitTarget.passengerIdx, receiverUser);
+            if (success) {
+              toast(`票券已成功分票給 ${receiverUser.name}`, 'success');
+            } else {
+              toast('分票失敗，請稍後再試', 'error');
+            }
+            setSplitTarget(null);
+          }}
+        />
+      )}
       {detailOrder && <OrderDetailModal order={detailOrder} onClose={() => setDetailOrder(null)} />}
       {ticketDetail && (
         <TicketDetailModal
@@ -137,12 +157,13 @@ export default function OrdersPage() {
 }
 
 /* ── Order Card ──────────────────────────────────────────────── */
-function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange, onPay, onTicket }) {
+function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange, onPay, onTicket, onSplitTicket }) {
   const typeInfo  = TRAIN_TYPES[order.train.type] ?? {};
   const statusInfo = ORDER_STATUSES[order.status] ?? {};
   const canRefund = (order.status === 'paid' || order.status === 'changed') && order.train.date >= today;
   const canChange = order.status === 'paid' && order.train.date > today;
   const canTicket = order.status === 'paid' || order.status === 'used' || order.status === 'changed';
+  const canSplit  = order.status === 'paid';
   const delay = order.train.delay ?? getDelayStatus(order.train.id ?? order.train.trainNo);
 
   return (
@@ -188,30 +209,62 @@ function OrderCard({ order, today, onDetail, onTicketDetail, onRefund, onChange,
         <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.35rem', fontWeight: 600 }}>
           車票明細（點擊查看詳情）
         </div>
-        {order.passengers.map((p, i) => (
-          <button
-            key={i}
-            onClick={() => onTicketDetail(p)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: '0.6rem', width: '100%',
-              padding: '0.4rem 0.6rem', marginBottom: '0.25rem',
-              background: 'var(--bg)', border: '1px solid var(--border)',
-              borderRadius: 'var(--radius)', cursor: 'pointer', textAlign: 'left',
-              transition: 'background 0.15s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-light)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'var(--bg)'}
-          >
-            <i className="fi fi-rr-ticket fi-xs" style={{ color: 'var(--primary)', flexShrink: 0 }} />
-            <span style={{ fontSize: '0.83rem', fontWeight: 600, flex: 1 }}>{p.name}</span>
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{p.ticketTypeName}</span>
-            {p.seatNo
-              ? <span className="seat-badge">{p.seatNo}</span>
-              : <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>候補</span>
-            }
-            <i className="fi fi-rr-arrow-right fi-xs" style={{ color: 'var(--text-secondary)', flexShrink: 0 }} />
-          </button>
-        ))}
+        {order.isFromSplit && (
+          <div style={{ marginBottom: '0.35rem' }}>
+            <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: 10, background: '#eff6ff', color: '#2563eb', fontWeight: 700, border: '1px solid #bfdbfe' }}>
+              <i className="fi fi-rr-share fi-xs" style={{ marginRight: 3 }} />來自分票：{order.splitFromUserName}
+            </span>
+          </div>
+        )}
+        {order.passengers.map((p, i) => {
+          const alreadySplit = p.splitStatus === 'transferred';
+          const isReceived = p.splitStatus === 'received';
+          const splitDisabled = !canSplit || alreadySplit;
+          const splitTitle = !canSplit ? '訂單狀態非已付款，無法分票' : alreadySplit ? '此票券已分票' : '分票';
+          return (
+            <div
+              key={i}
+              onClick={() => onTicketDetail(p)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '0.6rem', width: '100%',
+                padding: '0.4rem 0.6rem', marginBottom: '0.25rem',
+                background: 'var(--bg)', border: '1px solid var(--border)',
+                borderRadius: 'var(--radius)', transition: 'background 0.15s', cursor: 'pointer',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--primary-light)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'var(--bg)'}
+            >
+              <i className="fi fi-rr-ticket fi-xs" style={{ color: 'var(--primary)', flexShrink: 0 }} />
+              <span style={{ fontSize: '0.83rem', fontWeight: 600, flex: 1 }}>{p.name}</span>
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>{p.ticketTypeName}</span>
+              {p.seatNo
+                ? <span className="seat-badge">{p.seatNo}</span>
+                : <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>候補</span>
+              }
+              {alreadySplit && (
+                <span style={{ fontSize: '0.7rem', padding: '1px 6px', borderRadius: 8, background: '#e5e7eb', color: '#6b7280', fontWeight: 700, flexShrink: 0 }}>已分票</span>
+              )}
+              {isReceived && (
+                <span style={{ fontSize: '0.7rem', padding: '1px 6px', borderRadius: 8, background: '#eff6ff', color: '#2563eb', fontWeight: 700, flexShrink: 0 }}>來自分票</span>
+              )}
+              <button
+                title={splitTitle}
+                disabled={splitDisabled}
+                onClick={e => { e.stopPropagation(); if (!splitDisabled) onSplitTicket(p, i); }}
+                style={{
+                  flexShrink: 0, padding: '3px 7px', borderRadius: 6,
+                  border: '1px solid', cursor: splitDisabled ? 'not-allowed' : 'pointer',
+                  background: splitDisabled ? '#f3f4f6' : 'white',
+                  borderColor: splitDisabled ? '#d1d5db' : 'var(--border)',
+                  color: splitDisabled ? '#9ca3af' : 'var(--primary)',
+                  fontSize: '0.78rem', transition: 'all 0.15s',
+                }}
+              >
+                <i className="fi fi-rr-share fi-xs" />
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       <div className="order-card-bottom">
@@ -296,10 +349,27 @@ function OrderDetailModal({ order, onClose }) {
           })}
           {/* 票價小計 / 折抵 / 實付 */}
           <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', fontSize: '0.82rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>票價小計</span>
-              <span>NT${order.baseAmount?.toLocaleString() ?? order.totalAmount.toLocaleString()}</span>
-            </div>
+            {order.businessClass ? (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>原票價</span>
+                  <span>NT${order.origBaseAmount?.toLocaleString() ?? '—'}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#d97706' }}>
+                  <span>商務車廂加價（×1.3）</span>
+                  <span>＋NT${order.businessSurcharge?.toLocaleString() ?? '—'}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>小計</span>
+                  <span>NT${order.baseAmount?.toLocaleString() ?? order.totalAmount.toLocaleString()}</span>
+                </div>
+              </>
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>票價小計</span>
+                <span>NT${order.baseAmount?.toLocaleString() ?? order.totalAmount.toLocaleString()}</span>
+              </div>
+            )}
             {order.multiDiscount && (
               <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--success)' }}>
                 <span>優惠折扣</span>

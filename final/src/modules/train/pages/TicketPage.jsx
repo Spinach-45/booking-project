@@ -43,7 +43,7 @@ export default function TicketPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { getOrder } = useStore();
-  const [ticketMode, setTicketMode] = useState('qr'); // 'qr' | 'cvs'
+  const [ticketMode, setTicketMode] = useState('qr'); // 'qr' | 'cvs' | 'station'
   const [copied, setCopied] = useState(false);
 
   const order = getOrder(orderId);
@@ -135,6 +135,9 @@ export default function TicketPage() {
               <button className={`rec-source-tab ${ticketMode === 'cvs' ? 'active' : ''}`} onClick={() => setTicketMode('cvs')}>
                 <i className="fi fi-rr-store-alt fi-xs" style={{ marginRight: 4 }} />超商取票
               </button>
+              <button className={`rec-source-tab ${ticketMode === 'station' ? 'active' : ''}`} onClick={() => setTicketMode('station')}>
+                <i className="fi fi-rr-computer fi-xs" style={{ marginRight: 4 }} />車站機台取票
+              </button>
             </div>
           </div>
 
@@ -167,6 +170,41 @@ export default function TicketPage() {
               </p>
             </div>
           )}
+
+          {/* Station kiosk pickup section */}
+          {ticketMode === 'station' && (() => {
+            const rawCode = order.stationPickupCode ?? '';
+            const displayCode = rawCode.length === 6 ? `${rawCode.slice(0,3)}-${rawCode.slice(3)}` : '------';
+            const depDateTime = new Date(`${order.train.date}T${order.train.depTime}`);
+            const expiryDate = new Date(depDateTime.getTime() - 30 * 60 * 1000);
+            const expiryStr = `${order.train.date} ${String(expiryDate.getHours()).padStart(2,'0')}:${String(expiryDate.getMinutes()).padStart(2,'0')}`;
+            return (
+              <div className="ticket-cvs-section">
+                <div style={{ textAlign: 'center', padding: '0.5rem 0 0.75rem' }}>
+                  <i className="fi fi-rr-computer" style={{ fontSize: 32, color: 'var(--primary)', display: 'block', marginBottom: 8 }} />
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: 12 }}>取票碼</div>
+                  <div style={{
+                    fontFamily: 'monospace', fontWeight: 900, fontSize: '2.2rem', letterSpacing: 6,
+                    color: 'var(--primary)', background: 'var(--primary-light)',
+                    borderRadius: 'var(--radius-lg)', padding: '0.6rem 1.5rem', display: 'inline-block',
+                    border: '2px solid var(--primary)',
+                  }}>
+                    {displayCode}
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.7, background: 'var(--bg)', borderRadius: 'var(--radius)', padding: '0.75rem 1rem', border: '1px solid var(--border)' }}>
+                  <i className="fi fi-rr-info fi-xs" style={{ marginRight: 4 }} />
+                  請至任一台鐵車站自動售票機，選擇「取票」並輸入取票碼即可取得紙本車票
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--danger)', marginTop: 8, fontWeight: 600 }}>
+                  <i className="fi fi-rr-clock fi-xs" style={{ marginRight: 3 }} />取票碼有效期限：{expiryStr}（出發前 30 分鐘截止）
+                </p>
+                <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+                  取票碼已同步寄送至您的 Email 與手機簡訊
+                </p>
+              </div>
+            );
+          })()}
 
           {/* Divider */}
           <div className="ticket-notch-divider">

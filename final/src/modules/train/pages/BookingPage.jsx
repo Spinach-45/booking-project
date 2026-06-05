@@ -36,6 +36,7 @@ export default function BookingPage() {
   );
 
   const typeInfo = TRAIN_TYPES[selectedTrain.type] ?? {};
+  const isBusinessClass = !!(searchParams.businessClass) && selectedTrain.type === 'express';
 
   const allPassengerTickets = useMemo(() => {
     const list = [];
@@ -46,20 +47,28 @@ export default function BookingPage() {
     return list;
   }, [searchParams.ticketCounts]);
 
-  const tickets = useMemo(() =>
-    TICKET_TYPES
+  const tickets = useMemo(() => {
+    const mult = isBusinessClass ? 1.3 : 1.0;
+    return TICKET_TYPES
       .filter(tt => (searchParams.ticketCounts[tt.id] ?? 0) > 0)
-      .map(tt => ({
-        typeId: tt.id, typeName: tt.name,
-        count: searchParams.ticketCounts[tt.id],
-        unitPrice: Math.round(selectedTrain.basePrice * tt.discount),
-        subtotal: Math.round(selectedTrain.basePrice * tt.discount) * searchParams.ticketCounts[tt.id],
-      })),
-    [selectedTrain, searchParams.ticketCounts]
-  );
+      .map(tt => {
+        const origUnitPrice = Math.round(selectedTrain.basePrice * tt.discount);
+        const unitPrice = Math.round(origUnitPrice * mult);
+        const count = searchParams.ticketCounts[tt.id];
+        return {
+          typeId: tt.id, typeName: tt.name, count,
+          origUnitPrice,
+          unitPrice,
+          subtotal: unitPrice * count,
+          origSubtotal: origUnitPrice * count,
+        };
+      });
+  }, [selectedTrain, searchParams.ticketCounts, isBusinessClass]);
 
   const totalPassengers = allPassengerTickets.length;
-  const baseAmount = tickets.reduce((s, t) => s + t.subtotal, 0);
+  const origBaseAmount = tickets.reduce((s, t) => s + t.origSubtotal, 0);
+  const businessSurcharge = isBusinessClass ? Math.round(origBaseAmount * 0.3) : 0;
+  const baseAmount = origBaseAmount + businessSurcharge;
   const multiDiscount = getMultiDiscount(totalPassengers);
   const discountAmount = multiDiscount ? Math.round(baseAmount * multiDiscount.percent / 100) : 0;
   const totalAmount = baseAmount - discountAmount;
@@ -83,7 +92,10 @@ export default function BookingPage() {
     const builtPassengers = allPassengerTickets.map(pt => ({
       ...passengers[pt.key], ticketType: pt.id, ticketTypeName: pt.name,
     }));
-    const orderId = createOrder({ train: selectedTrain, tickets, passengers: builtPassengers, seatPref, multiDiscount });
+    const orderId = createOrder({
+      train: selectedTrain, tickets, passengers: builtPassengers, seatPref, multiDiscount,
+      businessClass: isBusinessClass, origBaseAmount, businessSurcharge,
+    });
     toast('訂單建立成功，請完成付款', 'success');
     navigate(`/ticket/payment/${orderId}`);
   };
@@ -188,22 +200,42 @@ export default function BookingPage() {
               {tickets.map(t => (
                 <div key={t.typeId} className="order-row subtotal">
                   <span>{t.typeName} × {t.count}</span>
-                  <span>NT${t.subtotal.toLocaleString()}</span>
+                  <span>NT${t.origSubtotal.toLocaleString()}</span>
                 </div>
               ))}
               {tickets.map(t => (
                 <div key={`unit-${t.typeId}`} className="order-row" style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: -6 }}>
-                  <span style={{ paddingLeft: '0.5rem' }}>（每張 NT${t.unitPrice.toLocaleString()}）</span>
+                  <span style={{ paddingLeft: '0.5rem' }}>（每張 NT${t.origUnitPrice.toLocaleString()}）</span>
                 </div>
               ))}
+
+              {/* 商務車廂加價明細 */}
+              {isBusinessClass && (
+                <>
+                  <div className="order-row" style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', borderTop: '1px dashed var(--border)', paddingTop: '0.4rem', marginTop: '0.25rem' }}>
+                    <span>原票價</span>
+                    <span>NT${origBaseAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="order-row" style={{ color: '#d97706', fontSize: '0.82rem' }}>
+                    <span><i className="fi fi-rr-star fi-xs" style={{ marginRight: 3 }} />商務車廂加價（×1.3）</span>
+                    <span>＋NT${businessSurcharge.toLocaleString()}</span>
+                  </div>
+                  <div className="order-row" style={{ fontSize: '0.82rem', fontWeight: 600, borderTop: '1px dashed var(--border)', paddingTop: '0.4rem', marginTop: '0.25rem' }}>
+                    <span>小計</span>
+                    <span>NT${baseAmount.toLocaleString()}</span>
+                  </div>
+                </>
+              )}
 
               {/* 多張折扣 */}
               {multiDiscount && (
                 <>
-                  <div className="order-row" style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', borderTop: '1px dashed var(--border)', paddingTop: '0.4rem', marginTop: '0.25rem' }}>
-                    <span>小計</span>
-                    <span>NT${baseAmount.toLocaleString()}</span>
-                  </div>
+                  {!isBusinessClass && (
+                    <div className="order-row" style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', borderTop: '1px dashed var(--border)', paddingTop: '0.4rem', marginTop: '0.25rem' }}>
+                      <span>小計</span>
+                      <span>NT${baseAmount.toLocaleString()}</span>
+                    </div>
+                  )}
                   <div className="order-row" style={{ color: 'var(--success)', fontSize: '0.82rem' }}>
                     <span><i className="fi fi-rr-gift fi-xs" style={{ marginRight: 3 }} />{multiDiscount.label}</span>
                     <span>－NT${discountAmount.toLocaleString()}</span>

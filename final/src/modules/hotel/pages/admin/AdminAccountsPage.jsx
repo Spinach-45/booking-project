@@ -11,9 +11,17 @@ export default function AdminAccountsPage() {
 
   const [users, setUsers] = useState(() => getUsers());
   const [confirmAction, setConfirmAction] = useState(null);
+  const [search, setSearch] = useState('');
   // confirmAction: { type: 'role'|'toggle', userId, newRole?, user }
 
   const refresh = () => setUsers(getUsers());
+
+  const filteredUsers = search.trim()
+    ? users.filter(u =>
+        u.name?.toLowerCase().includes(search.toLowerCase()) ||
+        u.email?.toLowerCase().includes(search.toLowerCase())
+      )
+    : users;
 
   const handleRoleChange = (userId, newRole) => {
     updateUserRole(userId, newRole);
@@ -33,6 +41,23 @@ export default function AdminAccountsPage() {
         <i className="fi fi-rr-users" style={{ fontSize: 20 }} /> 帳號管理
       </h1>
 
+      {/* 搜尋列 */}
+      <div style={{ marginBottom: 16, maxWidth: 360, display: 'flex', gap: 8, alignItems: 'center' }}>
+        <i className="fi fi-rr-search fi-sm" style={{ color: 'var(--text-secondary, #888)' }} />
+        <input
+          className="form-input"
+          placeholder="搜尋姓名或 Email…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ flex: 1 }}
+        />
+        {search && (
+          <button className="btn-ghost btn-sm" onClick={() => setSearch('')}>
+            <i className="fi fi-rr-cross fi-xs" />
+          </button>
+        )}
+      </div>
+
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
@@ -46,10 +71,10 @@ export default function AdminAccountsPage() {
             </tr>
           </thead>
           <tbody>
-            {users.length === 0 ? (
-              <tr><td colSpan={6} className="no-data-row">沒有用戶資料</td></tr>
+            {filteredUsers.length === 0 ? (
+              <tr><td colSpan={6} className="no-data-row">{search ? '找不到符合的帳號' : '沒有用戶資料'}</td></tr>
             ) : (
-              users.map(user => (
+              filteredUsers.map(user => (
                 <tr key={user.id}>
                   <td>{user.email}</td>
                   <td>{user.name}</td>

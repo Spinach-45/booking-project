@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useStore from '../../../store/useTrainStore';
 import useAuthStore from '../../../store/useAuthStore';
-import { STATIONS, STATION_GROUPS, STATION_MAP, TICKET_TYPES, TIME_SLOTS, CAR_TYPES } from '../data/trainData';
+import { STATIONS, STATION_GROUPS, STATION_MAP, TICKET_TYPES, TIME_SLOTS, CAR_TYPES, SEARCH_TRAIN_TYPES } from '../data/trainData';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -152,6 +152,43 @@ export default function HomePage() {
                       />
                       <span className="toggle-slider" />
                     </label>
+                  </div>
+                </div>
+              </div>
+              {/* 車種類型 + 商務車廂 */}
+              <div className="search-row-2" style={{ marginBottom: '0.75rem', alignItems: 'flex-end' }}>
+                <div className="form-group">
+                  <label>車種類型</label>
+                  <select
+                    className="form-input"
+                    value={searchParams.trainType ?? 'any'}
+                    onChange={e => {
+                      const v = e.target.value;
+                      setSearchParams({ trainType: v, businessClass: v === 'express' ? searchParams.businessClass : false });
+                    }}
+                  >
+                    {SEARCH_TRAIN_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                  </select>
+                </div>
+                <div className="form-group" style={{ justifyContent: 'flex-end' }}>
+                  <label style={{ opacity: 0 }}>商務</label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <label style={{
+                      display: 'flex', alignItems: 'center', gap: 8, cursor: searchParams.trainType === 'express' ? 'pointer' : 'default',
+                      opacity: searchParams.trainType === 'express' ? 1 : 0.45, userSelect: 'none',
+                    }}>
+                      <input
+                        type="checkbox"
+                        checked={!!searchParams.businessClass}
+                        disabled={searchParams.trainType !== 'express'}
+                        onChange={e => set('businessClass', e.target.checked)}
+                        style={{ width: 16, height: 16, accentColor: 'var(--primary)' }}
+                      />
+                      <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>商務車廂</span>
+                    </label>
+                    {searchParams.trainType !== 'express' && (
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>商務車廂僅適用於自強號</span>
+                    )}
                   </div>
                 </div>
               </div>

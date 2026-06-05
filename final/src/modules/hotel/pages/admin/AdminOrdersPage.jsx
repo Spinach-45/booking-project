@@ -1,16 +1,30 @@
 import { useState } from 'react';
 import useStore from '../../../../store/useHotelStore';
+import useTrainStore from '../../../../store/useTrainStore';
 import { t } from '../../i18n';
 import Modal from '../../../../components/common/Modal';
 import { useToast } from '../../../../components/common/Toast';
 
+const TRAIN_STATUS_LABEL = {
+  pending: '待付款', paid: '已付款', used: '已使用',
+  refunded: '已退票', cancelled: '已取消', changed: '已改票',
+};
+const TRAIN_STATUS_BADGE = {
+  pending: 'badge-pending', paid: 'badge-confirmed', used: 'badge-completed',
+  refunded: 'badge-cancelled', cancelled: 'badge-cancelled', changed: 'badge-pending',
+};
+
 export default function AdminOrdersPage() {
   const { lang, orders, updateOrder, addCoupon } = useStore();
+  const trainOrders = useTrainStore(s => s.orders);
   const addToast = useToast();
   const T = (key) => t(lang, key);
+  const [orderType, setOrderType] = useState('hotel'); // 'hotel' | 'train'
   const [filter, setFilter] = useState('all'); // all | conflict | confirmed | cancelled
+  const [trainFilter, setTrainFilter] = useState('all');
   const [conflictModal, setConflictModal] = useState(null);
   const [voucherForm, setVoucherForm] = useState({ type: 'percent', value: 10, code: '' });
+  const [trainDetail, setTrainDetail] = useState(null);
 
   // Detect conflicting orders: same property + room + overlapping dates
   const conflicts = [];
@@ -55,9 +69,88 @@ export default function AdminOrdersPage() {
     addToast(lang === 'zh' ? '訂單已確認' : 'Order confirmed', 'success');
   };
 
+  const filteredTrainOrders = trainFilter === 'all'
+    ? trainOrders
+    : trainOrders.filter(o => o.status === trainFilter);
+
   return (
     <div className="admin-page">
       <h1 className="admin-page-title"><i className="fi fi-rr-clipboard-list" style={{ fontSize: 20 }} /> {T('admin.order.title')}</h1>
+
+      {/* 訂單類型切換 */}
+      <div className="filter-tabs" style={{ marginBottom: 16 }}>
+        <button className={`tab-btn ${orderType === 'hotel' ? 'active' : ''}`} onClick={() => setOrderType('hotel')}>
+          <i className="fi fi-rr-building fi-xs" style={{ marginRight: 4 }} />住宿訂單
+          <span className="tab-badge" style={{ marginLeft: 4 }}>{orders.length}</span>
+        </button>
+        <button className={`tab-btn ${orderType === 'train' ? 'active' : ''}`} onClick={() => setOrderType('train')}>
+          <i className="fi fi-rr-train-side fi-xs" style={{ marginRight: 4 }} />車票訂單
+          <span className="tab-badge" style={{ marginLeft: 4 }}>{trainOrders.length}</span>
+        </button>
+      </div>
+
+      {/* ── 車票訂單 ── */}
+      {orderType === 'train' && (
+        <div>
+          <div className="filter-tabs">
+            {['all', 'pending', 'paid', 'used', 'refunded', 'cancelled'].map(f => (
+              <button key={f} className={`tab-btn ${trainFilter === f ? 'active' : ''}`} onClick={() => setTrainFilter(f)}>
+                {f === 'all' ? '全部' : TRAIN_STATUS_LABEL[f]}
+                {f !== 'all' && trainOrders.filter(o => o.status === f).length > 0 && (
+                  <span className="tab-badge">{trainOrders.filter(o => o.status === f).length}</span>
+                )}
+              </button>
+            ))}
+          </div>
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>訂單編號</th>
+                  <th>票號</th>
+                  <th>路線</th>
+                  <th>出發日期</th>
+                  <th>乘客數</th>
+                  <th>金額</th>
+                  <th>狀態</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTrainOrders.length === 0 ? (
+                  <tr><td colSpan={8} className="no-data-row">沒有符合的車票訂單</td></tr>
+                ) : (
+                  [...filteredTrainOrders]
+                    .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))
+                    .map(o => (
+                      <tr key={o.id}>
+                        <td className="order-id">{o.id.slice(-8)}</td>
+                        <td style={{ fontFamily: 'monospace', fontSize: 13 }}>{o.bookingNo || '—'}</td>
+                        <td>{o.train?.fromName} → {o.train?.toName}</td>
+                        <td>{o.train?.date}<br /><span style={{ fontSize: 12, color: 'var(--text-light, #888)' }}>{o.train?.depTime}</span></td>
+                        <td>{o.passengers?.length ?? 0} 位</td>
+                        <td>NT$ {(o.totalAmount || 0).toLocaleString()}</td>
+                        <td>
+                          <span className={`badge ${TRAIN_STATUS_BADGE[o.status] || ''}`}>
+                            {TRAIN_STATUS_LABEL[o.status] || o.status}
+                          </span>
+                        </td>
+                        <td>
+                          <button className="btn-sm btn-outline" onClick={() => setTrainDetail(o)}>
+                            <i className="fi fi-rr-eye fi-sm" /> 詳情
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ── 住宿訂單（原有內容） ── */}
+      {orderType === 'hotel' && <>
 
       {conflicts.length > 0 && (
         <div className="conflict-alert">
@@ -170,6 +263,57 @@ export default function AdminOrdersPage() {
                 <button className="btn-primary" onClick={handleIssueVoucher}>{T('admin.order.issueVoucher')}</button>
                 <button className="btn-ghost" onClick={() => setConflictModal(null)}>{T('common.cancel')}</button>
               </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      </> /* end hotel orders section */}
+
+      {/* Train order detail modal */}
+      <Modal isOpen={!!trainDetail} onClose={() => setTrainDetail(null)} title="車票訂單詳情" size="md">
+        {trainDetail && (
+          <div>
+            <div className="form-grid">
+              {[
+                ['訂單編號', trainDetail.id],
+                ['票號', trainDetail.bookingNo || '—'],
+                ['路線', `${trainDetail.train?.fromName} → ${trainDetail.train?.toName}`],
+                ['車次', `${trainDetail.train?.type?.toUpperCase()} ${trainDetail.train?.trainNo}`],
+                ['出發日期', `${trainDetail.train?.date} ${trainDetail.train?.depTime}`],
+                ['乘客人數', `${trainDetail.passengers?.length ?? 0} 位`],
+                ['付款方式', trainDetail.paymentMethod || '—'],
+                ['訂單狀態', TRAIN_STATUS_LABEL[trainDetail.status] || trainDetail.status],
+                ['金額', `NT$ ${(trainDetail.totalAmount || 0).toLocaleString()}`],
+                ['建立時間', trainDetail.createdAt ? new Date(trainDetail.createdAt).toLocaleString('zh-TW') : '—'],
+              ].map(([label, val]) => (
+                <div key={label} className="form-group">
+                  <label>{label}</label>
+                  <p className="form-value">{val}</p>
+                </div>
+              ))}
+            </div>
+            {trainDetail.passengers?.length > 0 && (
+              <div style={{ marginTop: 12 }}>
+                <label style={{ fontWeight: 600, fontSize: 13 }}>乘客名單</label>
+                <div className="admin-table-wrap" style={{ marginTop: 6 }}>
+                  <table className="admin-table" style={{ fontSize: 13 }}>
+                    <thead><tr><th>姓名</th><th>票種</th><th>座位</th></tr></thead>
+                    <tbody>
+                      {trainDetail.passengers.map((p, i) => (
+                        <tr key={i}>
+                          <td>{p.name}</td>
+                          <td>{p.ticketTypeName}</td>
+                          <td>{p.seatNo || '候補'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            <div className="modal-footer">
+              <button className="btn-ghost" onClick={() => setTrainDetail(null)}>關閉</button>
             </div>
           </div>
         )}

@@ -116,6 +116,23 @@ export const CAR_TYPES = [
   { id: 'business', name: '商務車廂' },
 ];
 
+export const SEARCH_TRAIN_TYPES = [
+  { value: 'any',       label: '不限車種' },
+  { value: 'puyuma',    label: '普悠瑪' },
+  { value: 'express',   label: '自強號' },
+  { value: 'chu-guang', label: '莒光號' },
+  { value: 'local',     label: '區間車' },
+  { value: 'semi-fast', label: '區間快' },
+];
+
+const TRAIN_TYPE_FILTER_MAP = {
+  'puyuma':    'puyuma',
+  'express':   'express',
+  'chu-guang': 'juguang',
+  'local':     'local',
+  'semi-fast': '__none__',
+};
+
 export const PAYMENT_METHODS = [
   { id: 'credit',  name: '信用卡',    icon: '💳', desc: 'Visa / Master / JCB' },
   { id: 'linepay', name: 'LINE Pay', icon: '📱', desc: '手機快速付款' },
@@ -178,7 +195,7 @@ function seededRand(seed) {
 const TYPE_IDS = Object.keys(TRAIN_TYPES);
 const PREFIXES = { taroko: 'TR', puyuma: 'PY', express: 'ZQ', juguang: 'JG', local: 'QJ' };
 
-export function generateTrains({ from, to, date, timeSlot = 'all' }) {
+export function generateTrains({ from, to, date, timeSlot = 'all', trainType = 'any' }) {
   const slot = TIME_SLOTS.find(s => s.id === timeSlot) ?? TIME_SLOTS[0];
   const seed = (from + to + date).split('').reduce((a, c) => a + c.charCodeAt(0), 0);
   const rand = seededRand(seed);
@@ -216,7 +233,10 @@ export function generateTrains({ from, to, date, timeSlot = 'all' }) {
       delay: getDelayStatus(`${typeId}-${from}-${to}-${date}-${i}`),
     });
   }
-  return trains.sort((a, b) => a.depTime.localeCompare(b.depTime));
+  const sorted = trains.sort((a, b) => a.depTime.localeCompare(b.depTime));
+  if (trainType === 'any') return sorted;
+  const targetType = TRAIN_TYPE_FILTER_MAP[trainType] ?? trainType;
+  return sorted.filter(t => t.type === targetType);
 }
 
 // ── 沿途停靠站 ─────────────────────────────────────────────────
