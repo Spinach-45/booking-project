@@ -9,7 +9,7 @@ export default function SearchResultsPage() {
   const [sortKey, setSortKey] = useState('depTime');
 
   useEffect(() => {
-    if (searchResults.length === 0) searchTrains(searchParams);
+    searchTrains(searchParams);
   }, []);
 
   const totalPassengers = Object.values(searchParams.ticketCounts).reduce((s, v) => s + v, 0);

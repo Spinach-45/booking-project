@@ -33,7 +33,7 @@ export default function HomePage() {
     if (searchParams.from === searchParams.to) return;
     if (totalPassengers === 0) return;
     const type = showAdvanced ? 'advanced' : 'basic';
-    searchTrains({ queryType: type });
+    searchTrains({ ...searchParams, queryType: type });
     navigate('/ticket/search');
   };
 
