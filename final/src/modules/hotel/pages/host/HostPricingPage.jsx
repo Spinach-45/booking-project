@@ -52,8 +52,15 @@ export default function HostPricingPage() {
   };
 
   const handlePriceChange = (roomId, field, value, oldPrice) => {
-    setPrices(p => ({ ...p, [roomId]: { ...p[roomId], [field]: Number(value) } }));
-    validatePrice(roomId, field, Number(value), oldPrice);
+    const n = value === '' ? '' : Number(value);
+    setPrices(p => ({ ...p, [roomId]: { ...p[roomId], [field]: n } }));
+    if (n !== '') {
+      validatePrice(roomId, field, n, oldPrice);
+    } else {
+      const errs = { ...errors };
+      delete errs[`${roomId}-${field}`];
+      setErrors(errs);
+    }
   };
 
   const handleSave = () => {
@@ -61,10 +68,11 @@ export default function HostPricingPage() {
       addToast('請修正定價錯誤後再儲存', 'error');
       return;
     }
+    const toNum = (val, fallback) => (val === '' || val === undefined) ? fallback : val;
     const updatedRooms = prop.rooms.map(room => {
       const p = prices[room.id] || {};
       const oldPrice = room.price;
-      const newPrice = p.weekday ?? room.price;
+      const newPrice = toNum(p.weekday, room.price);
       if (newPrice !== oldPrice) {
         addPriceHistory({
           propertyId: prop.id,
@@ -77,9 +85,9 @@ export default function HostPricingPage() {
       }
       return {
         ...room,
-        price: p.weekday ?? room.price,
-        weekendPrice: p.weekend ?? room.weekendPrice,
-        holidayPrice: p.holiday ?? room.holidayPrice,
+        price: toNum(p.weekday, room.price),
+        weekendPrice: toNum(p.weekend, room.weekendPrice),
+        holidayPrice: toNum(p.holiday, room.holidayPrice),
       };
     });
     updateProperty(prop.id, { rooms: updatedRooms });
@@ -134,7 +142,7 @@ export default function HostPricingPage() {
                         className={`form-input ${errors[`${room.id}-weekday`] ? 'input-error' : ''}`}
                         type="number"
                         min={0}
-                        value={p.weekday}
+                        value={p.weekday ?? ''}
                         onChange={e => handlePriceChange(room.id, 'weekday', e.target.value, room.price)}
                       />
                       {errors[`${room.id}-weekday`] && (
@@ -147,7 +155,7 @@ export default function HostPricingPage() {
                         className="form-input"
                         type="number"
                         min={0}
-                        value={p.weekend}
+                        value={p.weekend ?? ''}
                         onChange={e => handlePriceChange(room.id, 'weekend', e.target.value, room.weekendPrice || room.price)}
                       />
                     </div>
@@ -157,7 +165,7 @@ export default function HostPricingPage() {
                         className="form-input"
                         type="number"
                         min={0}
-                        value={p.holiday}
+                        value={p.holiday ?? ''}
                         onChange={e => handlePriceChange(room.id, 'holiday', e.target.value, room.holidayPrice || room.price)}
                       />
                     </div>

@@ -346,8 +346,8 @@ export default function HostPropertyFormPage() {
                     className="form-input"
                     type="number"
                     min={0}
-                    value={room.price}
-                    onChange={e => updateRoom(idx, 'price', Number(e.target.value))}
+                    value={room.price ?? ''}
+                    onChange={e => updateRoom(idx, 'price', e.target.value === '' ? '' : Number(e.target.value))}
                   />
                 </div>
                 <div className="form-group">
@@ -356,8 +356,8 @@ export default function HostPropertyFormPage() {
                     className="form-input"
                     type="number"
                     min={1}
-                    value={room.maxGuests}
-                    onChange={e => updateRoom(idx, 'maxGuests', Number(e.target.value))}
+                    value={room.maxGuests ?? ''}
+                    onChange={e => updateRoom(idx, 'maxGuests', e.target.value === '' ? '' : Number(e.target.value))}
                   />
                 </div>
                 <div className="form-group">
@@ -366,8 +366,8 @@ export default function HostPropertyFormPage() {
                     className="form-input"
                     type="number"
                     min={1}
-                    value={room.quantity}
-                    onChange={e => updateRoom(idx, 'quantity', Number(e.target.value))}
+                    value={room.quantity ?? ''}
+                    onChange={e => updateRoom(idx, 'quantity', e.target.value === '' ? '' : Number(e.target.value))}
                   />
                 </div>
                 <div className="form-group" style={{ display: 'flex', alignItems: 'flex-end' }}>
