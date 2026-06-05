@@ -4,16 +4,26 @@ import useAuthStore from '../../../../store/useAuthStore';
 import Modal from '../../../../components/common/Modal';
 
 const STATUS_LABEL = {
-  confirmed: '待入住',
-  completed: '已完成',
-  cancelled: '已取消',
-  checkedIn: '已入住',
+  confirmed:          '待入住',
+  completed:          '已完成',
+  cancelled:          '已取消',
+  checkedIn:          '已入住',
+  cancelling_full:    '全額退款中',
+  cancelling_partial: '部分退款中',
+  cancelled_no_refund:'已取消（不退款）',
+  refunded:           '退款完成',
+  conflict_cancelled: '衝突取消',
 };
 const STATUS_BADGE = {
-  confirmed: 'badge-confirmed',
-  completed: 'badge-completed',
-  cancelled: 'badge-cancelled',
-  checkedIn: 'badge-pending',
+  confirmed:          'badge-confirmed',
+  completed:          'badge-completed',
+  cancelled:          'badge-cancelled',
+  checkedIn:          'badge-pending',
+  cancelling_full:    'badge-paid',
+  cancelling_partial: 'badge-pending',
+  cancelled_no_refund:'badge-cancelled',
+  refunded:           'badge-confirmed',
+  conflict_cancelled: 'badge-cancelled',
 };
 
 const TABS = [

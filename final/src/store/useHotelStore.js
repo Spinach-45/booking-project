@@ -207,14 +207,20 @@ const useHotelStore = create((set, get) => ({
     let refundPercent = 0;
     if (diffDays >= 10) refundPercent = 100;
     else if (diffDays >= 4) refundPercent = 70;
-    const refundAmount = Math.round((order.finalAmount || order.totalAmount) * refundPercent / 100);
+    const base = order.finalAmount ?? order.totalAmount ?? 0;
+    const refundAmount = Math.round(base * refundPercent / 100);
+    const feeAmount = base - refundAmount;
+    // 依退款比例設定精細狀態
+    const newStatus = refundPercent === 100 ? 'cancelling_full'
+      : refundPercent > 0 ? 'cancelling_partial'
+      : 'cancelled_no_refund';
     const updatedOrders = orders.map(o => o.id === orderId
-      ? { ...o, status: 'cancelled', refundAmount, refundPercent, cancelledAt: new Date().toISOString() }
+      ? { ...o, status: newStatus, refundAmount, refundPercent, feeAmount, cancelledAt: new Date().toISOString() }
       : o
     );
     LS.set('bk_orders', updatedOrders);
     set({ orders: updatedOrders });
-    return { refundAmount, refundPercent };
+    return { refundAmount, refundPercent, feeAmount, newStatus };
   },
   getUserOrders: (userId) => LS.get('bk_orders', []).filter(o => o.userId === userId),
   getAllOrders: () => LS.get('bk_orders', []),

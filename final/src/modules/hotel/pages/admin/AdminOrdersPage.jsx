@@ -44,8 +44,10 @@ export default function AdminOrdersPage() {
     }
   }
 
+  const CANCEL_STATUSES = ['cancelled', 'cancelling_full', 'cancelling_partial', 'cancelled_no_refund', 'refunded', 'conflict_cancelled'];
   const filtered = filter === 'all' ? orders
     : filter === 'conflict' ? orders.filter(o => conflicts.some(c => c.ids.includes(o.id)))
+    : filter === 'cancelled'  ? orders.filter(o => CANCEL_STATUSES.includes(o.status))
     : orders.filter(o => o.status === filter);
 
   const handleIssueVoucher = () => {
@@ -200,7 +202,21 @@ export default function AdminOrdersPage() {
                   <td>{order.guests}</td>
                   <td>NT$ {order.finalAmount?.toLocaleString()}</td>
                   <td>
-                    <span className={`badge badge-${order.status}`}>{T(`orders.${order.status}`)}</span>
+                    <span className={`badge ${
+                      order.status === 'cancelling_full'    ? 'badge-paid'      :
+                      order.status === 'cancelling_partial' ? 'badge-pending'   :
+                      order.status === 'cancelled_no_refund'? 'badge-cancelled' :
+                      order.status === 'refunded'           ? 'badge-confirmed' :
+                      order.status === 'conflict_cancelled' ? 'badge-cancelled' :
+                      `badge-${order.status}`
+                    }`}>{
+                      order.status === 'cancelling_full'    ? '全額退款中'   :
+                      order.status === 'cancelling_partial' ? '部分退款中'   :
+                      order.status === 'cancelled_no_refund'? '已取消（不退款）':
+                      order.status === 'refunded'           ? '退款完成'     :
+                      order.status === 'conflict_cancelled' ? '衝突取消'     :
+                      T(`orders.${order.status}`)
+                    }</span>
                     {isConflict && <span className="badge badge-conflict"><i className="fi fi-sr-exclamation fi-xs" /></span>}
                   </td>
                   <td>
