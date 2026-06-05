@@ -102,6 +102,9 @@ export default function LoginPage() {
             <button className="demo-btn" onClick={() => { setMethod('email'); set('email', 'demo@example.com'); set('password', 'demo123'); }}>
               <i className="fi fi-rr-user fi-xs" style={{ marginRight: 4 }} />示範用戶 — demo@example.com / demo123
             </button>
+            <button className="demo-btn" onClick={() => { setMethod('email'); set('email', 'host@example.com'); set('password', 'host123'); }}>
+              <i className="fi fi-rr-home fi-xs" style={{ marginRight: 4 }} />示範房東 — host@example.com / host123
+            </button>
             <button className="demo-btn" onClick={() => { setMethod('email'); set('email', 'admin@example.com'); set('password', 'admin123'); }}>
               <i className="fi fi-rr-settings fi-xs" style={{ marginRight: 4 }} />系統管理員 — admin@example.com / admin123
             </button>
