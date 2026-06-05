@@ -71,8 +71,11 @@ export default function Navbar() {
                 {cartCount > 0 && <span className="badge" style={{ position: 'absolute', top: 0, right: 0, transform: 'translate(30%,-30%)', background: 'var(--danger)', color: 'white', minWidth: 16, height: 16, borderRadius: 8, fontSize: '0.68rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 3px' }}>{cartCount}</span>}
               </Link>
               <Link to="/hotel/chat" className="nav-link"><i className="fi fi-rr-comment fi-sm" /></Link>
+              {(currentUser.role === 'host' || currentUser.role === 'admin') && (
+                <Link to="/host" className="nav-link admin-link"><i className="fi fi-rr-home fi-sm" /> 房東後台</Link>
+              )}
               {currentUser.role === 'admin' && (
-                <Link to="/admin" className="nav-link admin-link"><i className="fi fi-rr-settings fi-sm" /> 後台</Link>
+                <Link to="/admin" className="nav-link admin-link"><i className="fi fi-rr-settings fi-sm" /> 管理後台</Link>
               )}
             </>
           )}
@@ -124,8 +127,11 @@ export default function Navbar() {
               <Link to="/profile" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-user fi-sm" style={{ marginRight: 6 }} />個人中心</Link>
               <Link to="/hotel/favorites" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-sr-heart fi-sm" style={{ marginRight: 6 }} />我的收藏</Link>
               <Link to="/hotel/cart" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-shopping-cart fi-sm" style={{ marginRight: 6 }} />購物車 {cartCount > 0 ? `(${cartCount})` : ''}</Link>
+              {(currentUser.role === 'host' || currentUser.role === 'admin') && (
+                <Link to="/host" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-home fi-sm" style={{ marginRight: 6 }} />房東後台</Link>
+              )}
               {currentUser.role === 'admin' && (
-                <Link to="/admin" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-settings fi-sm" style={{ marginRight: 6 }} />後台管理</Link>
+                <Link to="/admin" className="mobile-nav-link" onClick={() => setMenuOpen(false)}><i className="fi fi-rr-settings fi-sm" style={{ marginRight: 6 }} />管理後台</Link>
               )}
             </>
           )}
