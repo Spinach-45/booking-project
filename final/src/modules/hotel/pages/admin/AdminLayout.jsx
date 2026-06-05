@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation, Navigate, Outlet } from 'react-router-dom';
+import { Link, useLocation, Outlet } from 'react-router-dom';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
 
@@ -18,14 +18,10 @@ const NAV_ITEMS = [
 ];
 
 export default function AdminLayout() {
-  const { currentUser, lang } = useStore();
+  const { lang } = useStore();
   const location = useLocation();
   const T = (key) => t(lang, key);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  if (!currentUser || currentUser.role !== 'admin') {
-    return <Navigate to="/login" replace />;
-  }
 
   const isActive = (item) => {
     if (item.exact) return location.pathname === item.path;
