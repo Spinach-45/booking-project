@@ -39,31 +39,79 @@
 }
 .introjs-tooltip {
   border-radius: 14px !important;
-  padding: 22px 24px 18px !important;
+  padding: 20px 22px 16px !important;
   max-width: 340px !important;
   min-width: 260px !important;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18) !important;
   border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-sizing: border-box !important;
 }
-.introjs-tooltip-title {
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  color: #1e293b !important;
+
+/* 標題列：title 左對齊，跳過按鈕右對齊 */
+.introjs-tooltip-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
   margin-bottom: 8px !important;
   padding: 0 !important;
 }
+.introjs-tooltip-title {
+  flex: 1 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* 跳過按鈕：右上角小字連結 */
+.introjs-skipbutton {
+  flex-shrink: 0 !important;
+  position: static !important;
+  float: none !important;
+  display: inline-block !important;
+  padding: 2px 0 !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #9ca3af !important;
+  text-decoration: none !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  line-height: 1.4 !important;
+  white-space: nowrap !important;
+}
+.introjs-skipbutton:hover,
+.introjs-skipbutton:focus {
+  color: #6b7280 !important;
+  text-decoration: underline !important;
+  outline: none !important;
+}
+
 .introjs-tooltiptext {
   font-size: 13.5px !important;
   line-height: 1.65 !important;
   color: #475569 !important;
   padding: 0 !important;
+  margin: 0 !important;
 }
+
+/* 下方按鈕列 */
 .introjs-tooltipbuttons {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
   border-top: 1px solid #f1f5f9 !important;
   padding: 10px 0 0 !important;
   margin-top: 14px !important;
 }
 .introjs-button {
+  display: inline-flex !important;
+  align-items: center !important;
   border-radius: 8px !important;
   padding: 7px 16px !important;
   font-size: 13px !important;
@@ -71,34 +119,47 @@
   text-shadow: none !important;
   cursor: pointer !important;
   transition: opacity 0.15s !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
 }
 .introjs-nextbutton {
   background: #2563eb !important;
   color: #fff !important;
   border: none !important;
 }
-.introjs-nextbutton:hover { opacity: 0.88 !important; }
+.introjs-nextbutton:hover,
+.introjs-nextbutton:focus { opacity: 0.88 !important; outline: none !important; }
 .introjs-prevbutton {
   background: #fff !important;
   color: #374151 !important;
   border: 1px solid #e5e7eb !important;
 }
-.introjs-prevbutton:hover { background: #f9fafb !important; }
-.introjs-skipbutton {
-  color: #9ca3af !important;
-  font-size: 12px !important;
-  text-decoration: none !important;
-}
-.introjs-skipbutton:hover { color: #6b7280 !important; }
+.introjs-prevbutton:hover,
+.introjs-prevbutton:focus { background: #f9fafb !important; outline: none !important; }
+.introjs-disabled,
+.introjs-disabled:hover { opacity: 0.4 !important; cursor: not-allowed !important; }
+
+/* 進度條 */
 .introjs-progress {
   background: #e5e7eb !important;
   border-radius: 4px !important;
   height: 4px !important;
-  margin-bottom: 6px !important;
+  margin: 10px 0 4px !important;
 }
 .introjs-progressbar {
   background: #2563eb !important;
   border-radius: 4px !important;
+}
+
+/* 圓點導覽 */
+.introjs-bullets {
+  padding: 4px 0 0 !important;
+  text-align: center !important;
+}
+.introjs-bullets ul {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .introjs-bullets ul li a {
   background: #cbd5e1 !important;
