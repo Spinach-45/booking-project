@@ -8,3 +8,6 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 );
+
+// 功能導覽按鈕 — 自行建立獨立 React root，不修改現有元件樹
+import './tour/TourButton';
