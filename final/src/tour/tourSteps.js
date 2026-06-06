@@ -39,25 +39,46 @@ const OPTS = {
   disableInteraction: false,
   tooltipPosition: 'auto',
 };
-
-// 最後一段完成按鈕顯示「完成」
 const OPTS_FINAL = { ...OPTS, doneLabel: '完成 ✓' };
 
 // ════════════════════════════════════════════════════════════════
-//  第一段：住宿首頁 /hotel
+//  第一段：行程規劃 /trip
 // ════════════════════════════════════════════════════════════════
-function hotelHomeSteps() {
+function tripSteps() {
   return [
     {
       title: '歡迎使用 Agent TT！',
       intro:
-        '這是一站式旅遊預訂平台，整合 <strong>住宿訂房</strong>、<strong>台鐵訂票</strong> 與 <strong>行程規劃</strong> 三大功能。<br/><br/>導覽共分五個頁面，帶您快速認識各項功能！',
+        '這是一站式旅遊預訂平台，整合 <strong>行程規劃</strong>、<strong>住宿訂房</strong> 與 <strong>台鐵訂票</strong> 三大功能。<br/><br/>導覽共分六個頁面，帶您快速認識各項功能！',
     },
     makeStep(
       'nav.navbar, .navbar',
       '頂部導覽列',
       '從這裡切換三大功能模組。<br/><br/>登入後顯示我的訂單、收藏、購物車；<br/><strong>房東</strong>帳號顯示「房東後台」；<br/><strong>管理員</strong>帳號顯示「管理後台」。',
     ),
+    makeStep(
+      '.hero-content',
+      '行程規劃首頁',
+      '以火車站為核心規劃旅遊行程。<br/><br/>點「建立新行程」輸入行程名稱、目的地車站和起迄日期，立刻開始規劃，也可邀請旅伴共同編輯。',
+    ),
+    makeStep(
+      '.trips-grid, .trip-card',
+      '我的行程列表',
+      '所有行程以卡片方式呈現，顯示行程名稱、目的地車站和旅行天數。<br/><br/>點擊進入後可逐天加入景點、住宿、交通等項目並安排時間。',
+    ),
+    makeStep(
+      '.trip-card',
+      '行程詳情功能',
+      '進入行程後可以：<br/>• 每天加入多個行程項目（景點、餐廳、住宿、交通）<br/>• 地圖選點標記確切位置<br/>• 切換「費用記帳」Tab 記錄花費<br/>• 旅途結束後一鍵計算多人分帳結果',
+    ),
+  ];
+}
+
+// ════════════════════════════════════════════════════════════════
+//  第二段：住宿首頁 /hotel
+// ════════════════════════════════════════════════════════════════
+function hotelHomeSteps() {
+  return [
     makeStep(
       '.hero, .hero-content',
       '住宿快速搜尋',
@@ -76,13 +97,31 @@ function hotelHomeSteps() {
     makeStep(
       '.property-card',
       '房源卡片',
-      '每張卡片顯示：<br/>• 房源名稱與評分<br/>• 距最近車站距離<br/>• 每晚最低房價<br/><br/>可點愛心加入收藏，或點購物車加入待結帳清單。',
+      '每張卡片顯示：<br/>• 房源名稱與評分<br/>• 距最近車站距離<br/>• 每晚最低房價<br/><br/>可點愛心加入收藏，或點購物車圖示加入待結帳清單。',
     ),
   ];
 }
 
 // ════════════════════════════════════════════════════════════════
-//  第二段：台鐵首頁 /ticket
+//  第三段：住宿訂單管理 /hotel/orders
+// ════════════════════════════════════════════════════════════════
+function hotelOrderSteps() {
+  return [
+    makeStep(
+      '.order-card, .orders-list',
+      '住宿訂單管理',
+      '這裡顯示所有住宿訂單，依建立時間排列。<br/><br/>狀態標籤顏色區分：<br/>• 藍色 → 待入住<br/>• 綠色 → 全額退款中<br/>• 橘色 → 部分退款中<br/>• 灰色 → 已取消（不退款）',
+    ),
+    makeStep(
+      '.btn-danger-outline, .order-card-footer',
+      '取消訂單與退款規則',
+      '點「取消訂單」前，系統顯示退款計算確認視窗：<br/><br/>• 入住前 10 天以上 → <strong>全額退款</strong><br/>• 入住前 4～9 天 → <strong>退款 70%</strong>，收 30% 手續費<br/>• 入住前 3 天以內 → <strong>不予退款</strong><br/><br/>視窗清楚顯示退款金額（綠）和手續費（紅）。',
+    ),
+  ];
+}
+
+// ════════════════════════════════════════════════════════════════
+//  第四段：台鐵首頁 /ticket
 // ════════════════════════════════════════════════════════════════
 function trainHomeSteps() {
   return [
@@ -104,13 +143,13 @@ function trainHomeSteps() {
     makeStep(
       '.ticket-section-label, .ticket-count-grid',
       '票種與張數',
-      '支援全票、孩童票（5折）、敬老票（5折）、愛心票（5折）、學生票（8折）。<br/><br/><strong>多張自動折扣：</strong><br/>• 3 張（含）以上 → 九五折<br/>• 5 張（含）以上 → 九折',
+      '支援全票、孩童票（5折）、敬老票（5折）、愛心票（5折）、學生票（8折）。<br/><br/><strong>多張自動折扣：</strong><br/>• 3 張（含）以上 → 九五折<br/>• 5 張（含）以上 → 九折，折扣自動計算',
     ),
   ];
 }
 
 // ════════════════════════════════════════════════════════════════
-//  第三段：台鐵票務管理 /ticket/orders
+//  第五段：台鐵票務管理 /ticket/orders
 // ════════════════════════════════════════════════════════════════
 function trainOrderSteps() {
   return [
@@ -128,42 +167,19 @@ function trainOrderSteps() {
 }
 
 // ════════════════════════════════════════════════════════════════
-//  第四段：住宿訂單管理 /hotel/orders
-// ════════════════════════════════════════════════════════════════
-function hotelOrderSteps() {
-  return [
-    makeStep(
-      '.order-card, .orders-list',
-      '住宿訂單管理',
-      '這裡顯示所有住宿訂單，依建立時間排列。<br/><br/>狀態標籤顏色區分：<br/>• 藍色 → 待入住<br/>• 綠色 → 全額退款中<br/>• 橘色 → 部分退款中<br/>• 灰色 → 已取消（不退款）<br/>• 紅色 → 已取消',
-    ),
-    makeStep(
-      '.btn-danger-outline, .order-card-footer',
-      '取消訂單與退款規則',
-      '點「取消訂單」前系統顯示退款計算確認視窗：<br/><br/>• 入住前 10 天以上 → <strong>全額退款</strong><br/>• 入住前 4～9 天 → <strong>退款 70%</strong>，收 30% 手續費<br/>• 入住前 3 天以內 → <strong>不予退款</strong><br/><br/>視窗中清楚顯示退款金額（綠色）和手續費（紅色）。',
-    ),
-  ];
-}
-
-// ════════════════════════════════════════════════════════════════
-//  第五段：結語（停留原頁，純文字說明）
+//  第六段：結語（停留原頁，純文字說明）
 // ════════════════════════════════════════════════════════════════
 function finalSteps() {
   return [
     {
-      title: '行程規劃',
-      intro:
-        '點 Navbar「行程規劃」可建立個人或多人共享行程。<br/><br/>• 按天加入景點、住宿、交通等項目並安排時間<br/>• 支援地圖選點標記位置<br/>• 內建費用記帳，旅途後自動計算多人分帳結果',
-    },
-    {
       title: '房東後台',
       intro:
-        '以<strong>房東帳號</strong>登入後，Navbar 顯示「房東後台」入口：<br/><br/>• 新增房源並送審（管理員核准才上架）<br/>• 設定平日、週末、假日三種房價（受管理員漲幅上限保護）<br/>• 月曆視圖管理每日庫存<br/>• 設定早鳥、長住、季節等折扣活動',
+        '以<strong>房東帳號</strong>登入後，Navbar 顯示「房東後台」入口：<br/><br/>• 新增房源並送審（管理員核准才上架）<br/>• 設定平日、週末、假日三種房價（受漲幅上限保護）<br/>• 月曆視圖管理每日庫存<br/>• 設定早鳥、長住、季節等折扣活動',
     },
     {
       title: '管理員後台',
       intro:
-        '以<strong>管理員帳號</strong>登入後可進入完整後台：<br/><br/>• 審核房源上架申請<br/>• 管理住宿與火車訂單<br/>• 審核退款申請<br/>• 帳號角色管理（升級房東 / 停用帳號）<br/>• 設定全平台的定價漲幅上限與最低定價',
+        '以<strong>管理員帳號</strong>登入後可進入完整後台：<br/><br/>• 審核房源上架申請<br/>• 管理住宿與火車訂單（含衝突偵測）<br/>• 審核退款申請<br/>• 帳號角色管理（升級房東 / 停用帳號）<br/>• 設定全平台定價漲幅上限與最低定價',
     },
     {
       title: '我的優惠券',
@@ -180,32 +196,41 @@ function finalSteps() {
 
 // ════════════════════════════════════════════════════════════════
 //  主入口：依序執行各段導覽
+//  順序：行程規劃 → 住宿訂房 → 住宿訂單 → 台鐵訂票 → 台鐵票務 → 結語
 // ════════════════════════════════════════════════════════════════
 export function startTour() {
-  // 段 1：住宿首頁
-  navigateTo('/hotel', () => {
+  // 段 1：行程規劃
+  navigateTo('/trip', () => {
     introJs()
-      .setOptions({ ...OPTS, steps: hotelHomeSteps() })
+      .setOptions({ ...OPTS, steps: tripSteps() })
       .oncomplete(() => {
-        // 段 2：台鐵首頁
-        navigateTo('/ticket', () => {
+        // 段 2：住宿首頁
+        navigateTo('/hotel', () => {
           introJs()
-            .setOptions({ ...OPTS, steps: trainHomeSteps() })
+            .setOptions({ ...OPTS, steps: hotelHomeSteps() })
             .oncomplete(() => {
-              // 段 3：台鐵票務
-              navigateTo('/ticket/orders', () => {
+              // 段 3：住宿訂單
+              navigateTo('/hotel/orders', () => {
                 introJs()
-                  .setOptions({ ...OPTS, steps: trainOrderSteps() })
+                  .setOptions({ ...OPTS, steps: hotelOrderSteps() })
                   .oncomplete(() => {
-                    // 段 4：住宿訂單
-                    navigateTo('/hotel/orders', () => {
+                    // 段 4：台鐵首頁
+                    navigateTo('/ticket', () => {
                       introJs()
-                        .setOptions({ ...OPTS, steps: hotelOrderSteps() })
+                        .setOptions({ ...OPTS, steps: trainHomeSteps() })
                         .oncomplete(() => {
-                          // 段 5：結語（停留原頁）
-                          introJs()
-                            .setOptions({ ...OPTS_FINAL, steps: finalSteps() })
-                            .start();
+                          // 段 5：台鐵票務
+                          navigateTo('/ticket/orders', () => {
+                            introJs()
+                              .setOptions({ ...OPTS, steps: trainOrderSteps() })
+                              .oncomplete(() => {
+                                // 段 6：結語（停留原頁）
+                                introJs()
+                                  .setOptions({ ...OPTS_FINAL, steps: finalSteps() })
+                                  .start();
+                              })
+                              .start();
+                          });
                         })
                         .start();
                     });
