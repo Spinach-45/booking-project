@@ -1,116 +1,209 @@
 import introJs from 'intro.js';
 import 'intro.js/introjs.css';
 
-const STEP_DEFS = [
-  {
-    title: '歡迎使用 Agent TT！',
-    intro:
-      '這是一站式旅遊預訂平台，整合 <strong>住宿訂房</strong>、<strong>台鐵訂票</strong> 與 <strong>行程規劃</strong> 三大功能。<br/><br/>讓我帶您快速認識各項功能！',
-  },
-  {
-    selector: 'nav.navbar, .navbar',
-    title: '頂部導覽列',
-    intro:
-      '從這裡切換各功能模組。<br/><br/>登入後可看到「我的訂單」、收藏清單、購物車；<strong>房東</strong>帳號可進入房東後台，<strong>管理員</strong>帳號可進入管理後台。',
-  },
-  {
-    selector: '.hero-content, .hero, .search-hero-inner',
-    title: '首頁快速搜尋',
-    intro:
-      '輸入目的地、入住／退房日期與人數，快速查詢可預訂的住宿。<br/><br/>火車訂票首頁可選擇出發站、到達站、日期與票種，最多同時購買 6 張票。',
-  },
-  {
-    selector: '.destinations-grid',
-    title: '熱門目的地',
-    intro:
-      '點擊台北、基隆、新北、桃園等城市卡片，可直接篩選顯示該城市的上架住宿房源，數量即時反映目前可訂房源。',
-  },
-  {
-    selector: '.properties-grid, .featured-properties .properties-grid',
-    title: '精選房源',
-    intro:
-      '首頁精選推薦的熱門住宿。<br/><br/>點擊任一房源可查看詳細資訊、設備設施、其他旅客評價，並選擇入住日期與房型後直接訂房或加入購物車。',
-  },
-  {
-    selector: '.property-card',
-    title: '房源卡片',
-    intro:
-      '每張卡片顯示：<br/>• 房源名稱與評分<br/>• 距最近車站距離<br/>• 最低房價<br/><br/>點擊愛心可加入收藏；點擊購物車可加入待結帳清單。',
-  },
-  {
-    selector: '.search-card, .search-card-wrap .search-card',
-    title: '火車訂票查詢',
-    intro:
-      '選擇出發站與到達站後，點擊中間箭頭可快速交換。<br/><br/>切換至<strong>進階查詢</strong>可選擇車種類型（自強號、普悠瑪等）及商務車廂（自強號專屬，票價 ×1.3）。',
-  },
-  {
-    selector: '.train-card',
-    title: '車次選擇',
-    intro:
-      '搜尋結果依出發時間排列，顯示車種標籤、行車時間、餘票與票價。<br/><br/>可依<strong>出發時間、行車時間、票價</strong>重新排序，展開可查看沿途停靠站。',
-  },
-  {
-    selector: '.ticket-card',
-    title: '電子票',
-    intro:
-      '付款完成後可於「取票」頁面取得：<br/>• 線上電子票 QR Code<br/>• 超商取票代碼<br/>• 車站機台取票碼<br/><br/>支援「分票」功能，可轉讓給其他平台用戶。',
-  },
-  {
-    selector: '.trip-list, .trips-grid, [class*="trip"]',
-    title: '行程規劃',
-    intro:
-      '建立個人或多人共享行程，<br/>加入景點、交通、住宿等項目並安排日期時間。<br/><br/>支援費用分帳，旅行結束後一鍵計算各人應付金額。',
-  },
-  {
-    selector: '.hotel-cart, .cart-page, .cart-section',
-    title: '住宿購物車',
-    intro:
-      '將多個感興趣的住宿加入購物車統一比較，準備好後再一一結帳，不必每次重新搜尋。',
-  },
-  {
-    selector: '.order-card, .orders-list',
-    title: '我的訂單',
-    intro:
-      '在「個人中心」可查看所有訂單：<br/>• 住宿訂單支援取消退款（依入住天數計算退款比例）<br/>• 火車票支援改票、退票、分票給他人<br/>• 系統自動偵測衝突並補發折價券',
-  },
-  {
-    selector: '.admin-page, .admin-layout',
-    title: '管理後台 / 房東後台',
-    intro:
-      '管理員可審核房源、管理訂單與退款、設定定價規則、查看衝突紀錄。<br/><br/>房東可新增管理房源、設定折扣、調整定價，房源須通過管理員審核後上架。',
-  },
-  {
-    title: '導覽完成！',
-    intro:
-      '您已了解 Agent TT 的主要功能。<br/><br/>如需再次查看，請點擊畫面右下角的<strong>「功能導覽」</strong>按鈕隨時重新啟動。祝旅途愉快！',
-  },
-];
-
-function buildSteps() {
-  return STEP_DEFS.map(def => {
-    if (!def.selector) return { title: def.title, intro: def.intro };
-    const el = document.querySelector(def.selector);
-    return el
-      ? { element: el, title: def.title, intro: def.intro }
-      : { title: def.title, intro: def.intro };
-  });
+// ── 導航工具 ─────────────────────────────────────────────────────
+// 使用 pushState + popstate 讓 React Router 感知頁面切換，
+// 不造成整頁重整；callback 在 React 重新渲染完成後執行。
+function navigateTo(path, callback) {
+  const base = window.location.pathname.includes('/booking-project')
+    ? '/booking-project'
+    : '';
+  const target = base + path;
+  if (window.location.pathname === target) {
+    setTimeout(callback, 100);
+    return;
+  }
+  window.history.pushState({}, '', target);
+  window.dispatchEvent(new PopStateEvent('popstate', { state: window.history.state }));
+  setTimeout(callback, 450); // 等 React re-render
 }
 
+// 查找元素，找不到回傳 null（步驟自動退化為純文字）
+function q(selector) {
+  if (!selector) return null;
+  return document.querySelector(selector) || null;
+}
+
+function makeStep(selector, title, intro) {
+  const el = q(selector);
+  return el
+    ? { element: el, title, intro }
+    : { title, intro };
+}
+
+// ── intro.js 公用設定 ─────────────────────────────────────────────
+const OPTS = {
+  nextLabel: '下一步 →',
+  prevLabel: '← 上一步',
+  skipLabel: '跳過導覽',
+  doneLabel: '完成 ✓',
+  showProgress: true,
+  showBullets: true,
+  exitOnOverlayClick: false,
+  scrollToElement: true,
+  scrollPadding: 80,
+  disableInteraction: false,
+  tooltipPosition: 'auto',
+  highlightClass: 'introjs-custom-highlight',
+};
+
+// ════════════════════════════════════════════════════════════════
+//  第一段：住宿首頁 /hotel
+// ════════════════════════════════════════════════════════════════
+function hotelHomeSteps() {
+  return [
+    {
+      title: '歡迎使用 Agent TT！',
+      intro:
+        '這是一站式旅遊預訂平台，整合 <strong>住宿訂房</strong>、<strong>台鐵訂票</strong> 與 <strong>行程規劃</strong> 三大功能。<br/><br/>導覽共分三個頁面，帶您快速認識各項功能！',
+    },
+    makeStep(
+      'nav.navbar, .navbar',
+      '頂部導覽列',
+      '從這裡切換三大功能模組。<br/><br/>登入後顯示我的訂單、收藏、購物車；<br/><strong>房東</strong>帳號顯示「房東後台」；<br/><strong>管理員</strong>帳號同時顯示「管理後台」。',
+    ),
+    makeStep(
+      '.hero, .hero-content',
+      '住宿快速搜尋',
+      '輸入目的地城市、入住／退房日期和人數，按查詢後進入房源列表。<br/><br/>支援篩選價格區間、評分、設施（Wi-Fi、停車、早餐等）和距車站距離。',
+    ),
+    makeStep(
+      '.destinations-grid',
+      '熱門目的地',
+      '點擊城市卡片（台北、基隆、新北、桃園）直接篩選該城市的所有上架房源。<br/><br/>數字是即時計算的，房東新增房源且通過審核後自動更新。',
+    ),
+    makeStep(
+      '.properties-grid',
+      '精選房源',
+      '首頁精選推薦的熱門住宿。<br/><br/>點擊任一房源可查看相片、設施、政策、房東資訊和旅客評價，選好日期與房型後直接訂房。',
+    ),
+    makeStep(
+      '.property-card',
+      '房源卡片',
+      '每張卡片顯示：<br/>• 房源名稱與評分<br/>• 距最近車站距離<br/>• 每晚最低房價<br/><br/>可點愛心加入收藏，或點購物車圖示加入待結帳清單，不需立刻做決定。',
+    ),
+  ];
+}
+
+// ════════════════════════════════════════════════════════════════
+//  第二段：台鐵首頁 /ticket
+// ════════════════════════════════════════════════════════════════
+function trainHomeSteps() {
+  return [
+    {
+      title: '台鐵線上訂票',
+      intro:
+        '現在切換到台鐵訂票功能。<br/><br/>選擇出發站和到達站，中間的箭頭按鈕可一鍵交換兩站；接著設定日期、時段和票種張數，最多同時購買 6 張。',
+    },
+    makeStep(
+      '.search-card, .search-card-wrap .search-card',
+      '查詢表單',
+      '出發站和到達站依路線分組顯示（縱貫線北、縱貫線南、深澳線、平溪線），方便快速找到正確的站名。',
+    ),
+    makeStep(
+      '.query-type-bar',
+      '基礎 / 進階查詢',
+      '切換到<strong>進階查詢</strong>可設定：<br/>• 車種類型（普悠瑪、自強號、莒光號、區間車、區間快）<br/>• 商務車廂（限自強號，票價 ×1.3）<br/>• 座位偏好（靠窗 / 靠走道）<br/>• 是否允許轉乘',
+    ),
+    makeStep(
+      '.ticket-section-label, .ticket-count-grid',
+      '票種與張數',
+      '支援全票、孩童票、敬老票、愛心票、學生票，各自設定張數。<br/><br/><strong>多張自動折扣：</strong><br/>• 3 張（含）以上 → 九五折<br/>• 5 張（含）以上 → 九折',
+    ),
+    makeStep(
+      '.search-hero, .search-hero-inner',
+      '搜尋結果',
+      '搜尋後進入車次列表，顯示：<br/>• 車種標籤與即時誤點狀態<br/>• 出發／到達時間、行車時長<br/>• 靠窗和走道的剩餘座位數<br/><br/>可依出發時間、行車時間或票價排序；展開可查看沿途停靠站。',
+    ),
+  ];
+}
+
+// ════════════════════════════════════════════════════════════════
+//  第三段：我的票務 /ticket/orders
+// ════════════════════════════════════════════════════════════════
+function ticketOrderSteps() {
+  return [
+    {
+      title: '電子票（三種取票方式）',
+      intro:
+        '付款完成後可在「取票」頁面切換三種取票方式：<br/><br/>① <strong>線上電子票</strong>：顯示 QR Code，閘門直接掃描<br/>② <strong>超商取票</strong>：顯示代碼，至 7-11、全家、萊爾富繳費取票<br/>③ <strong>車站機台取票</strong>：顯示六位取票碼（XXX-XXX），至自動售票機取票，出發前 30 分鐘截止',
+    },
+    makeStep(
+      '.order-tabs, .filter-tabs',
+      '訂單狀態篩選',
+      '可依狀態快速篩選：全部、待付款、已付款、已使用、已退票、已取消。<br/><br/>每個分類右側顯示筆數，方便快速掌握訂單狀況。',
+    ),
+    makeStep(
+      '.order-card',
+      '分票功能',
+      '每張票右側有「分票」按鈕（分享圖示）：<br/><br/>1. 輸入接收方的帳號名稱、手機或 Email<br/>2. 系統查詢確認對方為平台用戶<br/>3. 顯示接收方姓名確認後執行轉移<br/><br/>分票後對方帳號的訂單紀錄會出現「來自分票」藍色標籤，您的訂單則顯示「已分票」灰色標籤。',
+    ),
+  ];
+}
+
+// ════════════════════════════════════════════════════════════════
+//  第四段：結語（純文字，不需特定頁面）
+// ════════════════════════════════════════════════════════════════
+function finalSteps() {
+  return [
+    {
+      title: '住宿訂單管理',
+      intro:
+        '在「個人中心 → 住宿訂單」可查看所有住宿訂單。<br/><br/><strong>取消退款規則：</strong><br/>• 入住前 10 天以上 → 全額退款<br/>• 入住前 4～9 天 → 退款 70%，收 30% 手續費<br/>• 入住前 3 天以內 → 不予退款<br/><br/>取消前系統會顯示詳細的退款金額和手續費確認視窗。',
+    },
+    {
+      title: '行程規劃',
+      intro:
+        '點 Navbar「行程規劃」可建立個人或多人共享行程。<br/><br/>• 按天加入景點、住宿、交通等項目<br/>• 支援地圖選點標記位置<br/>• 內建費用記帳，旅途後自動計算多人分帳結果',
+    },
+    {
+      title: '房東後台（房東帳號限定）',
+      intro:
+        '以房東帳號登入後，Navbar 顯示「房東後台」入口：<br/><br/>• 新增房源並送審（管理員核准才上架）<br/>• 設定平日、週末、假日三種房價<br/>• 月曆視圖管理每日庫存<br/>• 設定早鳥、長住、季節等折扣活動',
+    },
+    {
+      title: '訂房衝突補償機制',
+      intro:
+        '訂房時系統自動鎖定房間 10 分鐘；送出前再次驗證是否仍有空房。<br/><br/>若發生衝突（極罕見），後建立的訂單自動取消，受影響用戶收到：<br/>• <strong>全額退款</strong>（3～5 個工作天）<br/>• <strong>NT$500 折價券</strong>（有效 90 天，可在個人中心 → 我的優惠券查看）',
+    },
+    {
+      title: '導覽完成！',
+      intro:
+        '您已了解 Agent TT 的主要功能。<br/><br/>隨時點擊畫面右下角的 <strong>「功能導覽」</strong> 藍色按鈕可重新啟動。<br/><br/>祝旅途愉快！',
+    },
+  ];
+}
+
+// ════════════════════════════════════════════════════════════════
+//  主入口：依序執行各段導覽
+// ════════════════════════════════════════════════════════════════
 export function startTour() {
-  introJs()
-    .setOptions({
-      steps: buildSteps(),
-      nextLabel: '下一步 &rarr;',
-      prevLabel: '&larr; 上一步',
-      skipLabel: '跳過',
-      doneLabel: '完成 ✓',
-      showProgress: true,
-      showBullets: true,
-      exitOnOverlayClick: true,
-      scrollToElement: true,
-      scrollPadding: 80,
-      disableInteraction: false,
-      tooltipPosition: 'auto',
-    })
-    .start();
+  // 第一段：導航至住宿首頁
+  navigateTo('/hotel', () => {
+    introJs()
+      .setOptions({ ...OPTS, steps: hotelHomeSteps() })
+      .oncomplete(() => {
+        // 第二段：導航至台鐵首頁
+        navigateTo('/ticket', () => {
+          introJs()
+            .setOptions({ ...OPTS, steps: trainHomeSteps() })
+            .oncomplete(() => {
+              // 第三段：導航至票務訂單（需登入，若未登入退化為純文字）
+              navigateTo('/ticket/orders', () => {
+                introJs()
+                  .setOptions({ ...OPTS, steps: ticketOrderSteps() })
+                  .oncomplete(() => {
+                    // 第四段：結語（停留在目前頁面）
+                    introJs()
+                      .setOptions({ ...OPTS, steps: finalSteps() })
+                      .start();
+                  })
+                  .start();
+              });
+            })
+            .start();
+        });
+      })
+      .start();
+  });
 }
