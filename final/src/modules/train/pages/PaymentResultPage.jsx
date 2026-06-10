@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import useStore from '../../../store/useTrainStore';
 import { TRAIN_TYPES } from '../data/trainData';
+import AddToTripModal from '../../../components/common/AddToTripModal';
 
 export default function PaymentResultPage() {
   const { orderId } = useParams();
@@ -23,6 +25,7 @@ export default function PaymentResultPage() {
   const success = order.status === 'paid';
   const typeInfo = TRAIN_TYPES[order.train.type] ?? {};
   const pmLabels = { credit: '信用卡', linepay: 'LINE Pay', cvs: '超商付款', bank: '銀行轉帳' };
+  const [showTripModal, setShowTripModal] = useState(false);
 
   const handleRetry  = () => navigate(`/ticket/payment/${orderId}`);
   const handleCancel = () => { cancelOrder(orderId); navigate('/ticket'); };
@@ -84,6 +87,21 @@ export default function PaymentResultPage() {
             <i className="fi fi-rr-envelope fi-xs" style={{ marginRight: 3 }} />訂票確認通知已發送至您的 Email，<i className="fi fi-rr-bell fi-xs" style={{ margin: '0 3px' }} />出發前 30 分鐘將以簡訊提醒
           </p>
 
+          {/* 加入行程 */}
+          <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '1rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1e40af' }}>
+                <i className="fi fi-rr-map fi-sm" style={{ marginRight: 6 }} />加入行程規劃
+              </div>
+              <div style={{ fontSize: '0.8rem', color: '#3b82f6', marginTop: 2 }}>
+                將這次乘車加入您的旅遊行程中統一管理
+              </div>
+            </div>
+            <button className="btn-primary btn-sm" onClick={() => setShowTripModal(true)}>
+              加入行程
+            </button>
+          </div>
+
           <div className="result-actions">
             <Link to={`/ticket/ticket/${orderId}`} className="btn-primary">
               <i className="fi fi-rr-ticket fi-sm" style={{ marginRight: 4 }} />取票 / 查看電子票
@@ -95,6 +113,20 @@ export default function PaymentResultPage() {
               <i className="fi fi-rr-home fi-sm" /> 返回首頁
             </Link>
           </div>
+
+          <AddToTripModal
+            isOpen={showTripModal}
+            onClose={() => setShowTripModal(false)}
+            suggestDate={order.train.date}
+            itemData={{
+              type: 'transport',
+              title: `${order.train.fromName} → ${order.train.toName}（${order.train.trainNo}）`,
+              location: `${order.train.fromName}站`,
+              time: order.train.depTime,
+              duration: order.train.duration || 0,
+              notes: `票號：${order.bookingNo}，抵達：${order.train.arrTime}`,
+            }}
+          />
         </div>
       ) : (
         <div className="result-page">

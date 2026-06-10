@@ -9,7 +9,7 @@ import { useToast } from '../../../../components/common/Toast';
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
-  const { lang, properties, favorites, toggleFavorite, addToCart, searchParams, reviews, addReview } = useStore();
+  const { lang, properties, favorites, toggleFavorite, addToCart, searchParams, reviews, addReview, discounts } = useStore();
   const { currentUser } = useAuthStore();
   const navigate = useNavigate();
   const addToast = useToast();
@@ -28,6 +28,12 @@ export default function PropertyDetailPage() {
   const propReviews = reviews.filter(r => r.propertyId === id);
   const today = new Date().toISOString().split('T')[0];
   const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+  const activeDiscounts = (discounts || []).filter(d =>
+    d.active &&
+    (d.propertyId === 'all' || d.propertyId === property.id) &&
+    d.startDate <= today && d.endDate >= today
+  );
   const checkIn = searchParams.checkIn || today;
   const checkOut = searchParams.checkOut || tomorrow;
   const nights = Math.max(1, Math.ceil((new Date(checkOut) - new Date(checkIn)) / 86400000));
@@ -195,6 +201,29 @@ export default function PropertyDetailPage() {
           <aside className="detail-sidebar">
             <div className="rooms-card">
               <h3 className="rooms-card-title">{lang === 'zh' ? '選擇房型' : 'Select Room Type'}</h3>
+
+              {/* 住宿優惠區塊 */}
+              {activeDiscounts.length > 0 && (
+                <div style={{ marginBottom: '0.75rem' }}>
+                  {activeDiscounts.map(d => (
+                    <div key={d.id} style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      background: '#fef9ee', border: '1px solid #fcd34d',
+                      borderRadius: 6, padding: '5px 10px', marginBottom: 4, fontSize: '0.82rem',
+                    }}>
+                      <i className="fi fi-rr-percentage" style={{ color: '#d97706', fontSize: 13 }} />
+                      <span style={{ fontWeight: 700, color: '#92400e' }}>{d.name}</span>
+                      <span style={{ color: '#b45309', marginLeft: 'auto', fontWeight: 700 }}>
+                        {d.discountType === 'percent' ? `-${d.value}%` : `-NT$${d.value}`}
+                      </span>
+                      {(d.minNights || 1) > 1 && (
+                        <span style={{ fontSize: '0.72rem', color: '#92400e' }}>（住{d.minNights}晚以上）</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="date-summary">
                 <span><i className="fi fi-rr-calendar fi-xs" style={{ marginRight: 3 }} />{checkIn} → {checkOut}</span>
                 <span><i className="fi fi-rr-moon fi-xs" style={{ marginRight: 3 }} />{nights} {T('common.nights')}</span>

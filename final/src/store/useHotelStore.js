@@ -136,22 +136,26 @@ const useHotelStore = create((set, get) => ({
   orders: LS.get('bk_orders', []),
   createOrder: (orderData) => {
     const orders = LS.get('bk_orders', []);
-    // 跨模組折扣：訂房兩晚以上享八折優惠
+    // 跨模組折扣：訂房兩晚以上享八五折優惠
     const nights = orderData.nights || 1;
-    let finalAmount = orderData.totalAmount;
+    const baseAmount = orderData.baseAmount ?? 0;
+    const couponOff  = orderData.couponDiscount ?? 0;
+    const hostDiscOff = orderData.hostDiscount ?? 0;
+    let finalAmount;
     let discountApplied = null;
     if (nights >= 2) {
-      finalAmount = Math.round(orderData.totalAmount * 0.8);
-      discountApplied = { reason: '訂房兩晚以上八折優惠', percent: 20, savedAmount: orderData.totalAmount - finalAmount };
+      const discounted = Math.round(baseAmount * 0.85);
+      finalAmount = Math.max(0, discounted - hostDiscOff - couponOff);
+      discountApplied = { reason: '訂房兩晚以上八五折優惠', percent: 15, savedAmount: baseAmount - discounted };
+    } else {
+      finalAmount = Math.max(0, baseAmount - hostDiscOff - couponOff);
     }
     const newOrder = {
       ...orderData,
       id: `ORD-${Date.now()}`,
       status: 'confirmed',
       paymentStatus: 'paid',
-      // finalAmount 可能為 undefined（totalAmount 未傳）或 NaN（undefined * 0.8），
-      // 兩者皆 falsy，安全退回 BookingPage 傳入的 finalAmount
-      finalAmount: finalAmount || orderData.finalAmount || 0,
+      finalAmount: finalAmount ?? 0,
       discountApplied,
       createdAt: new Date().toISOString(),
     };

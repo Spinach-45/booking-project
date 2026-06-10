@@ -10,7 +10,7 @@ const LOCK_SECS = 600; // 10 分鐘
 export default function BookingPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { lang, createOrder, validateCoupon, useCoupon, lockRoom, releaseLock, checkRoomAvailability } = useStore();
+  const { lang, createOrder, validateCoupon, useCoupon, lockRoom, releaseLock, checkRoomAvailability, discounts } = useStore();
   const { currentUser } = useAuthStore();
   const addToast = useToast();
   const T = (key) => t(lang, key);
@@ -71,8 +71,26 @@ export default function BookingPage() {
     );
   }
 
-  const basePrice = room.price * nights;
-  const finalPrice = Math.max(0, basePrice - couponDiscount);
+  const basePrice       = room.price * nights;
+  const multiSaved      = nights >= 2 ? Math.round(basePrice * 0.15) : 0;
+
+  // 套用房東設定的最優折扣
+  const todayStr = new Date().toISOString().split('T')[0];
+  const bestHostDiscount = (discounts || [])
+    .filter(d =>
+      d.active &&
+      (d.propertyId === 'all' || d.propertyId === property.id) &&
+      (d.minNights || 1) <= nights &&
+      d.startDate <= todayStr && d.endDate >= todayStr
+    )
+    .map(d => ({
+      ...d,
+      amount: d.discountType === 'percent' ? Math.round(basePrice * d.value / 100) : d.value,
+    }))
+    .sort((a, b) => b.amount - a.amount)[0] ?? null;
+  const hostDiscountAmount = bestHostDiscount?.amount ?? 0;
+
+  const finalPrice      = Math.max(0, basePrice - multiSaved - hostDiscountAmount - couponDiscount);
 
   const handleApplyCoupon = () => {
     if (!couponCode.trim()) return;
@@ -125,6 +143,8 @@ export default function BookingPage() {
         baseAmount: basePrice,
         couponDiscount,
         couponCode: appliedCoupon?.code || null,
+        hostDiscount: hostDiscountAmount,
+        hostDiscountName: bestHostDiscount?.name || null,
         finalAmount: finalPrice,
       });
 
@@ -272,6 +292,18 @@ export default function BookingPage() {
                   <span>{T('booking.originalPrice')}</span>
                   <span>NT$ {basePrice.toLocaleString()}</span>
                 </div>
+                {multiSaved > 0 && (
+                  <div className="price-row price-discount">
+                    <span><i className="fi fi-rr-gift fi-xs" style={{ marginRight: 3 }} />兩晚以上八五折優惠</span>
+                    <span>- NT$ {multiSaved.toLocaleString()}</span>
+                  </div>
+                )}
+                {hostDiscountAmount > 0 && (
+                  <div className="price-row price-discount">
+                    <span><i className="fi fi-rr-percentage fi-xs" style={{ marginRight: 3 }} />{bestHostDiscount.name}</span>
+                    <span>- NT$ {hostDiscountAmount.toLocaleString()}</span>
+                  </div>
+                )}
                 {couponDiscount > 0 && (
                   <div className="price-row price-discount">
                     <span>{T('booking.couponDiscount')}</span>

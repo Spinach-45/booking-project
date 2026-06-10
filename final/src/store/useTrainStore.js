@@ -49,9 +49,12 @@ const SEED_ORDERS = [
     bookingNo: 'TR9932087612',
     train: { id: 'taroko-taipei-tainan-demo', trainNo: 'TR0223', type: 'taroko', from: 'taipei', fromName: '台北', to: 'tainan', toName: '台南', date: nextWeek, depTime: '09:00', arrTime: '11:40', duration: 160, basePrice: 738 },
     tickets: [{ typeId: 'adult', typeName: '全票', count: 1, unitPrice: 738, subtotal: 738 }, { typeId: 'child', typeName: '孩童票', count: 1, unitPrice: 369, subtotal: 369 }],
-    passengers: [{ name: '示範用戶', phone: '0912-345-678', idNo: 'A123456789', ticketType: 'adult', ticketTypeName: '全票' }],
+    passengers: [{ name: '示範用戶', phone: '0912-345-678', idNo: 'A123456789', ticketType: 'adult', ticketTypeName: '全票', seatNo: '3車18F' }],
     seatPref: 'window', paymentMethod: 'linepay', totalAmount: 1107,
     status: 'paid', createdAt: Date.now() - 3600000, paidAt: Date.now() - 3600000,
+    cvsPickupCode: 'CV93260701',
+    stationPickupCode: '476219',
+    pointsEarned: 11,
   },
 ];
 
@@ -59,6 +62,24 @@ function init() {
   if (!LS.get('tr_initialized', false)) {
     LS.set('tr_orders', SEED_ORDERS);
     LS.set('tr_initialized', true);
+  } else {
+    // migration: 為已付款但缺少取票碼的訂單補齊 cvsPickupCode / stationPickupCode
+    const orders = LS.get('tr_orders', []);
+    const needsMigration = orders.some(o => (o.status === 'paid' || o.status === 'changed') && !o.cvsPickupCode);
+    if (needsMigration) {
+      const migrated = orders.map(o => {
+        if ((o.status === 'paid' || o.status === 'changed') && !o.cvsPickupCode) {
+          const suffix = o.bookingNo?.slice(-8) ?? String(Date.now()).slice(-8);
+          return {
+            ...o,
+            cvsPickupCode: `CV${suffix}`,
+            stationPickupCode: suffix.slice(-6),
+          };
+        }
+        return o;
+      });
+      LS.set('tr_orders', migrated);
+    }
   }
 }
 init();

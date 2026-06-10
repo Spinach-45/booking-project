@@ -1,12 +1,15 @@
+import { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import useStore from '../../../../store/useHotelStore';
 import { t } from '../../i18n';
+import AddToTripModal from '../../../../components/common/AddToTripModal';
 
 export default function BookingSuccessPage() {
   const { state } = useLocation();
   const { lang } = useStore();
   const T = (key) => t(lang, key);
   const order = state?.order;
+  const [showTripModal, setShowTripModal] = useState(false);
 
   if (!order) return (
     <div className="container" style={{ paddingTop: '3rem' }}>
@@ -120,6 +123,21 @@ export default function BookingSuccessPage() {
           <i className="fi fi-rr-bell fi-xs" style={{ marginRight: 3 }} />入住前一天將以簡訊提醒
         </p>
 
+        {/* 加入行程 */}
+        <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '1rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1e40af' }}>
+              <i className="fi fi-rr-map fi-sm" style={{ marginRight: 6 }} />加入行程規劃
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#3b82f6', marginTop: 2 }}>
+              將這次住宿加入您的旅遊行程中統一管理
+            </div>
+          </div>
+          <button className="btn-primary btn-sm" onClick={() => setShowTripModal(true)}>
+            加入行程
+          </button>
+        </div>
+
         {/* 操作按鈕 */}
         <div className="result-actions">
           <Link to="/hotel/orders" className="btn-primary">
@@ -135,6 +153,20 @@ export default function BookingSuccessPage() {
             {lang === 'zh' ? '返回首頁' : 'Home'}
           </Link>
         </div>
+
+        <AddToTripModal
+          isOpen={showTripModal}
+          onClose={() => setShowTripModal(false)}
+          suggestDate={order.checkIn}
+          itemData={{
+            type: 'other',
+            title: order.propertyName,
+            location: '',
+            time: '15:00',
+            duration: 60,
+            notes: `${order.roomType}，入住 ${order.nights ?? 1} 晚`,
+          }}
+        />
       </div>
     </div>
   );
