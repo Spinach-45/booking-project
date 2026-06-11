@@ -118,6 +118,8 @@ export default function PaymentResultPage() {
             isOpen={showTripModal}
             onClose={() => setShowTripModal(false)}
             suggestDate={order.train.date}
+            sourceType="train"
+            sourceData={order}
             itemData={{
               type: 'transport',
               title: `${order.train.fromName} → ${order.train.toName}（${order.train.trainNo}）`,

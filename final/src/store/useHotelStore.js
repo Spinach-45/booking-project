@@ -144,9 +144,9 @@ const useHotelStore = create((set, get) => ({
     let finalAmount;
     let discountApplied = null;
     if (nights >= 2) {
-      const discounted = Math.round(baseAmount * 0.85);
+      const discounted = Math.round(baseAmount * 0.8);
       finalAmount = Math.max(0, discounted - hostDiscOff - couponOff);
-      discountApplied = { reason: '訂房兩晚以上八五折優惠', percent: 15, savedAmount: baseAmount - discounted };
+      discountApplied = { reason: '訂房兩晚以上八折優惠', percent: 20, savedAmount: baseAmount - discounted };
     } else {
       finalAmount = Math.max(0, baseAmount - hostDiscOff - couponOff);
     }

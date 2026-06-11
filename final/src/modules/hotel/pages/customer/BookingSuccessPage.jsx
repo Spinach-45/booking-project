@@ -158,13 +158,15 @@ export default function BookingSuccessPage() {
           isOpen={showTripModal}
           onClose={() => setShowTripModal(false)}
           suggestDate={order.checkIn}
+          sourceType="booking"
+          sourceData={order}
           itemData={{
-            type: 'other',
+            type: 'accommodation',
             title: order.propertyName,
             location: '',
             time: '15:00',
-            duration: 60,
-            notes: `${order.roomType}，入住 ${order.nights ?? 1} 晚`,
+            duration: 0,
+            notes: `入住：${order.checkIn} 退房：${order.checkOut}，${order.roomType}`,
           }}
         />
       </div>

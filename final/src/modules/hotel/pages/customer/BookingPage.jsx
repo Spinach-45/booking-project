@@ -72,7 +72,7 @@ export default function BookingPage() {
   }
 
   const basePrice       = room.price * nights;
-  const multiSaved      = nights >= 2 ? Math.round(basePrice * 0.15) : 0;
+  const multiSaved      = nights >= 2 ? Math.round(basePrice * 0.2) : 0;
 
   // 套用房東設定的最優折扣
   const todayStr = new Date().toISOString().split('T')[0];
@@ -294,7 +294,7 @@ export default function BookingPage() {
                 </div>
                 {multiSaved > 0 && (
                   <div className="price-row price-discount">
-                    <span><i className="fi fi-rr-gift fi-xs" style={{ marginRight: 3 }} />兩晚以上八五折優惠</span>
+                    <span><i className="fi fi-rr-gift fi-xs" style={{ marginRight: 3 }} />兩晚以上八折優惠</span>
                     <span>- NT$ {multiSaved.toLocaleString()}</span>
                   </div>
                 )}

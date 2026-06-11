@@ -4,8 +4,10 @@ import useTripStore from '../../store/useTripStore';
 import useAuthStore from '../../store/useAuthStore';
 import { Link } from 'react-router-dom';
 
-export default function AddToTripModal({ isOpen, onClose, itemData, suggestDate }) {
-  const { getUserTrips, addItem } = useTripStore();
+// sourceType: 'booking' | 'train' | undefined
+// sourceData: raw order object (hotel order or train order)
+export default function AddToTripModal({ isOpen, onClose, itemData, suggestDate, sourceType, sourceData }) {
+  const { getUserTrips, addItem, addBookingToTrip, addTrainToTrip } = useTripStore();
   const { currentUser } = useAuthStore();
 
   const trips = currentUser ? getUserTrips() : [];
@@ -30,7 +32,29 @@ export default function AddToTripModal({ isOpen, onClose, itemData, suggestDate 
 
   const handleAdd = () => {
     if (!tripId || !dayId) return;
-    addItem(tripId, dayId, itemData);
+    if (sourceType === 'booking' && sourceData) {
+      addBookingToTrip(tripId, dayId, {
+        propertyName: sourceData.propertyName,
+        location: '',
+        checkIn: sourceData.checkIn,
+        checkOut: sourceData.checkOut,
+        checkInTime: '15:00',
+        orderId: sourceData.id,
+      });
+    } else if (sourceType === 'train' && sourceData) {
+      addTrainToTrip(tripId, dayId, {
+        fromName: sourceData.train.fromName,
+        toName: sourceData.train.toName,
+        trainNo: sourceData.train.trainNo,
+        depTime: sourceData.train.depTime,
+        duration: sourceData.train.duration || 0,
+        arrTime: sourceData.train.arrTime,
+        bookingNo: sourceData.bookingNo,
+        orderId: sourceData.id,
+      });
+    } else {
+      addItem(tripId, dayId, itemData);
+    }
     setDone(true);
   };
 
